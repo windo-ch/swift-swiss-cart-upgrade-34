@@ -22,6 +22,9 @@ const Navbar = () => {
             <Link to="/" className="text-gray-700 hover:text-shop-primary transition-colors">
               Home
             </Link>
+            <Link to="/order" className="text-gray-700 hover:text-shop-primary transition-colors">
+              Order
+            </Link>
             <Link to="/products" className="text-gray-700 hover:text-shop-primary transition-colors">
               Products
             </Link>
@@ -69,6 +72,9 @@ const Navbar = () => {
             <div className="flex flex-col space-y-4">
               <Link to="/" className="text-gray-700 hover:text-shop-primary transition-colors">
                 Home
+              </Link>
+              <Link to="/order" className="text-gray-700 hover:text-shop-primary transition-colors">
+                Order
               </Link>
               <Link to="/products" className="text-gray-700 hover:text-shop-primary transition-colors">
                 Products
