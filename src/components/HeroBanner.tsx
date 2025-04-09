@@ -23,9 +23,11 @@ const HeroBanner = () => {
                   Jetzt Bstelle
                 </Button>
               </Link>
-              <Button variant="outline" className="border-brings-secondary text-brings-secondary hover:bg-brings-secondary/10 px-6 py-6 rounded-xl">
-                Produkt Aluege
-              </Button>
+              <Link to="/products">
+                <Button variant="outline" className="border-brings-secondary text-brings-dark bg-brings-secondary hover:bg-brings-dark hover:text-brings-secondary px-6 py-6 rounded-xl transition-colors duration-300">
+                  Produkt Aluege
+                </Button>
+              </Link>
             </div>
           </div>
           <div className="relative flex justify-center items-center">
