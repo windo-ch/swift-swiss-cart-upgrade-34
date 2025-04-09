@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -6,7 +5,7 @@ import LocationSelection from '../components/LocationSelection';
 import DistrictSelection from '../components/DistrictSelection';
 import ProductBrowsing from '../components/ProductBrowsing';
 import PromoBanner from '../components/PromoBanner';
-import { MapMarker } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 
 type OrderStep = 'city' | 'district' | 'products';
 
@@ -46,7 +45,7 @@ const Order = () => {
             <div className="flex items-center justify-center gap-4 md:gap-8">
               <div className={`flex flex-col items-center ${currentStep === 'city' ? 'text-shop-primary' : 'text-gray-400'}`}>
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-2 ${currentStep === 'city' ? 'bg-shop-primary text-white' : 'bg-gray-200 text-gray-400'}`}>
-                  <MapMarker size={16} />
+                  <MapPin size={16} />
                 </div>
                 <span className="text-sm font-medium">Select City</span>
               </div>
