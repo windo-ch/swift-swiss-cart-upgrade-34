@@ -29,20 +29,20 @@ const DistrictSelection: React.FC<DistrictSelectionProps> = ({ city, onSelectDis
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center mb-6">
-        <Button variant="ghost" size="sm" onClick={onBack} className="mr-2">
-          <ChevronLeft size={16} className="mr-1" /> Back
+        <Button variant="ghost" size="sm" onClick={onBack} className="mr-2 text-brings-dark hover:text-brings-primary">
+          <ChevronLeft size={16} className="mr-1" /> Zrügg
         </Button>
         <h2 className="text-xl font-semibold">
-          Select District in {city.charAt(0).toUpperCase() + city.slice(1)}
+          Wähl din Kreis in {city.charAt(0).toUpperCase() + city.slice(1)}
         </h2>
       </div>
 
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-shop-dark mb-2">Choose Your District</h1>
-        <p className="text-gray-600">Select which area of Zürich you'd like your delivery to</p>
+        <h1 className="text-3xl font-bold text-brings-dark mb-2">Wähl din Kreis</h1>
+        <p className="text-gray-600">Wähl usä, in welle Kreis vo Züri mir dir söllid liefere</p>
       </div>
       
-      <div className="relative mb-8 border rounded-lg overflow-hidden shadow-md bg-white">
+      <div className="relative mb-8 border border-brings-primary/20 rounded-lg overflow-hidden shadow-md bg-white">
         <img
           src="/lovable-uploads/e250d193-99ad-47b8-abb9-faf026a403d8.png"
           alt="Zürich Districts Map"
@@ -61,24 +61,24 @@ const DistrictSelection: React.FC<DistrictSelectionProps> = ({ city, onSelectDis
             onClick={() => district.active && onSelectDistrict(district.id)}
             className="cursor-pointer"
           >
-            <div className="bg-shop-primary/90 text-white hover:bg-shop-primary rounded-full w-10 h-10 flex items-center justify-center font-bold transition-colors">
+            <div className="bg-brings-primary/90 text-white hover:bg-brings-primary rounded-full w-10 h-10 flex items-center justify-center font-bold transition-colors duration-300 transform hover:scale-110">
               {district.number}
             </div>
           </div>
         ))}
       </div>
       
-      <div className="bg-shop-light p-6 rounded-lg mb-8">
-        <h3 className="text-xl font-bold mb-4">All Districts</h3>
+      <div className="bg-brings-light p-6 rounded-lg mb-8">
+        <h3 className="text-xl font-bold mb-4">Alli Kreis</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {zurichDistricts.map((district) => (
             <Button
               key={district.id}
               variant="outline"
               onClick={() => district.active && onSelectDistrict(district.id)}
-              className="w-full justify-start hover:bg-shop-primary hover:text-white"
+              className="w-full justify-start hover:bg-brings-primary hover:text-white"
             >
-              <div className="w-6 h-6 rounded-full bg-shop-primary/20 text-shop-primary flex items-center justify-center mr-2 font-bold text-xs">
+              <div className="w-6 h-6 rounded-full bg-brings-primary/20 text-brings-primary flex items-center justify-center mr-2 font-bold text-xs">
                 {district.number}
               </div>
               {district.name.split(' ')[0]} <span className="text-xs ml-1 opacity-70">{district.name.split(' ')[1]}</span>

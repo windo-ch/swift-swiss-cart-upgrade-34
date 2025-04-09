@@ -63,11 +63,11 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				shop: {
-					primary: '#2A9D8F',
-					secondary: '#E9C46A',
-					accent: '#F4A261',
-					dark: '#264653',
+				brings: {
+					primary: '#FF6B00',    // Orange from logo
+					secondary: '#FFD500',  // Yellow from logo
+					accent: '#7FD6EB',     // Light blue from logo
+					dark: '#1A2E45',       // Dark blue from logo
 					light: '#F8F9FA'
 				}
 			},

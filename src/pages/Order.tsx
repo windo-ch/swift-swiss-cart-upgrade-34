@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -40,28 +41,28 @@ const Order = () => {
       <Navbar />
       <main className="flex-grow">
         {/* Order progress indicator */}
-        <div className="bg-shop-light py-6">
+        <div className="bg-brings-light py-6">
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-center gap-4 md:gap-8">
-              <div className={`flex flex-col items-center ${currentStep === 'city' ? 'text-shop-primary' : 'text-gray-400'}`}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-2 ${currentStep === 'city' ? 'bg-shop-primary text-white' : 'bg-gray-200 text-gray-400'}`}>
+              <div className={`flex flex-col items-center ${currentStep === 'city' ? 'text-brings-primary' : 'text-gray-400'}`}>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-2 ${currentStep === 'city' ? 'bg-brings-primary text-white' : 'bg-gray-200 text-gray-400'}`}>
                   <MapPin size={16} />
                 </div>
-                <span className="text-sm font-medium">Select City</span>
+                <span className="text-sm font-medium">Stadt wähle</span>
               </div>
-              <div className={`w-12 h-0.5 ${currentStep !== 'city' ? 'bg-shop-primary' : 'bg-gray-200'}`}></div>
-              <div className={`flex flex-col items-center ${currentStep === 'district' ? 'text-shop-primary' : 'text-gray-400'}`}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-2 ${currentStep === 'district' ? 'bg-shop-primary text-white' : 'bg-gray-200 text-gray-400'}`}>
+              <div className={`w-12 h-0.5 ${currentStep !== 'city' ? 'bg-brings-primary' : 'bg-gray-200'}`}></div>
+              <div className={`flex flex-col items-center ${currentStep === 'district' ? 'text-brings-primary' : 'text-gray-400'}`}>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-2 ${currentStep === 'district' ? 'bg-brings-primary text-white' : 'bg-gray-200 text-gray-400'}`}>
                   <span className="text-xs font-bold">2</span>
                 </div>
-                <span className="text-sm font-medium">Select District</span>
+                <span className="text-sm font-medium">Kreis wähle</span>
               </div>
-              <div className={`w-12 h-0.5 ${currentStep === 'products' ? 'bg-shop-primary' : 'bg-gray-200'}`}></div>
-              <div className={`flex flex-col items-center ${currentStep === 'products' ? 'text-shop-primary' : 'text-gray-400'}`}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-2 ${currentStep === 'products' ? 'bg-shop-primary text-white' : 'bg-gray-200 text-gray-400'}`}>
+              <div className={`w-12 h-0.5 ${currentStep === 'products' ? 'bg-brings-primary' : 'bg-gray-200'}`}></div>
+              <div className={`flex flex-col items-center ${currentStep === 'products' ? 'text-brings-primary' : 'text-gray-400'}`}>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-2 ${currentStep === 'products' ? 'bg-brings-primary text-white' : 'bg-gray-200 text-gray-400'}`}>
                   <span className="text-xs font-bold">3</span>
                 </div>
-                <span className="text-sm font-medium">Browse Products</span>
+                <span className="text-sm font-medium">Produkt wähle</span>
               </div>
             </div>
           </div>

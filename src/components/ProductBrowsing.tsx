@@ -39,23 +39,23 @@ const ProductBrowsing: React.FC<ProductBrowsingProps> = ({ city, district, onBac
   return (
     <div>
       <div className="flex items-center mb-6">
-        <Button variant="ghost" size="sm" onClick={onBack} className="mr-2">
-          <ChevronLeft size={16} className="mr-1" /> Back
+        <Button variant="ghost" size="sm" onClick={onBack} className="mr-2 text-brings-dark hover:text-brings-primary">
+          <ChevronLeft size={16} className="mr-1" /> Zrügg
         </Button>
         <h2 className="text-xl font-semibold">
-          Browse Products
+          Produkt usswähle
         </h2>
       </div>
       
-      <div className="bg-shop-primary/10 p-6 rounded-lg mb-8">
+      <div className="bg-gradient-to-r from-brings-dark to-brings-dark/90 text-white p-6 rounded-lg mb-8">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
           <div>
-            <h3 className="text-2xl font-bold text-shop-dark">Delivering to {formattedDistrict}</h3>
-            <p className="text-gray-600">We'll deliver your groceries to {formattedCity}, {formattedDistrict}</p>
+            <h3 className="text-2xl font-bold mb-1">Lieferig nach {formattedDistrict}</h3>
+            <p className="text-gray-300">Mir bringed dini Produkt nach {formattedCity}, {formattedDistrict}</p>
           </div>
           <div className="mt-4 md:mt-0">
-            <Button variant="outline" size="sm" onClick={onBack} className="mr-2">
-              Change District
+            <Button variant="outline" size="sm" onClick={onBack} className="border-brings-secondary text-brings-secondary hover:bg-brings-secondary/10">
+              Kreis ändere
             </Button>
           </div>
         </div>

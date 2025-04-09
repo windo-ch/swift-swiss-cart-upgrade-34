@@ -10,7 +10,7 @@ interface LocationSelectionProps {
 const locations = [
   {
     id: 'zurich',
-    name: 'Zürich',
+    name: 'Züri',
     position: { x: 275, y: 680 },
     isActive: true
   },
@@ -38,14 +38,14 @@ const LocationSelection: React.FC<LocationSelectionProps> = ({ onSelectCity }) =
   return (
     <div className="max-w-4xl mx-auto">
       <div className="text-center mb-10">
-        <h1 className="text-3xl font-bold text-shop-dark mb-2">Select Your Delivery Location</h1>
-        <p className="text-gray-600">Choose your city to continue with your order</p>
+        <h1 className="text-3xl font-bold text-brings-dark mb-2">Wo söll's hiigah?</h1>
+        <p className="text-gray-600">Wähl dini Stadt zum witerfahre</p>
       </div>
       
       <div className="relative mb-8 border rounded-lg overflow-hidden shadow-md bg-white">
         <img
           src="/lovable-uploads/4c6b9ae0-4ef4-4856-a9f0-cc27d8537d85.png"
-          alt="Canton Zurich Map"
+          alt="Kanton Zürich Map"
           className="w-full"
         />
         
@@ -61,7 +61,7 @@ const LocationSelection: React.FC<LocationSelectionProps> = ({ onSelectCity }) =
           >
             <div 
               className={`
-                ${location.isActive ? 'bg-shop-primary text-white hover:bg-shop-primary/90' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}
+                ${location.isActive ? 'bg-brings-primary text-white hover:bg-brings-primary/90' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}
                 rounded-full w-8 h-8 flex items-center justify-center
               `}
               onClick={() => location.isActive && onSelectCity(location.id)}
@@ -75,8 +75,8 @@ const LocationSelection: React.FC<LocationSelectionProps> = ({ onSelectCity }) =
         ))}
       </div>
       
-      <div className="bg-shop-light p-6 rounded-lg mb-8">
-        <h3 className="text-xl font-bold mb-3">Available Delivery Areas</h3>
+      <div className="bg-brings-light p-6 rounded-lg mb-8">
+        <h3 className="text-xl font-bold mb-3">Verfügbari Liefergebiät</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {locations.map((location) => (
             <Button
@@ -84,24 +84,24 @@ const LocationSelection: React.FC<LocationSelectionProps> = ({ onSelectCity }) =
               variant={location.isActive ? "default" : "outline"}
               disabled={!location.isActive}
               onClick={() => location.isActive && onSelectCity(location.id)}
-              className="w-full justify-start"
+              className={`w-full justify-start ${location.isActive ? 'bg-brings-primary hover:bg-brings-primary/90' : ''}`}
             >
               <MapPin size={16} className="mr-2" />
               {location.name}
-              {!location.isActive && <span className="ml-auto text-xs text-gray-400">(Coming soon)</span>}
+              {!location.isActive && <span className="ml-auto text-xs text-gray-400">(Bald verfügbar)</span>}
             </Button>
           ))}
         </div>
       </div>
       
-      <div className="bg-shop-light p-6 rounded-lg">
+      <div className="bg-gradient-to-r from-brings-primary/20 to-brings-accent/20 p-6 rounded-lg border border-brings-primary/20">
         <div className="flex items-start">
-          <div className="flex-shrink-0 bg-shop-primary/10 p-3 rounded-full">
-            <MapPin size={24} className="text-shop-primary" />
+          <div className="flex-shrink-0 bg-brings-primary/10 p-3 rounded-full">
+            <MapPin size={24} className="text-brings-primary" />
           </div>
           <div className="ml-4">
-            <h3 className="font-bold text-lg">Currently, we only deliver to Zürich</h3>
-            <p className="text-gray-600">We're expanding our delivery areas soon. Please select Zürich to continue.</p>
+            <h3 className="font-bold text-lg">Momentan liefered mir nur nach Züri</h3>
+            <p className="text-gray-600">Mir sind dra, üses Liefergebiet z'erwütere. Bitte wähl Züri zum witerfahre.</p>
           </div>
         </div>
       </div>
