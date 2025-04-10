@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingCart, Menu, X, Search } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import CartDrawer from './CartDrawer';
 
 const Navbar = () => {
@@ -15,7 +16,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <img 
-              src="/lovable-uploads/80c228b4-813c-499f-b601-34324112c42f.png" 
+              src="/lovable-uploads/e4d3037b-5d79-4749-a7ff-ea9a4c991cbb.png" 
               alt="Brings Logo" 
               className="h-12 mr-2"
             />
@@ -25,9 +26,6 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-8">
             <Link to="/" className="text-brings-dark hover:text-brings-primary font-medium transition-colors">
               Startsiite
-            </Link>
-            <Link to="/order" className="text-brings-dark hover:text-brings-primary font-medium transition-colors">
-              Bstelle
             </Link>
             <Link to="/products" className="text-brings-dark hover:text-brings-primary font-medium transition-colors">
               Produkt
@@ -40,7 +38,7 @@ const Navbar = () => {
             </Link>
           </div>
           
-          {/* Search & Cart */}
+          {/* Search & Cart & Order Button */}
           <div className="flex items-center space-x-4">
             <button 
               className="p-2 text-brings-dark hover:text-brings-primary transition-colors"
@@ -58,6 +56,14 @@ const Navbar = () => {
                 0
               </span>
             </button>
+            
+            {/* Order Button - Prominently displayed */}
+            <Link to="/order" className="hidden md:block">
+              <Button className="bg-brings-primary hover:bg-brings-primary/90 text-white rounded-xl">
+                <ShoppingCart className="mr-2" size={16} />
+                Jetzt Bstelle
+              </Button>
+            </Link>
             
             {/* Mobile Menu Button */}
             <button 
@@ -77,9 +83,6 @@ const Navbar = () => {
               <Link to="/" className="text-brings-dark hover:text-brings-primary transition-colors">
                 Startsiite
               </Link>
-              <Link to="/order" className="text-brings-dark hover:text-brings-primary transition-colors">
-                Bstelle
-              </Link>
               <Link to="/products" className="text-brings-dark hover:text-brings-primary transition-colors">
                 Produkt
               </Link>
@@ -88,6 +91,12 @@ const Navbar = () => {
               </Link>
               <Link to="/about" className="text-brings-dark hover:text-brings-primary transition-colors">
                 Über Eus
+              </Link>
+              <Link to="/order" className="mt-2">
+                <Button className="w-full bg-brings-primary hover:bg-brings-primary/90 text-white rounded-xl">
+                  <ShoppingCart className="mr-2" size={16} />
+                  Jetzt Bstelle
+                </Button>
               </Link>
             </div>
           </div>

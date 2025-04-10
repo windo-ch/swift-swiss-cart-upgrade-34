@@ -24,7 +24,7 @@ const HeroBanner = () => {
                 </Button>
               </Link>
               <Link to="/products">
-                <Button variant="outline" className="border-brings-secondary text-brings-dark bg-brings-secondary hover:bg-brings-dark hover:text-brings-secondary px-6 py-6 rounded-xl transition-colors duration-300">
+                <Button variant="outline" className="border-brings-secondary bg-brings-secondary text-brings-dark hover:bg-brings-dark hover:text-brings-secondary px-6 py-6 rounded-xl transition-colors duration-300">
                   Produkt Aluege
                 </Button>
               </Link>
