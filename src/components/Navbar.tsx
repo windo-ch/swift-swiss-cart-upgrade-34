@@ -4,10 +4,12 @@ import { Link } from 'react-router-dom';
 import { ShoppingCart, Menu, X, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import CartDrawer from './CartDrawer';
+import { useAgeVerification } from '../contexts/AgeVerificationContext';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const { isAdult } = useAgeVerification();
   
   return (
     <nav className="bg-white shadow-sm sticky top-0 z-50">
@@ -20,6 +22,11 @@ const Navbar = () => {
               alt="Brings Logo" 
               className="h-12 mr-2"
             />
+            {isAdult && (
+              <span className="text-xs bg-brings-primary text-white px-2 py-0.5 rounded-full">
+                18+
+              </span>
+            )}
           </Link>
           
           {/* Desktop Navigation */}

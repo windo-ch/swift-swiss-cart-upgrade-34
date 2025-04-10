@@ -14,29 +14,34 @@ import NotFound from "./pages/NotFound";
 import Dateschutz from "./pages/Dateschutz";
 import AGB from "./pages/AGB";
 import Impressum from "./pages/Impressum";
+import { AgeVerificationProvider } from "./contexts/AgeVerificationContext";
+import InitialLoadingScreen from "./components/InitialLoadingScreen";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/order" element={<Order />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/product/:id" element={<ProductDetail />} />
-          <Route path="/categories" element={<Categories />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/dateschutz" element={<Dateschutz />} />
-          <Route path="/agb" element={<AGB />} />
-          <Route path="/impressum" element={<Impressum />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <AgeVerificationProvider>
+        <InitialLoadingScreen />
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/order" element={<Order />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/product/:id" element={<ProductDetail />} />
+            <Route path="/categories" element={<Categories />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/dateschutz" element={<Dateschutz />} />
+            <Route path="/agb" element={<AGB />} />
+            <Route path="/impressum" element={<Impressum />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </AgeVerificationProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

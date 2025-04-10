@@ -1,6 +1,7 @@
 
 import React from 'react';
 import ProductCard from './ProductCard';
+import { useAgeVerification } from '../contexts/AgeVerificationContext';
 
 // Products from brings-delivery.ch
 const products = [
@@ -8,103 +9,158 @@ const products = [
     id: '1',
     name: 'Red Bull Energy 0.25l',
     price: 2.90,
-    image: 'https://images.unsplash.com/photo-1622543925917-763c34d1a86e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=986&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/red-bull-energy-drink-250ml-787_600x.jpg',
     category: 'Energy Drinks',
-    isNew: false
+    isNew: false,
+    ageRestricted: false
   },
   {
     id: '2',
     name: 'Coca Cola 0.5l',
     price: 2.50,
-    image: 'https://images.unsplash.com/photo-1554866585-cd94860890b7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/coca-cola-classic-500ml-787_600x.jpg',
     category: 'Getränk',
-    isFeatured: true
+    isFeatured: true,
+    ageRestricted: false
   },
   {
     id: '3',
     name: 'Zweifel Chips Paprika 90g',
     price: 3.20,
-    image: 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1015&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/zweifel-nature-155g-550_600x.jpg',
     category: 'Chips & Snacks',
-    isFeatured: true
+    isFeatured: true,
+    ageRestricted: false
   },
   {
     id: '4',
     name: 'Cailler Schokolade 100g',
     price: 3.50,
-    image: 'https://images.unsplash.com/photo-1623428454614-abaf7c039c32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/cailler-milch-1_600x.jpg',
     category: 'Süssigkeite',
-    isNew: false
+    isNew: false,
+    ageRestricted: false
   },
   {
     id: '5',
     name: 'Monster Energy Ultra 0.5l',
     price: 3.50,
-    image: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/monster-ultra-paradise-500ml-787_600x.jpg',
     category: 'Energy Drinks',
-    isFeatured: true
+    isFeatured: true,
+    ageRestricted: false
   },
   {
     id: '6',
     name: 'Rivella Rot 0.5l',
     price: 2.50,
-    image: 'https://images.unsplash.com/photo-1527960471264-932f39eb5846?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/rivella-rot-500ml-787_600x.jpg',
     category: 'Getränk',
-    isNew: false
+    isNew: false,
+    ageRestricted: false
   },
   {
     id: '7',
     name: 'Manner Schnitten Original 75g',
     price: 2.90,
-    image: 'https://images.unsplash.com/photo-1558745087-19465451e307?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/manner-original-75g-837_600x.jpg',
     category: 'Süssigkeite',
-    isFeatured: true
+    isFeatured: true,
+    ageRestricted: false
   },
   {
     id: '8',
     name: 'Feldschlösschen Bier 0.5l',
     price: 2.90,
-    image: 'https://images.unsplash.com/photo-1584225064785-c62a8b43d148?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/feldschlosschen-original-500ml-787_600x.jpg',
     category: 'Alkohol',
-    isNew: true
+    isNew: true,
+    ageRestricted: true
   },
   {
     id: '9',
     name: 'Appenzeller Bier 0.33l',
     price: 2.90,
-    image: 'https://images.unsplash.com/photo-1608270586920-248521c07eff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/appenzeller-quollfrisch-330ml-787_600x.jpg',
     category: 'Alkohol',
-    isNew: false
+    isNew: false,
+    ageRestricted: true
   },
   {
     id: '10',
-    name: 'Eichhof Bier 0.5l',
+    name: 'Heineken Bier 0.5l',
     price: 2.90,
-    image: 'https://images.unsplash.com/photo-1608270586920-248521c07eff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/heineken-500ml-787_600x.jpg',
     category: 'Alkohol',
-    isNew: false
+    isNew: false,
+    ageRestricted: true
   },
   {
     id: '11',
     name: 'Sprite 0.5l',
     price: 2.50,
-    image: 'https://images.unsplash.com/photo-1625772299848-391b6a87d7b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/sprite-500ml-787_600x.jpg',
     category: 'Getränk',
-    isFeatured: false
+    isFeatured: false,
+    ageRestricted: false
   },
   {
     id: '12',
     name: 'Haribo Goldbären 100g',
     price: 1.90,
-    image: 'https://images.unsplash.com/photo-1582058091505-f87a2e55a40f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/haribo-goldbaeren-200g-550_600x.jpg',
     category: 'Süssigkeite',
-    isFeatured: false
+    isFeatured: false,
+    ageRestricted: false
+  },
+  {
+    id: '13',
+    name: 'Marlboro Zigaretten',
+    price: 9.50,
+    image: 'https://brings-delivery.ch/cdn/shop/products/marlboro-red-550_600x.jpg',
+    category: 'Tabak',
+    isFeatured: false,
+    ageRestricted: true
+  },
+  {
+    id: '14',
+    name: 'Jack Daniel\'s Whiskey 0.7l',
+    price: 32.90,
+    image: 'https://brings-delivery.ch/cdn/shop/products/jack-daniels-07l-550_600x.jpg',
+    category: 'Alkohol',
+    isFeatured: true,
+    ageRestricted: true
+  },
+  {
+    id: '15',
+    name: 'Mövenpick Glacé Schokolade',
+    price: 7.90,
+    image: 'https://brings-delivery.ch/cdn/shop/products/movenpick-feines-vanille-900ml-550_600x.jpg',
+    category: 'Dessert',
+    isFeatured: true,
+    ageRestricted: false
+  },
+  {
+    id: '16',
+    name: 'M-Budget Energy Drink 0.5l',
+    price: 0.60,
+    image: 'https://brings-delivery.ch/cdn/shop/products/m-budget-energy-drink-500ml-787_600x.jpg',
+    category: 'Energy Drinks',
+    isFeatured: true,
+    ageRestricted: false
   }
 ];
 
 const FeaturedProducts = () => {
+  const { isAdult } = useAgeVerification();
+  
+  // Filter out age-restricted products if not adult
+  const filteredProducts = isAdult 
+    ? products 
+    : products.filter(product => !product.ageRestricted);
+  
   // Only show 8 products on the featured page
-  const featuredProducts = products.slice(0, 8);
+  const featuredProducts = filteredProducts.slice(0, 8);
   
   return (
     <section className="py-12">
