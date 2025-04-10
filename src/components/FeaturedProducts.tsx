@@ -1,7 +1,9 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import ProductCard from './ProductCard';
 import { useAgeVerification } from '../contexts/AgeVerificationContext';
+import { Button } from '@/components/ui/button';
 
 // Products from brings-delivery.ch
 const products = [
@@ -186,9 +188,11 @@ const FeaturedProducts = () => {
         </div>
         
         <div className="mt-10 text-center">
-          <button className="bg-brings-primary hover:bg-brings-primary/90 text-white font-medium py-2 px-6 rounded-full transition-colors">
-            Alli Produkt azeige
-          </button>
+          <Link to="/products">
+            <Button className="bg-brings-primary hover:bg-brings-primary/90 text-white font-medium py-2 px-6 rounded-full transition-colors">
+              Alli Produkt azeige
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

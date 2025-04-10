@@ -1,112 +1,115 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Menu, X, Search } from 'lucide-react';
+import { Menu, X, ShoppingBag, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import CartDrawer from './CartDrawer';
 import { useAgeVerification } from '../contexts/AgeVerificationContext';
+import { useCart } from '../contexts/CartContext';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
   const { isAdult } = useAgeVerification();
-  
+  const { totalItems, setIsCartOpen } = useCart();
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
-    <nav className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-3">
-        <div className="flex items-center justify-between">
+    <header className="bg-white shadow-sm sticky top-0 z-40">
+      <nav className="container mx-auto px-4 py-4">
+        <div className="flex justify-between items-center">
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <img 
               src="/lovable-uploads/e4d3037b-5d79-4749-a7ff-ea9a4c991cbb.png" 
               alt="Brings Logo" 
-              className="h-12 mr-2"
+              className="h-8"
             />
             {isAdult && (
-              <span className="text-xs bg-brings-primary text-white px-2 py-0.5 rounded-full">
-                18+
-              </span>
+              <span className="ml-2 text-xs font-bold bg-red-500 text-white px-1.5 py-0.5 rounded">18+</span>
             )}
           </Link>
-          
+
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/products" className="text-brings-dark hover:text-brings-primary font-medium transition-colors">
-              Produkt
-            </Link>
-            <Link to="/categories" className="text-brings-dark hover:text-brings-primary font-medium transition-colors">
-              Kategorie
-            </Link>
-            <Link to="/about" className="text-brings-dark hover:text-brings-primary font-medium transition-colors">
-              Über Eus
-            </Link>
+            <Link to="/" className="nav-link">Home</Link>
+            <Link to="/products" className="nav-link">Produkt</Link>
+            <Link to="/categories" className="nav-link">Kategorie</Link>
+            <Link to="/about" className="nav-link">Über üs</Link>
           </div>
-          
-          {/* Search & Cart & Order Button */}
-          <div className="flex items-center space-x-4">
-            <button 
-              className="p-2 text-brings-dark hover:text-brings-primary transition-colors"
-              aria-label="Search"
-            >
+
+          {/* CTA Buttons */}
+          <div className="hidden md:flex items-center space-x-4">
+            <button className="text-gray-500 hover:text-brings-primary">
               <Search size={20} />
             </button>
             <button 
-              className="p-2 text-brings-dark hover:text-brings-primary transition-colors relative"
+              className="relative" 
               onClick={() => setIsCartOpen(true)}
-              aria-label="Shopping Cart"
             >
-              <ShoppingCart size={20} />
-              <span className="absolute -top-1 -right-1 bg-brings-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                0
-              </span>
+              <ShoppingBag size={20} className="text-brings-dark" />
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-brings-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
             </button>
-            
-            {/* Order Button - Prominently displayed */}
-            <Link to="/order" className="hidden md:block">
-              <Button className="bg-brings-primary hover:bg-brings-primary/90 text-white rounded-xl">
-                <ShoppingCart className="mr-2" size={16} />
-                Jetzt Bstelle
+            <Link to="/order">
+              <Button className="bg-brings-primary hover:bg-brings-primary/90 text-white">
+                Bstelle
               </Button>
             </Link>
-            
-            {/* Mobile Menu Button */}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="flex items-center space-x-4 md:hidden">
             <button 
-              className="p-2 text-brings-dark md:hidden"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              aria-label={isMenuOpen ? "Close Menu" : "Open Menu"}
+              className="relative" 
+              onClick={() => setIsCartOpen(true)}
             >
-              {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              <ShoppingBag size={20} className="text-brings-dark" />
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-brings-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
+            </button>
+            <button 
+              onClick={toggleMenu}
+              className="text-brings-dark focus:outline-none"
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
-        
+
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 animate-fade-in">
+          <div className="md:hidden mt-4 py-4 border-t border-gray-100">
             <div className="flex flex-col space-y-4">
-              <Link to="/products" className="text-brings-dark hover:text-brings-primary transition-colors">
+              <Link to="/" className="nav-link-mobile" onClick={() => setIsMenuOpen(false)}>
+                Home
+              </Link>
+              <Link to="/products" className="nav-link-mobile" onClick={() => setIsMenuOpen(false)}>
                 Produkt
               </Link>
-              <Link to="/categories" className="text-brings-dark hover:text-brings-primary transition-colors">
+              <Link to="/categories" className="nav-link-mobile" onClick={() => setIsMenuOpen(false)}>
                 Kategorie
               </Link>
-              <Link to="/about" className="text-brings-dark hover:text-brings-primary transition-colors">
-                Über Eus
+              <Link to="/about" className="nav-link-mobile" onClick={() => setIsMenuOpen(false)}>
+                Über üs
               </Link>
-              <Link to="/order" className="mt-2">
-                <Button className="w-full bg-brings-primary hover:bg-brings-primary/90 text-white rounded-xl">
-                  <ShoppingCart className="mr-2" size={16} />
+              <Link to="/order" onClick={() => setIsMenuOpen(false)}>
+                <Button className="w-full bg-brings-primary hover:bg-brings-primary/90 text-white">
                   Jetzt Bstelle
                 </Button>
               </Link>
             </div>
           </div>
         )}
-      </div>
-      
-      {/* Cart Drawer */}
-      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
-    </nav>
+      </nav>
+    </header>
   );
 };
 
