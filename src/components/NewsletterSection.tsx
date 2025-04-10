@@ -2,32 +2,41 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { toast } from '@/components/ui/use-toast';
 
 const NewsletterSection = () => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast({
+      title: "Newsletter aameldig",
+      description: "Merci für dini Aamäldig! Du wirsch bald vo üs höre.",
+    });
+  };
+
   return (
-    <section className="py-12 bg-shop-primary/10">
+    <section className="py-12 bg-brings-primary/10">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-shop-dark mb-3">Stay Updated</h2>
+          <h2 className="text-3xl font-bold text-brings-dark mb-3">Blib uf em Laufende</h2>
           <p className="text-gray-600 mb-6">
-            Subscribe to our newsletter for exclusive offers, recipes, and updates on new products.
+            Mäld dich für üse Newsletter a und erhalte exklusivi Aagebot, Rezept und Updates zu neue Produkt.
           </p>
           
-          <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
             <Input 
               type="email" 
-              placeholder="Your email address" 
-              className="flex-grow border-shop-primary/20 focus-visible:ring-shop-primary"
+              placeholder="Dini E-Mail Adresse" 
+              className="flex-grow border-brings-primary/20 focus-visible:ring-brings-primary"
               required
             />
-            <Button type="submit" className="bg-shop-primary hover:bg-shop-primary/90 text-white whitespace-nowrap">
-              Subscribe
+            <Button type="submit" className="bg-brings-primary hover:bg-brings-primary/90 text-white whitespace-nowrap">
+              Aamelde
             </Button>
           </form>
           
           <p className="text-xs text-gray-500 mt-4">
-            By subscribing, you agree to receive marketing communications from us.
-            You can unsubscribe at any time.
+            Mit dinere Aamäldig bisch iverstande, Marketing-Mitteilige vo üs z'erhalte.
+            Du chasch dich jederzit abmelde.
           </p>
         </div>
       </div>
