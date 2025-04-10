@@ -75,12 +75,12 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/privacy" className="text-gray-300 hover:text-brings-secondary transition-colors">
+                <Link to="/dateschutz" className="text-gray-300 hover:text-brings-secondary transition-colors">
                   Dateschutz
                 </Link>
               </li>
               <li>
-                <Link to="/terms" className="text-gray-300 hover:text-brings-secondary transition-colors">
+                <Link to="/agb" className="text-gray-300 hover:text-brings-secondary transition-colors">
                   AGB
                 </Link>
               </li>
@@ -111,13 +111,13 @@ const Footer = () => {
         <div className="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
           <p>© 2025 Brings AG. Alli Rächt vorbehalte.</p>
           <div className="mt-4 md:mt-0 flex space-x-4">
-            <Link to="/privacy" className="hover:text-brings-secondary transition-colors">
+            <Link to="/dateschutz" className="hover:text-brings-secondary transition-colors">
               Dateschutz
             </Link>
-            <Link to="/terms" className="hover:text-brings-secondary transition-colors">
+            <Link to="/agb" className="hover:text-brings-secondary transition-colors">
               AGB
             </Link>
-            <Link to="/imprint" className="hover:text-brings-secondary transition-colors">
+            <Link to="/impressum" className="hover:text-brings-secondary transition-colors">
               Impressum
             </Link>
           </div>

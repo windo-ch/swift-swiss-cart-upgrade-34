@@ -24,9 +24,6 @@ const Navbar = () => {
           
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-brings-dark hover:text-brings-primary font-medium transition-colors">
-              Startsiite
-            </Link>
             <Link to="/products" className="text-brings-dark hover:text-brings-primary font-medium transition-colors">
               Produkt
             </Link>
@@ -80,9 +77,6 @@ const Navbar = () => {
         {isMenuOpen && (
           <div className="md:hidden mt-4 pb-4 animate-fade-in">
             <div className="flex flex-col space-y-4">
-              <Link to="/" className="text-brings-dark hover:text-brings-primary transition-colors">
-                Startsiite
-              </Link>
               <Link to="/products" className="text-brings-dark hover:text-brings-primary transition-colors">
                 Produkt
               </Link>
