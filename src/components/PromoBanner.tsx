@@ -9,15 +9,15 @@ const PromoBanner = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="flex items-center justify-center">
             <Truck size={20} className="mr-2 text-shop-secondary" />
-            <span>Free delivery on orders over $50</span>
+            <span>Gratis Lieferig ab CHF 50</span>
           </div>
           <div className="flex items-center justify-center">
             <Clock size={20} className="mr-2 text-shop-secondary" />
-            <span>Same-day delivery available</span>
+            <span>Glichtagsliferig möglich</span>
           </div>
           <div className="flex items-center justify-center">
             <Tag size={20} className="mr-2 text-shop-secondary" />
-            <span>New customers: 15% off first order</span>
+            <span>Nüi Kunden: 15% Rabatt uf die ersti Bstellig</span>
           </div>
         </div>
       </div>

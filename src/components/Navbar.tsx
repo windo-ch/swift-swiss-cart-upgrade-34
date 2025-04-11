@@ -24,7 +24,7 @@ const Navbar = () => {
             <img 
               src="/lovable-uploads/e4d3037b-5d79-4749-a7ff-ea9a4c991cbb.png" 
               alt="Brings Logo" 
-              className="h-8"
+              className="h-12"  {/* Increased height from h-8 to h-12 */}
             />
             {isAdult && (
               <span className="ml-2 text-xs font-bold bg-red-500 text-white px-1.5 py-0.5 rounded">18+</span>
@@ -33,7 +33,6 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="nav-link">Home</Link>
             <Link to="/products" className="nav-link">Produkt</Link>
             <Link to="/categories" className="nav-link">Kategorie</Link>
             <Link to="/about" className="nav-link">Über üs</Link>
@@ -88,9 +87,6 @@ const Navbar = () => {
         {isMenuOpen && (
           <div className="md:hidden mt-4 py-4 border-t border-gray-100">
             <div className="flex flex-col space-y-4">
-              <Link to="/" className="nav-link-mobile" onClick={() => setIsMenuOpen(false)}>
-                Home
-              </Link>
               <Link to="/products" className="nav-link-mobile" onClick={() => setIsMenuOpen(false)}>
                 Produkt
               </Link>
