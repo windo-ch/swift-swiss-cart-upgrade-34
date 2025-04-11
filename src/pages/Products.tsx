@@ -1,10 +1,11 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Button } from '@/components/ui/button';
 import { Search, Filter, ShoppingBag } from 'lucide-react';
 import PromoBanner from '../components/PromoBanner';
+import { useCart } from '../contexts/CartContext';
 
 // Product data
 const products = [
@@ -79,13 +80,30 @@ const categories = [
 const Products = () => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [filteredProducts, setFilteredProducts] = useState(products);
+  const { addToCart } = useCart();
   
-  // Filter products based on search and category
-  const filteredProducts = products.filter((product) => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = activeCategory === 'all' || product.category === activeCategory;
-    return matchesSearch && matchesCategory;
-  });
+  // Filter products whenever search term or category changes
+  useEffect(() => {
+    const filtered = products.filter((product) => {
+      const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = activeCategory === 'all' || product.category === activeCategory;
+      return matchesSearch && matchesCategory;
+    });
+    
+    setFilteredProducts(filtered);
+  }, [searchTerm, activeCategory]);
+
+  // Handle product add to cart
+  const handleAddToCart = (product: typeof products[0]) => {
+    addToCart({
+      id: product.id.toString(),
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      quantity: 1
+    });
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -125,8 +143,10 @@ const Products = () => {
                 <button
                   key={category.id}
                   onClick={() => setActiveCategory(category.id)}
-                  className={`category-button whitespace-nowrap ${
-                    activeCategory === category.id ? 'active' : ''
+                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                    activeCategory === category.id 
+                      ? 'bg-brings-primary text-white' 
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
                   <span className="mr-1">{category.icon}</span> {category.name}
@@ -138,11 +158,19 @@ const Products = () => {
           {/* Product grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {filteredProducts.map((product) => (
-              <div key={product.id} className="product-card group">
+              <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 group">
                 <div className="relative overflow-hidden">
-                  <img src={product.image} alt={product.name} className="product-image" />
+                  <img 
+                    src={product.image} 
+                    alt={product.name} 
+                    className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105" 
+                  />
                   <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <Button variant="default" className="bg-brings-primary hover:bg-brings-primary/90">
+                    <Button 
+                      variant="default" 
+                      className="bg-brings-primary hover:bg-brings-primary/90"
+                      onClick={() => handleAddToCart(product)}
+                    >
                       <ShoppingBag className="mr-2" size={16} />
                       In Warechorb
                     </Button>
@@ -152,7 +180,12 @@ const Products = () => {
                   <h3 className="font-medium text-gray-800">{product.name}</h3>
                   <div className="flex items-center justify-between mt-2">
                     <span className="font-bold text-brings-dark">CHF {product.price.toFixed(2)}</span>
-                    <Button variant="ghost" size="sm" className="text-brings-primary hover:text-brings-primary/90 hover:bg-brings-primary/10 p-1">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-brings-primary hover:text-brings-primary/90 hover:bg-brings-primary/10 p-1"
+                      onClick={() => handleAddToCart(product)}
+                    >
                       <ShoppingBag size={18} />
                     </Button>
                   </div>
