@@ -27,12 +27,12 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AgeVerificationProvider>
-        <CartProvider>
-          <InitialLoadingScreen />
-          <CartDrawer />
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
+        <BrowserRouter>
+          <CartProvider>
+            <InitialLoadingScreen />
+            <CartDrawer />
+            <Toaster />
+            <Sonner />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/order" element={<Order />} />
@@ -48,8 +48,8 @@ const App = () => (
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </BrowserRouter>
-        </CartProvider>
+          </CartProvider>
+        </BrowserRouter>
       </AgeVerificationProvider>
     </TooltipProvider>
   </QueryClientProvider>
