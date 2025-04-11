@@ -13,9 +13,20 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus, Trash2, Edit, Search, Image } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
+// Define a strict product type
+interface Product {
+  id: string;
+  name: string;
+  image: string;
+  price: number;
+  category: string;
+  description: string;
+  weight: string;
+}
+
 // Mock products data
 // In a real app, this would come from a database
-const initialProducts = [
+const initialProducts: Product[] = [
   {
     id: '1',
     name: 'Zweifel Chips Paprika',
@@ -68,7 +79,7 @@ const productSchema = z.object({
 type ProductFormValues = z.infer<typeof productSchema>;
 
 const Admin = () => {
-  const [products, setProducts] = useState(initialProducts);
+  const [products, setProducts] = useState<Product[]>(initialProducts);
   const [isEditing, setIsEditing] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const { toast } = useToast();
@@ -98,7 +109,15 @@ const Admin = () => {
       // Update existing product
       setProducts(prevProducts => 
         prevProducts.map(product => 
-          product.id === data.id ? { ...data } : product
+          product.id === data.id ? {
+            id: data.id,
+            name: data.name,
+            price: data.price,
+            category: data.category,
+            description: data.description,
+            image: data.image,
+            weight: data.weight
+          } : product
         )
       );
       
@@ -108,10 +127,15 @@ const Admin = () => {
         duration: 3000,
       });
     } else {
-      // Add new product
-      const newProduct = {
-        ...data,
+      // Add new product with all required fields
+      const newProduct: Product = {
         id: Date.now().toString(),
+        name: data.name,
+        price: data.price,
+        category: data.category,
+        description: data.description,
+        image: data.image,
+        weight: data.weight
       };
       
       setProducts(prevProducts => [...prevProducts, newProduct]);
@@ -129,7 +153,7 @@ const Admin = () => {
   };
   
   // Handle edit product
-  const handleEdit = (product: any) => {
+  const handleEdit = (product: Product) => {
     form.reset(product);
     setIsEditing(true);
   };
