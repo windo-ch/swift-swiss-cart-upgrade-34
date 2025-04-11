@@ -1,19 +1,21 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Button } from '@/components/ui/button';
-import { ShoppingBag, ChevronLeft, Minus, Plus, Heart } from 'lucide-react';
+import { ShoppingBag, ChevronLeft, Minus, Plus, Heart, Star } from 'lucide-react';
 import PromoBanner from '../components/PromoBanner';
 import { useCart } from '../contexts/CartContext';
+import { Card, CardContent } from '@/components/ui/card';
+import { useToast } from '@/components/ui/use-toast';
 
-// Product data - this would normally come from an API
-const products = [
+// Base product data - this would normally come from an API
+const baseProducts = [
   {
     id: '1',
     name: 'Zweifel Chips Paprika',
-    image: 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/zweifel-paprika-155g-550_600x.jpg',
     price: 5.90,
     category: 'chips',
     description: 'Die beliebte Zweifel Chips mit Paprika-Gschmack. Perfekt für de Film-Abig oder es gemütlichs Zämme-Sitze mit Fründe.',
@@ -23,7 +25,7 @@ const products = [
   {
     id: '2',
     name: 'Coca Cola 0.5L',
-    image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/coca-cola-classic-500ml-787_600x.jpg',
     price: 2.50,
     category: 'drinks',
     description: 'Die klassischi Coca-Cola. Erfrischend und perfekt für unterwegs.',
@@ -33,22 +35,99 @@ const products = [
   {
     id: '3',
     name: 'Rivella Rot 0.5L',
-    image: 'https://images.unsplash.com/photo-1625772299848-391b6a87d7b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/rivella-rot-500ml-787_600x.jpg',
     price: 2.80,
     category: 'drinks',
     description: 'Rivella Rot - Das Original. Das beliebte Schwizer Getränk us Milchserum.',
     weight: '500ml',
     ingredients: 'Wasser, Milchserum, Zucker, Kohlensäure, Säuerungsmittel: Zitronensäure, Aromen.'
+  },
+  {
+    id: '4',
+    name: 'Kägi Fret Mini',
+    image: 'https://brings-delivery.ch/cdn/shop/products/kagi-fret-mini-165g-250_600x.jpg',
+    price: 3.90,
+    category: 'sweets',
+    description: 'Die beliebte Schweizer Waffelspezialität mit feinem Kakao und zartschmelzender Schokolade.',
+    weight: '165g',
+    ingredients: 'Zucker, Weizenmehl, Pflanzenfette (Kokos, Palmkern), Kakaobutter, Vollmilchpulver, Kakaomasse, Magermilchpulver, Haselnüsse, Emulgator: Lecithine (Soja), Salz, Backtriebmittel: Natriumcarbonat, Aromen.'
+  },
+  {
+    id: '5',
+    name: 'Red Bull Energy Drink',
+    image: 'https://brings-delivery.ch/cdn/shop/products/red-bull-energy-drink-250ml-787_600x.jpg',
+    price: 3.50,
+    category: 'energy',
+    description: 'Red Bull Energy Drink belebt Körper und Geist.',
+    weight: '250ml',
+    ingredients: 'Wasser, Saccharose, Glucose, Säureregulator (Natriumcitrate, Magnesiumcarbonat), Kohlensäure, Zitronensäure, Taurin (0,4%), Koffein (0,03%), Inositol, Vitamine (Niacin, Pantothensäure, B6, B12), Aromen, Farbstoffe (Zuckerkulör, Riboflavin).'
+  },
+  {
+    id: '6',
+    name: 'Zweifel Chips Nature',
+    image: 'https://brings-delivery.ch/cdn/shop/products/zweifel-nature-155g-550_600x.jpg',
+    price: 5.90,
+    category: 'chips',
+    description: 'Die klassische Zweifel Chips ohne zusätzliche Gewürze. Der pure Kartoffelgenuss.',
+    weight: '175g',
+    ingredients: 'Kartoffeln, Sonnenblumenöl, Speisesalz.'
+  },
+  {
+    id: '7',
+    name: 'Feldschlösschen Bier',
+    image: 'https://brings-delivery.ch/cdn/shop/products/feldschlosschen-original-500ml-787_600x.jpg',
+    price: 3.90,
+    category: 'alcohol',
+    description: 'Das meistgetrunkene Schweizer Bier. Frisch und würzig im Geschmack.',
+    weight: '500ml',
+    ingredients: 'Wasser, Gerstenmalz, Hopfen.'
+  },
+  {
+    id: '8',
+    name: 'Ovomaltine Schokolade',
+    image: 'https://brings-delivery.ch/cdn/shop/products/cailler-milch-1_600x.jpg',
+    price: 2.90,
+    category: 'sweets',
+    description: 'Vollmilchschokolade mit knusprigen Ovomaltine-Stückchen. Ein Schweizer Klassiker.',
+    weight: '100g',
+    ingredients: 'Zucker, Kakaobutter, Vollmilchpulver, Kakaomasse, Ovomaltine 10% (Gerstenmalzextrakt, kondensierte Magermilch, Magermilchpulver, Kakaopulver, Mineralstoffe), Emulgator: Sojalecithin, Aromen.'
   }
 ];
+
+// Get complete product list including admin-added products
+const getAllProducts = () => {
+  try {
+    const storedProducts = localStorage.getItem('adminProducts');
+    const adminProducts = storedProducts ? JSON.parse(storedProducts) : [];
+    
+    // Map admin products to ensure they have all required fields
+    const formattedAdminProducts = adminProducts.map(product => ({
+      ...product,
+      ingredients: product.ingredients || 'Keine Angaben zu Zutaten verfügbar.',
+      weight: product.weight || 'Keine Angaben zum Gewicht verfügbar.'
+    }));
+    
+    return [...baseProducts, ...formattedAdminProducts];
+  } catch (error) {
+    console.error('Error loading products:', error);
+    return baseProducts;
+  }
+};
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [quantity, setQuantity] = useState(1);
+  const [products, setProducts] = useState<any[]>([]);
   const { addToCart } = useCart();
+  const { toast } = useToast();
+  
+  // Initialize products from all sources
+  useEffect(() => {
+    setProducts(getAllProducts());
+  }, []);
   
   // Find the product by id
-  const product = products.find(p => p.id === id);
+  const product = products.find(p => p.id.toString() === id);
   
   // Handle quantity changes
   const decreaseQuantity = () => {
@@ -66,15 +145,26 @@ const ProductDetail = () => {
       // Add product to cart with quantity
       for (let i = 0; i < quantity; i++) {
         addToCart({
-          id: product.id,
+          id: product.id.toString(),
           name: product.name,
           price: product.price,
           image: product.image,
           category: product.category
         });
       }
+      
+      // Show toast notification
+      toast({
+        title: "Zum Warechorb hinzuegfüegt",
+        description: `${quantity}x ${product.name}`,
+      });
     }
   };
+  
+  // Find related products (same category, excluding current product)
+  const relatedProducts = products
+    .filter(p => p.category === product?.category && p.id.toString() !== id)
+    .slice(0, 4);
   
   if (!product) {
     return (
@@ -114,6 +204,10 @@ const ProductDetail = () => {
                 src={product.image} 
                 alt={product.name} 
                 className="w-full h-auto object-cover aspect-square"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png';
+                }}
               />
             </div>
             
@@ -188,6 +282,38 @@ const ProductDetail = () => {
               </div>
             </div>
           </div>
+          
+          {/* Related products section */}
+          {relatedProducts.length > 0 && (
+            <div className="mt-16">
+              <h2 className="text-2xl font-bold text-brings-dark mb-6">Das chönt dir au gfalle</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                {relatedProducts.map(relatedProduct => (
+                  <Link 
+                    key={relatedProduct.id} 
+                    to={`/product/${relatedProduct.id}`}
+                    className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
+                  >
+                    <div className="relative h-40">
+                      <img 
+                        src={relatedProduct.image} 
+                        alt={relatedProduct.name} 
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png';
+                        }}
+                      />
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-medium text-gray-800">{relatedProduct.name}</h3>
+                      <p className="font-bold text-brings-primary mt-1">CHF {relatedProduct.price.toFixed(2)}</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </main>
       

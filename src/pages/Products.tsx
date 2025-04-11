@@ -6,62 +6,64 @@ import { Button } from '@/components/ui/button';
 import { Search, Filter, ShoppingBag } from 'lucide-react';
 import PromoBanner from '../components/PromoBanner';
 import { useCart } from '../contexts/CartContext';
+import { Link } from 'react-router-dom';
+import ProductCard from '../components/ProductCard';
 
 // Product data
 const products = [
   {
     id: 1,
     name: 'Zweifel Chips Paprika',
-    image: 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/zweifel-paprika-155g-550_600x.jpg',
     price: 5.90,
     category: 'chips'
   },
   {
     id: 2,
     name: 'Coca Cola 0.5L',
-    image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/coca-cola-classic-500ml-787_600x.jpg',
     price: 2.50,
     category: 'drinks'
   },
   {
     id: 3,
     name: 'Rivella Rot 0.5L',
-    image: 'https://images.unsplash.com/photo-1625772299848-391b6a87d7b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/rivella-rot-500ml-787_600x.jpg',
     price: 2.80,
     category: 'drinks'
   },
   {
     id: 4,
     name: 'Kägi Fret Mini',
-    image: 'https://images.unsplash.com/photo-1583527853922-60e8bf9d1a3f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/kagi-fret-mini-165g-250_600x.jpg',
     price: 3.90,
     category: 'sweets'
   },
   {
     id: 5,
     name: 'Red Bull Energy Drink',
-    image: 'https://images.unsplash.com/photo-1613577075905-399c90fabde7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/red-bull-energy-drink-250ml-787_600x.jpg',
     price: 3.50,
     category: 'energy'
   },
   {
     id: 6,
     name: 'Zweifel Chips Nature',
-    image: 'https://images.unsplash.com/photo-1613919113640-25732ec5e61f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/zweifel-nature-155g-550_600x.jpg',
     price: 5.90,
     category: 'chips'
   },
   {
     id: 7,
     name: 'Feldschlösschen Bier',
-    image: 'https://images.unsplash.com/photo-1608270586620-248524c67de9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/feldschlosschen-original-500ml-787_600x.jpg',
     price: 3.90,
     category: 'alcohol'
   },
   {
     id: 8,
     name: 'Ovomaltine Schokolade',
-    image: 'https://images.unsplash.com/photo-1614088685112-0e760536a695?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/cailler-milch-1_600x.jpg',
     price: 2.90,
     category: 'sweets'
   },
@@ -77,22 +79,45 @@ const categories = [
   { id: 'energy', name: 'Energy Drinks', icon: '⚡' },
 ];
 
+// Get products from localStorage if available
+const getStoredProducts = () => {
+  try {
+    const storedProducts = localStorage.getItem('adminProducts');
+    const parsedProducts = storedProducts ? JSON.parse(storedProducts) : [];
+    return [...products, ...parsedProducts];
+  } catch (error) {
+    console.error('Error loading products from localStorage:', error);
+    return products;
+  }
+};
+
 const Products = () => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [filteredProducts, setFilteredProducts] = useState(products);
+  const [allProducts, setAllProducts] = useState(getStoredProducts());
+  const [filteredProducts, setFilteredProducts] = useState(allProducts);
   const { addToCart } = useCart();
   
-  // Filter products whenever search term or category changes
+  // Update products when localStorage changes
   useEffect(() => {
-    const filtered = products.filter((product) => {
+    const handleStorageChange = () => {
+      setAllProducts(getStoredProducts());
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+  
+  // Filter products whenever search term, category, or all products changes
+  useEffect(() => {
+    const filtered = allProducts.filter((product) => {
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesCategory = activeCategory === 'all' || product.category === activeCategory;
       return matchesSearch && matchesCategory;
     });
     
     setFilteredProducts(filtered);
-  }, [searchTerm, activeCategory]);
+  }, [searchTerm, activeCategory, allProducts]);
 
   // Handle product add to cart
   const handleAddToCart = (product: typeof products[0]) => {
@@ -160,11 +185,17 @@ const Products = () => {
             {filteredProducts.map((product) => (
               <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 group">
                 <div className="relative overflow-hidden">
-                  <img 
-                    src={product.image} 
-                    alt={product.name} 
-                    className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105" 
-                  />
+                  <Link to={`/product/${product.id}`}>
+                    <img 
+                      src={product.image} 
+                      alt={product.name} 
+                      className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png';
+                      }}
+                    />
+                  </Link>
                   <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <Button 
                       variant="default" 
@@ -177,7 +208,9 @@ const Products = () => {
                   </div>
                 </div>
                 <div className="p-4">
-                  <h3 className="font-medium text-gray-800">{product.name}</h3>
+                  <Link to={`/product/${product.id}`}>
+                    <h3 className="font-medium text-gray-800 hover:text-brings-primary transition-colors">{product.name}</h3>
+                  </Link>
                   <div className="flex items-center justify-between mt-2">
                     <span className="font-bold text-brings-dark">CHF {product.price.toFixed(2)}</span>
                     <Button 

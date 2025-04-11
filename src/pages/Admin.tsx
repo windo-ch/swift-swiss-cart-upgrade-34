@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Button } from '@/components/ui/button';
@@ -10,7 +10,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Plus, Trash2, Edit, Search, Image } from 'lucide-react';
+import { Plus, Trash2, Edit, Search, Image, Save } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 // Define a strict product type
@@ -22,6 +22,7 @@ interface Product {
   category: string;
   description: string;
   weight: string;
+  ingredients?: string;
 }
 
 // Mock products data
@@ -30,29 +31,32 @@ const initialProducts: Product[] = [
   {
     id: '1',
     name: 'Zweifel Chips Paprika',
-    image: 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/zweifel-paprika-155g-550_600x.jpg',
     price: 5.90,
     category: 'chips',
     description: 'Die beliebte Zweifel Chips mit Paprika-Gschmack. Perfekt für de Film-Abig oder es gemütlichs Zämme-Sitze mit Fründe.',
     weight: '175g',
+    ingredients: 'Kartoffeln, Sonnenblumenöl, Paprika-Gewürz (Paprika, Salz, Zucker, Gewürze), Speisesalz.'
   },
   {
     id: '2',
     name: 'Coca Cola 0.5L',
-    image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/coca-cola-classic-500ml-787_600x.jpg',
     price: 2.50,
     category: 'drinks',
     description: 'Die klassischi Coca-Cola. Erfrischend und perfekt für unterwegs.',
     weight: '500ml',
+    ingredients: 'Wasser, Zucker, Kohlensäure, Farbstoff E150d, Säuerungsmittel Phosphorsäure, natürliches Aroma, Koffein.'
   },
   {
     id: '3',
     name: 'Rivella Rot 0.5L',
-    image: 'https://images.unsplash.com/photo-1625772299848-391b6a87d7b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+    image: 'https://brings-delivery.ch/cdn/shop/products/rivella-rot-500ml-787_600x.jpg',
     price: 2.80,
     category: 'drinks',
     description: 'Rivella Rot - Das Original. Das beliebte Schwizer Getränk us Milchserum.',
     weight: '500ml',
+    ingredients: 'Wasser, Milchserum, Zucker, Kohlensäure, Säuerungsmittel: Zitronensäure, Aromen.'
   }
 ];
 
@@ -74,15 +78,41 @@ const productSchema = z.object({
   description: z.string().min(10, { message: 'Beschribig muess mindestens 10 Zeiche ha' }),
   image: z.string().url({ message: 'Bitte gib e gültigi URL für s Bild i' }),
   weight: z.string().min(1, { message: 'Bitte gib s Gwicht/Inhalt a' }),
+  ingredients: z.string().optional(),
 });
 
 type ProductFormValues = z.infer<typeof productSchema>;
 
+// Get products from localStorage
+const getStoredAdminProducts = (): Product[] => {
+  try {
+    const stored = localStorage.getItem('adminProducts');
+    return stored ? JSON.parse(stored) : [];
+  } catch (error) {
+    console.error('Error loading admin products:', error);
+    return [];
+  }
+};
+
 const Admin = () => {
-  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [products, setProducts] = useState<Product[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const { toast } = useToast();
+  
+  // Load products when component mounts
+  useEffect(() => {
+    const adminProducts = getStoredAdminProducts();
+    setProducts(adminProducts);
+  }, []);
+  
+  // Save products to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('adminProducts', JSON.stringify(products));
+    
+    // Trigger storage event to notify other components
+    window.dispatchEvent(new Event('storage'));
+  }, [products]);
   
   // Initialize form
   const form = useForm<ProductFormValues>({
@@ -94,6 +124,7 @@ const Admin = () => {
       description: '',
       image: '',
       weight: '',
+      ingredients: '',
     },
   });
   
@@ -116,7 +147,8 @@ const Admin = () => {
             category: data.category,
             description: data.description,
             image: data.image,
-            weight: data.weight
+            weight: data.weight,
+            ingredients: data.ingredients || ''
           } : product
         )
       );
@@ -135,7 +167,8 @@ const Admin = () => {
         category: data.category,
         description: data.description,
         image: data.image,
-        weight: data.weight
+        weight: data.weight,
+        ingredients: data.ingredients || 'Keine Angaben zu Zutaten verfügbar.'
       };
       
       setProducts(prevProducts => [...prevProducts, newProduct]);
@@ -174,13 +207,46 @@ const Admin = () => {
     form.reset();
     setIsEditing(false);
   };
+
+  // Export all products
+  const handleExportProducts = () => {
+    const exportData = JSON.stringify(products, null, 2);
+    const blob = new Blob([exportData], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'brings_produkte.json';
+    document.body.appendChild(a);
+    a.click();
+    
+    // Cleanup
+    URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+    
+    toast({
+      title: "Produkt exportiert",
+      description: "Alli Produkt sind erfolgrich als JSON exportiert worde.",
+      duration: 3000,
+    });
+  };
   
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       
       <main className="flex-grow container mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-8">Produkt Verwalitig</h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-2xl font-bold">Produkt Verwalitig</h1>
+          <Button 
+            variant="outline" 
+            onClick={handleExportProducts}
+            className="flex items-center"
+          >
+            <Save size={16} className="mr-2" />
+            Produkt exportiere
+          </Button>
+        </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Product form */}
@@ -296,6 +362,24 @@ const Admin = () => {
                     )}
                   />
                   
+                  <FormField
+                    control={form.control}
+                    name="ingredients"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Zuetate (optional)</FormLabel>
+                        <FormControl>
+                          <Textarea 
+                            placeholder="Zuetate vom Produkt..." 
+                            className="resize-none min-h-[80px]"
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
                   <div className="flex gap-2 pt-2">
                     {isEditing ? (
                       <>
@@ -322,7 +406,7 @@ const Admin = () => {
           <div className="lg:col-span-2">
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold">Alli Produkt</h2>
+                <h2 className="text-xl font-semibold">Alli Produkt ({products.length})</h2>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
                   <Input
@@ -360,7 +444,15 @@ const Admin = () => {
                             <div className="flex items-center">
                               <div className="flex-shrink-0 h-10 w-10">
                                 {product.image ? (
-                                  <img className="h-10 w-10 rounded-md object-cover" src={product.image} alt={product.name} />
+                                  <img 
+                                    className="h-10 w-10 rounded-md object-cover" 
+                                    src={product.image} 
+                                    alt={product.name}
+                                    onError={(e) => {
+                                      const target = e.target as HTMLImageElement;
+                                      target.src = 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png';
+                                    }} 
+                                  />
                                 ) : (
                                   <div className="h-10 w-10 rounded-md bg-gray-200 flex items-center justify-center">
                                     <Image size={16} className="text-gray-500" />
