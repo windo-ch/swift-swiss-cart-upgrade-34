@@ -24,7 +24,7 @@ const Navbar = () => {
             <img 
               src="/lovable-uploads/e4d3037b-5d79-4749-a7ff-ea9a4c991cbb.png" 
               alt="Brings Logo" 
-              className="h-12"  {/* Increased height from h-8 to h-12 */}
+              className="h-12" /* Increased height from h-8 to h-12 */
             />
             {isAdult && (
               <span className="ml-2 text-xs font-bold bg-red-500 text-white px-1.5 py-0.5 rounded">18+</span>
