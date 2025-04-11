@@ -4,20 +4,20 @@ import { Clock, Truck, Tag } from 'lucide-react';
 
 const PromoBanner = () => {
   return (
-    <div className="bg-shop-dark text-white py-3">
+    <div className="bg-brings-dark text-white py-3">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="flex items-center justify-center">
-            <Truck size={20} className="mr-2 text-shop-secondary" />
-            <span>Gratis Lieferig ab CHF 50</span>
+            <Truck size={20} className="mr-2 text-brings-secondary" />
+            <span className="font-medium text-white">Gratis Lieferig ab CHF 50</span>
           </div>
           <div className="flex items-center justify-center">
-            <Clock size={20} className="mr-2 text-shop-secondary" />
-            <span>Glichtagsliferig möglich</span>
+            <Clock size={20} className="mr-2 text-brings-secondary" />
+            <span className="font-medium text-white">Glichtagsliferig möglich</span>
           </div>
           <div className="flex items-center justify-center">
-            <Tag size={20} className="mr-2 text-shop-secondary" />
-            <span>Nüi Kunden: 15% Rabatt uf die ersti Bstellig</span>
+            <Tag size={20} className="mr-2 text-brings-secondary" />
+            <span className="font-medium text-white">Nüi Kunden: 15% Rabatt uf die ersti Bstellig</span>
           </div>
         </div>
       </div>
