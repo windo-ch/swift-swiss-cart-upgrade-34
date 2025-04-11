@@ -6,6 +6,7 @@ import Footer from '../components/Footer';
 import { Button } from '@/components/ui/button';
 import { ShoppingBag, ChevronLeft, Minus, Plus, Heart } from 'lucide-react';
 import PromoBanner from '../components/PromoBanner';
+import { useCart } from '../contexts/CartContext';
 
 // Product data - this would normally come from an API
 const products = [
@@ -44,6 +45,7 @@ const products = [
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [quantity, setQuantity] = useState(1);
+  const { addToCart } = useCart();
   
   // Find the product by id
   const product = products.find(p => p.id === id);
@@ -57,6 +59,21 @@ const ProductDetail = () => {
   
   const increaseQuantity = () => {
     setQuantity(quantity + 1);
+  };
+  
+  const handleAddToCart = () => {
+    if (product) {
+      // Add product to cart with quantity
+      for (let i = 0; i < quantity; i++) {
+        addToCart({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          category: product.category
+        });
+      }
+    }
   };
   
   if (!product) {
@@ -147,7 +164,10 @@ const ProductDetail = () => {
               
               {/* Add to cart button */}
               <div className="flex gap-3">
-                <Button className="bg-brings-primary hover:bg-brings-primary/90 text-white w-full py-6">
+                <Button 
+                  className="bg-brings-primary hover:bg-brings-primary/90 text-white w-full py-6"
+                  onClick={handleAddToCart}
+                >
                   <ShoppingBag className="mr-2" size={20} />
                   In Warechorb
                 </Button>

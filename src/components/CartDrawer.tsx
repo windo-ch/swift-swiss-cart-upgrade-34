@@ -3,6 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Trash2, Plus, Minus, X, ShoppingBag } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
+import { Link } from 'react-router-dom';
 
 const CartDrawer: React.FC = () => {
   const { 
@@ -126,9 +127,11 @@ const CartDrawer: React.FC = () => {
                   </p>
                 </div>
                 <div className="space-y-3">
-                  <Button className="w-full bg-brings-primary hover:bg-brings-primary/90">
-                    Zur Kasse
-                  </Button>
+                  <Link to="/checkout" onClick={() => setIsCartOpen(false)}>
+                    <Button className="w-full bg-brings-primary hover:bg-brings-primary/90">
+                      Zur Kasse
+                    </Button>
+                  </Link>
                   <Button 
                     variant="outline" 
                     className="w-full border-brings-primary text-brings-primary hover:bg-brings-primary/10"

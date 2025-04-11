@@ -4,6 +4,8 @@ import { ChevronLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import CategorySection from './CategorySection';
 import FeaturedProducts from './FeaturedProducts';
+import { useCart } from '../contexts/CartContext';
+import { Link } from 'react-router-dom';
 
 interface ProductBrowsingProps {
   city: string;
@@ -33,18 +35,28 @@ const formatDistrict = (district: string): string => {
 
 const ProductBrowsing: React.FC<ProductBrowsingProps> = ({ city, district, onBack }) => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const { totalItems } = useCart();
   const formattedDistrict = formatDistrict(district);
   const formattedCity = city.charAt(0).toUpperCase() + city.slice(1);
   
   return (
     <div>
-      <div className="flex items-center mb-6">
-        <Button variant="ghost" size="sm" onClick={onBack} className="mr-2 text-brings-dark hover:text-brings-primary">
-          <ChevronLeft size={16} className="mr-1" /> Zrügg
-        </Button>
-        <h2 className="text-xl font-semibold">
-          Produkt usswähle
-        </h2>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center">
+          <Button variant="ghost" size="sm" onClick={onBack} className="mr-2 text-brings-dark hover:text-brings-primary">
+            <ChevronLeft size={16} className="mr-1" /> Zrügg
+          </Button>
+          <h2 className="text-xl font-semibold">
+            Produkt usswähle
+          </h2>
+        </div>
+        {totalItems > 0 && (
+          <Link to="/checkout">
+            <Button className="bg-brings-primary hover:bg-brings-primary/90">
+              Zur Kasse ({totalItems})
+            </Button>
+          </Link>
+        )}
       </div>
       
       <div className="bg-gradient-to-r from-brings-dark to-brings-dark/90 text-white p-6 rounded-lg mb-8">
@@ -69,6 +81,14 @@ const ProductBrowsing: React.FC<ProductBrowsingProps> = ({ city, district, onBac
       {/* Products Display Section */}
       <div>
         <FeaturedProducts />
+      </div>
+      
+      <div className="mt-8 flex justify-center">
+        <Link to="/checkout">
+          <Button className="bg-brings-primary hover:bg-brings-primary/90 px-8 py-6 text-lg">
+            Zur Kasse gah
+          </Button>
+        </Link>
       </div>
     </div>
   );

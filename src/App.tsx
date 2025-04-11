@@ -14,6 +14,8 @@ import NotFound from "./pages/NotFound";
 import Dateschutz from "./pages/Dateschutz";
 import AGB from "./pages/AGB";
 import Impressum from "./pages/Impressum";
+import Checkout from "./pages/Checkout";
+import Admin from "./pages/Admin";
 import { AgeVerificationProvider } from "./contexts/AgeVerificationContext";
 import { CartProvider } from "./contexts/CartContext";
 import InitialLoadingScreen from "./components/InitialLoadingScreen";
@@ -38,6 +40,8 @@ const App = () => (
               <Route path="/product/:id" element={<ProductDetail />} />
               <Route path="/categories" element={<Categories />} />
               <Route path="/about" element={<About />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/admin" element={<Admin />} />
               <Route path="/dateschutz" element={<Dateschutz />} />
               <Route path="/agb" element={<AGB />} />
               <Route path="/impressum" element={<Impressum />} />
