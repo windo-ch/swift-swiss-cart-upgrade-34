@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Plus } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { useAdmin, Product } from '@/contexts/AdminContext';
+import ImageUpload from './ImageUpload';
 
 // Available categories
 const categories = [
@@ -27,7 +27,7 @@ const productSchema = z.object({
   price: z.coerce.number().min(0.1, { message: 'Priis muess grösser als 0 si' }),
   category: z.string({ required_error: 'Bitte wähl e Kategorie us' }),
   description: z.string().min(10, { message: 'Beschribig muess mindestens 10 Zeiche ha' }),
-  image: z.string().url({ message: 'Bitte gib e gültigi URL für s Bild i' }),
+  image: z.string().min(1, { message: 'Bitte lad es Bild ufe' }),
   weight: z.string().min(1, { message: 'Bitte gib s Gwicht/Inhalt a' }),
   ingredients: z.string().optional(),
 });
@@ -59,11 +59,10 @@ const AdminProductForm = ({ initialData, onCancel }: AdminProductFormProps) => {
 
   const onSubmit = (data: ProductFormValues) => {
     if (isEditing && initialData) {
-      // For updating, we need to include the id from initialData
       updateProduct({
         ...data,
         id: initialData.id,
-      } as Product); // Cast to Product since we know all required fields are present
+      } as Product);
       
       toast({
         title: "Produkt aktualisiert",
@@ -71,7 +70,6 @@ const AdminProductForm = ({ initialData, onCancel }: AdminProductFormProps) => {
         duration: 3000,
       });
     } else {
-      // For adding a new product, we properly type it as Omit<Product, "id">
       addProduct(data as Omit<Product, "id">);
       
       toast({
@@ -166,9 +164,12 @@ const AdminProductForm = ({ initialData, onCancel }: AdminProductFormProps) => {
             name="image"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Bild URL</FormLabel>
+                <FormLabel>Produktbild</FormLabel>
                 <FormControl>
-                  <Input placeholder="https://example.com/image.jpg" {...field} />
+                  <ImageUpload
+                    onImageUploaded={(url) => field.onChange(url)}
+                    existingImageUrl={field.value}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

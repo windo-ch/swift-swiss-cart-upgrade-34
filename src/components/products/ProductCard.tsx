@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -23,18 +22,22 @@ const ProductCard = ({ product }: ProductCardProps) => {
     });
   };
 
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const target = e.target as HTMLImageElement;
+    target.src = 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png';
+    target.onerror = null; // Prevent infinite loop if placeholder also fails
+  };
+
   return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 group">
+    <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow group">
       <div className="relative overflow-hidden">
         <Link to={`/product/${product.id}`}>
           <img 
             src={product.image} 
             alt={product.name} 
             className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.src = 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png';
-            }}
+            onError={handleImageError}
+            loading="lazy"
           />
         </Link>
         {product.ageRestricted && (
