@@ -71,7 +71,10 @@ const ProductCard = ({
             src={hasImageError ? placeholderImage : productImage} 
             alt={productName} 
             className={`w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105 ${isOutOfStock ? 'opacity-50' : ''}`}
-            onError={() => setHasImageError(true)}
+            onError={() => {
+              console.error(`Error loading product image: ${productImage} for ${productName}`);
+              setHasImageError(true);
+            }}
             loading="lazy"
           />
         </Link>

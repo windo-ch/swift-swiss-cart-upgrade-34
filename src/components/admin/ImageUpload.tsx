@@ -12,7 +12,9 @@ interface ImageUploadProps {
 
 const ImageUpload = ({ onImageUploaded, existingImageUrl }: ImageUploadProps) => {
   const [isUploading, setIsUploading] = useState(false);
+  const [hasImageError, setHasImageError] = useState(false);
   const { toast } = useToast();
+  const placeholderImage = 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png';
 
   const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -24,20 +26,29 @@ const ImageUpload = ({ onImageUploaded, existingImageUrl }: ImageUploadProps) =>
       // Create a unique file name
       const fileExt = file.name.split('.').pop();
       const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
-      const filePath = `${fileName}`;
+      const filePath = fileName;
 
+      console.log("Uploading file to Supabase:", fileName);
+      
       // Upload the file to Supabase storage
       const { data, error } = await supabase.storage
         .from('product-images')
         .upload(filePath, file);
 
-      if (error) throw error;
+      if (error) {
+        console.error("Supabase upload error:", error);
+        throw error;
+      }
+
+      console.log("Upload successful, data:", data);
 
       // Get the public URL
       const { data: { publicUrl } } = supabase.storage
         .from('product-images')
         .getPublicUrl(filePath);
 
+      console.log("Generated public URL:", publicUrl);
+      
       onImageUploaded(publicUrl);
       
       toast({
@@ -61,12 +72,12 @@ const ImageUpload = ({ onImageUploaded, existingImageUrl }: ImageUploadProps) =>
       {existingImageUrl && (
         <div className="relative w-full h-40 bg-gray-100 rounded-lg overflow-hidden">
           <img
-            src={existingImageUrl}
+            src={hasImageError ? placeholderImage : existingImageUrl}
             alt="Product preview"
             className="w-full h-full object-cover"
             onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.src = 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png';
+              console.error(`Error loading image preview: ${existingImageUrl}`);
+              setHasImageError(true);
             }}
           />
         </div>

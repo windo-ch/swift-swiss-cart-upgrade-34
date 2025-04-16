@@ -16,7 +16,7 @@ export const getProductImageUrl = (imageName: string): string => {
     return imageName;
   }
   
-  // Construct Supabase storage URL with proper format, avoiding double slashes
+  // Construct Supabase storage URL with proper format
   return `${SUPABASE_URL}/storage/v1/object/public/${DEFAULT_BUCKET}/${imageName.replace(/^\/+/, '')}`;
 };
 
@@ -41,7 +41,7 @@ export const getStoredProducts = (): Product[] => {
           name: product.name,
           price: typeof product.price === 'number' ? product.price : parseFloat(String(product.price)),
           category: product.category,
-          image: getProductImageUrl(product.image), // Properly format image URLs
+          image: product.image, // Do not modify image URLs here as they should be correct already
           description: product.description || '',
           weight: product.weight || '',
           ingredients: product.ingredients || '',
@@ -59,10 +59,7 @@ export const getStoredProducts = (): Product[] => {
     const newStoredProducts = localStorage.getItem('adminProducts');
     if (newStoredProducts) {
       const newProducts = JSON.parse(newStoredProducts);
-      return newProducts.map((product: Product) => ({
-        ...product,
-        image: getProductImageUrl(product.image), // Properly format image URLs
-      }));
+      return newProducts;
     }
     
     // Fallback to an empty array if still no products

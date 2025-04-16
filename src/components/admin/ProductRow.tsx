@@ -68,7 +68,10 @@ const ProductRow = ({ product, onEdit, onDelete }: ProductRowProps) => {
                 className="h-10 w-10 rounded-md object-cover" 
                 src={hasImageError ? placeholderImage : product.image} 
                 alt={product.name}
-                onError={() => setHasImageError(true)}
+                onError={() => {
+                  console.error(`Error loading admin product image: ${product.image} for ${product.name}`);
+                  setHasImageError(true);
+                }}
                 loading="lazy"
               />
             ) : (
