@@ -1,18 +1,18 @@
 
 import React, { useState } from 'react';
 import { ChevronRight } from 'lucide-react';
-
-const categories = [
-  { id: 'chips', name: 'Chips & Snacks', icon: '🍿' },
-  { id: 'drinks', name: 'Getränk', icon: '🥤' },
-  { id: 'sweets', name: 'Süssigkeite', icon: '🍫' },
-  { id: 'alcohol', name: 'Alkohol', icon: '🍺' },
-  { id: 'energy', name: 'Energy Drinks', icon: '⚡' },
-  { id: 'party', name: 'Party Supplies', icon: '🎉' },
-];
+import { Link, useNavigate } from 'react-router-dom';
+import { categories } from '../data/products';
 
 const CategorySection = () => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const navigate = useNavigate();
+  
+  const handleCategoryClick = (categoryId: string) => {
+    setActiveCategory(categoryId);
+    // Navigate to products page with the selected category as a query parameter
+    navigate(`/products?category=${categoryId}`);
+  };
   
   return (
     <section className="py-12 bg-brings-light">
@@ -26,7 +26,7 @@ const CategorySection = () => {
           {categories.map((category) => (
             <button
               key={category.id}
-              onClick={() => setActiveCategory(category.id)}
+              onClick={() => handleCategoryClick(category.id)}
               className={`category-card flex flex-col items-center justify-center p-6 rounded-lg transition-all duration-300 transform hover:scale-105 ${
                 activeCategory === category.id 
                   ? 'bg-brings-primary text-white shadow-md' 
@@ -40,10 +40,10 @@ const CategorySection = () => {
         </div>
         
         <div className="mt-8 text-center">
-          <button className="inline-flex items-center text-brings-primary hover:underline font-medium">
+          <Link to="/categories" className="inline-flex items-center text-brings-primary hover:underline font-medium">
             Alli Kategorie azeige
             <ChevronRight size={16} className="ml-1" />
-          </button>
+          </Link>
         </div>
       </div>
     </section>
