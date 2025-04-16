@@ -1,14 +1,4 @@
 
-import { Json } from "@/integrations/supabase/types";
-
-export interface OrderItem {
-  id: string;
-  product_id: string;
-  product_name: string;
-  quantity: number;
-  price: number;
-}
-
 export interface OrderAddress {
   firstName: string;
   lastName: string;
@@ -19,6 +9,16 @@ export interface OrderAddress {
   phone: string;
 }
 
+export interface OrderItem {
+  id: string;
+  order_id: string;
+  product_id: string;
+  product_name: string;
+  price: number;
+  quantity: number;
+  created_at?: string;
+}
+
 export interface Order {
   id: string;
   user_id: string;
@@ -26,12 +26,10 @@ export interface Order {
   delivery_fee: number;
   discount_amount: number;
   delivery_address: OrderAddress;
-  status: 'pending' | 'in_delivery' | 'delivered';
+  status: string;
   created_at: string;
-  updated_at?: string;
+  updated_at: string;
   payment_method: string;
-  estimated_delivery_time?: string;
+  estimated_delivery_time: string | null;
   order_items: OrderItem[];
-  delivery_photo?: string;
-  marketing_consent?: boolean;
 }

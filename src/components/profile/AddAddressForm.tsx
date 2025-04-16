@@ -59,7 +59,7 @@ export const AddAddressForm = ({ onAddressAdded, onCancel }: AddAddressFormProps
       const { count, error: countError } = await supabase
         .from('user_addresses')
         .select('*', { count: 'exact', head: true })
-        .eq('user_id', user.id);
+        .eq('user_id', user.id) as { count: number, error: any };
       
       if (countError) throw countError;
       
@@ -76,12 +76,11 @@ export const AddAddressForm = ({ onAddressAdded, onCancel }: AddAddressFormProps
           city: data.city,
           is_default: isFirstAddress, // Set as default if it's the first address
         })
-        .select()
-        .single();
+        .select() as { data: any, error: any };
       
       if (error) throw error;
       
-      onAddressAdded(newAddress);
+      onAddressAdded(newAddress[0]);
     } catch (error) {
       console.error('Error adding address:', error);
       toast({

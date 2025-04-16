@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -9,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, User, MapPin, Package, History, CreditCard } from 'lucide-react';
+import { Loader2, User, MapPin, Package, History } from 'lucide-react';
 import { OrderCard } from '@/components/profile/OrderCard';
 import { AddressCard } from '@/components/profile/AddressCard';
 import { AddAddressForm } from '@/components/profile/AddAddressForm';
@@ -45,8 +44,7 @@ const Profile = () => {
             *,
             order_items (*)
           `)
-          .eq('user_id', user.id)
-          .order('created_at', { ascending: false });
+          .eq('user_id', user.id);
 
         if (ordersError) throw ordersError;
         
@@ -84,9 +82,7 @@ const Profile = () => {
             updated_at: order.updated_at,
             payment_method: order.payment_method,
             estimated_delivery_time: order.estimated_delivery_time,
-            order_items: order.order_items || [],
-            delivery_photo: order.delivery_photo,
-            marketing_consent: order.marketing_consent
+            order_items: order.order_items || []
           };
         });
 
@@ -96,8 +92,7 @@ const Profile = () => {
         const { data: addressesData, error: addressesError } = await supabase
           .from('user_addresses')
           .select('*')
-          .eq('user_id', user.id)
-          .order('is_default', { ascending: false });
+          .eq('user_id', user.id) as { data: any[], error: any };
 
         if (addressesError) throw addressesError;
         setAddresses(addressesData || []);
@@ -146,13 +141,13 @@ const Profile = () => {
       await supabase
         .from('user_addresses')
         .update({ is_default: false })
-        .eq('user_id', user?.id);
+        .eq('user_id', user?.id) as { error: any };
       
       // Then set the selected address as default
       const { error } = await supabase
         .from('user_addresses')
         .update({ is_default: true })
-        .eq('id', addressId);
+        .eq('id', addressId) as { error: any };
       
       if (error) throw error;
       
@@ -183,7 +178,7 @@ const Profile = () => {
       const { error } = await supabase
         .from('user_addresses')
         .delete()
-        .eq('id', addressId);
+        .eq('id', addressId) as { error: any };
       
       if (error) throw error;
       
