@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
-import { Form } from '@/components/ui/form';
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { Plus } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAdmin, Product } from '@/contexts/AdminContext';
@@ -115,4 +114,3 @@ const AdminProductForm = ({ initialData, onCancel }: AdminProductFormProps) => {
 };
 
 export default AdminProductForm;
-
