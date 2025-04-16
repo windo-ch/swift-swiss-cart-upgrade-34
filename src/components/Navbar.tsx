@@ -1,14 +1,17 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, ShoppingBag, Search } from 'lucide-react';
+import { Menu, X, ShoppingBag, Search, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAgeVerification } from '../contexts/AgeVerificationContext';
 import { useCart } from '../contexts/CartContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isAdult } = useAgeVerification();
   const { totalItems, setIsCartOpen } = useCart();
+  const { user, signOut } = useAuth();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -53,6 +56,22 @@ const Navbar = () => {
                 </span>
               )}
             </button>
+            {user ? (
+              <>
+                <Button
+                  variant="ghost"
+                  className="flex items-center gap-2"
+                  onClick={() => signOut()}
+                >
+                  <LogOut size={20} />
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <Link to="/auth">
+                <Button variant="ghost">Login</Button>
+              </Link>
+            )}
             <Link to="/order">
               <Button className="bg-brings-primary hover:bg-brings-primary/90 text-white">
                 Bstelle
@@ -95,6 +114,25 @@ const Navbar = () => {
               <Link to="/about" className="nav-link-mobile" onClick={() => setIsMenuOpen(false)}>
                 Über üs
               </Link>
+              {user ? (
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start"
+                  onClick={() => {
+                    signOut();
+                    setIsMenuOpen(false);
+                  }}
+                >
+                  <LogOut className="mr-2" size={20} />
+                  Logout
+                </Button>
+              ) : (
+                <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
+                  <Button variant="ghost" className="w-full justify-start">
+                    Login
+                  </Button>
+                </Link>
+              )}
               <Link to="/order" onClick={() => setIsMenuOpen(false)}>
                 <Button className="w-full bg-brings-primary hover:bg-brings-primary/90 text-white">
                   Jetzt Bstelle
