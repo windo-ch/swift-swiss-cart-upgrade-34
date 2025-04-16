@@ -1,9 +1,10 @@
-
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import PromoBanner from '../components/PromoBanner';
@@ -16,7 +17,6 @@ import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Link } from 'react-router-dom';
 
-// Form schema using zod
 const formSchema = z.object({
   firstName: z.string().min(2, { message: 'Vorname muess mindestens 2 Zeiche ha' }),
   lastName: z.string().min(2, { message: 'Nachname muess mindestens 2 Zeiche ha' }),
@@ -37,8 +37,9 @@ const Checkout = () => {
   const { cartItems, totalPrice, totalItems, clearCart } = useCart();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { user, hasAppliedDiscount } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // Initialize form
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -53,35 +54,90 @@ const Checkout = () => {
     },
   });
   
-  // Handle form submission
-  const onSubmit = (data: FormValues) => {
+  const onSubmit = async (data: FormValues) => {
     if (step === 'details') {
       setStep('payment');
-    } else {
-      // Here we would normally process the payment
-      // For now, just show a success message and redirect
+      return;
+    }
+
+    if (!user) {
       toast({
-        title: "Bstellig erfolgrich",
-        description: "Dini Bstellig isch bi üs igange und wird bald glieferet.",
-        duration: 5000,
+        title: "Fehler",
+        description: "Bitte melde dich a zum bestelle",
+        variant: "destructive",
       });
-      
-      // Clear cart
+      navigate('/auth');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const deliveryFee = totalPrice >= 50 ? 0 : 5.90;
+      const discountAmount = hasAppliedDiscount ? totalPrice * 0.10 : 0;
+      const finalTotal = totalPrice + deliveryFee - discountAmount;
+
+      const { data: order, error: orderError } = await supabase
+        .from('orders')
+        .insert({
+          user_id: user.id,
+          total_amount: finalTotal,
+          delivery_fee: deliveryFee,
+          discount_amount: discountAmount,
+          payment_method: data.paymentMethod,
+          delivery_address: {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            address: data.address,
+            city: data.city,
+            postalCode: data.postalCode,
+            email: data.email,
+            phone: data.phone,
+          },
+          status: 'pending',
+          estimated_delivery_time: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+        })
+        .select()
+        .single();
+
+      if (orderError) throw orderError;
+
+      const orderItems = cartItems.map(item => ({
+        order_id: order.id,
+        product_id: item.id,
+        product_name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+      }));
+
+      const { error: itemsError } = await supabase
+        .from('order_items')
+        .insert(orderItems);
+
+      if (itemsError) throw itemsError;
+
       clearCart();
-      
-      // Redirect to homepage
-      setTimeout(() => {
-        navigate('/');
-      }, 2000);
+      toast({
+        title: "Bstellig erfolgrich!",
+        description: "Du wirsch in Kürzi per E-Mail informiert.",
+      });
+
+      navigate('/');
+    } catch (error) {
+      console.error('Checkout error:', error);
+      toast({
+        title: "Fehler",
+        description: "Es isch öppis schiefgloffe. Bitte versuech's spöter nomal.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
-  
-  // Calculate delivery fee
+
   const deliveryFee = totalPrice >= 50 ? 0 : 5.90;
-  
-  // Calculate total with delivery
   const orderTotal = totalPrice + deliveryFee;
-  
+
   if (cartItems.length === 0) {
     return (
       <div className="min-h-screen flex flex-col">
@@ -103,7 +159,7 @@ const Checkout = () => {
       </div>
     );
   }
-  
+
   return (
     <div className="min-h-screen flex flex-col">
       <PromoBanner />
@@ -118,7 +174,6 @@ const Checkout = () => {
           <h1 className="text-2xl font-bold">Zur Kasse</h1>
         </div>
         
-        {/* Progress steps */}
         <div className="flex items-center justify-center mb-8">
           <div className="flex items-center">
             <div className="flex flex-col items-center">
@@ -138,7 +193,6 @@ const Checkout = () => {
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Checkout form */}
           <div className="lg:col-span-2">
             <div className="bg-white p-6 rounded-lg shadow-md">
               {step === 'details' ? (
@@ -317,8 +371,9 @@ const Checkout = () => {
                         <Button 
                           type="submit" 
                           className="w-full bg-brings-primary hover:bg-brings-primary/90"
+                          disabled={isSubmitting}
                         >
-                          Bstellig abschlüüsse
+                          {isSubmitting ? "Bstellig wird verarbeitet..." : "Bstellig abschlüüsse"}
                         </Button>
                       </div>
                     </form>
@@ -328,7 +383,6 @@ const Checkout = () => {
             </div>
           </div>
           
-          {/* Order summary */}
           <div className="lg:col-span-1">
             <div className="bg-white p-6 rounded-lg shadow-md">
               <h2 className="text-xl font-semibold mb-4">Din Bstellig</h2>
@@ -350,7 +404,6 @@ const Checkout = () => {
                 ))}
               </div>
               
-              {/* Order totals */}
               <div className="space-y-2 border-t pt-4">
                 <div className="flex justify-between">
                   <span>Zwischesumme</span>
@@ -366,7 +419,6 @@ const Checkout = () => {
                 </div>
               </div>
               
-              {/* Delivery info */}
               <div className="mt-6 bg-brings-light p-4 rounded-lg">
                 <div className="flex items-start">
                   <Truck className="text-brings-primary mr-3 flex-shrink-0 mt-1" size={20} />
