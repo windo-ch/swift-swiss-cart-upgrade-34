@@ -69,10 +69,23 @@ const OrderTrackingList = ({ orders, status }: OrderTrackingListProps) => {
   };
 
   const formatAddress = (address: any) => {
+    if (!address) return '';
+    
+    if (typeof address === 'string') {
+      try {
+        address = JSON.parse(address);
+      } catch (e) {
+        return 'Invalid address';
+      }
+    }
+
+    if (address.firstName) {
+      return `${address.firstName} ${address.lastName}, ${address.address}, ${address.city}`;
+    }
     if (address.street) {
       return `${address.street}, ${address.city}, ${address.postcode}`;
     }
-    return `${address.address}, ${address.city}, ${address.postalCode}`;
+    return 'Address information unavailable';
   };
 
   const handleViewDetails = (order: Order) => {

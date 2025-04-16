@@ -7,7 +7,7 @@ import Footer from '../components/Footer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import OrderTrackingList from '@/components/admin/OrderTrackingList';
 import { Loader2 } from 'lucide-react';
-import { Order } from '@/types/order';
+import { Order, OrderAddress } from '@/types/order';
 
 const AdminOrderTracking = () => {
   const { data: orders, isLoading, error } = useQuery({
@@ -24,10 +24,44 @@ const AdminOrderTracking = () => {
       if (error) throw error;
 
       // Transform the data to match our Order type
-      return data.map((order: any): Order => ({
-        ...order,
-        order_items: order.order_items || []
-      }));
+      return data.map((order: any): Order => {
+        let deliveryAddress: OrderAddress;
+        
+        if (typeof order.delivery_address === 'string') {
+          try {
+            deliveryAddress = JSON.parse(order.delivery_address);
+          } catch (e) {
+            deliveryAddress = {
+              firstName: 'Unknown',
+              lastName: 'Customer',
+              address: 'Unknown',
+              city: 'Unknown',
+              postalCode: 'Unknown',
+              email: 'unknown@example.com',
+              phone: 'Unknown'
+            };
+          }
+        } else {
+          deliveryAddress = order.delivery_address as OrderAddress;
+        }
+        
+        return {
+          id: order.id,
+          user_id: order.user_id,
+          total_amount: order.total_amount,
+          delivery_fee: order.delivery_fee || 0,
+          discount_amount: order.discount_amount || 0,
+          delivery_address: deliveryAddress,
+          status: order.status,
+          created_at: order.created_at,
+          updated_at: order.updated_at,
+          payment_method: order.payment_method,
+          estimated_delivery_time: order.estimated_delivery_time,
+          order_items: order.order_items || [],
+          delivery_photo: order.delivery_photo,
+          marketing_consent: order.marketing_consent
+        };
+      });
     }
   });
 
