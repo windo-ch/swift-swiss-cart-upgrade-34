@@ -28,7 +28,7 @@ export const getStoredProducts = (): Product[] => {
     // Convert store products to match admin product format
     const formattedStoreProducts = storeProducts.map(product => ({
       ...product,
-      id: product.id.toString(),
+      id: product.id.toString(), // Ensure id is always a string
       // Ensure image paths are properly formatted
       image: getProductImageUrl(product.image)
     }));
@@ -38,7 +38,7 @@ export const getStoredProducts = (): Product[] => {
     
     // Add or update with admin products
     adminProducts.forEach(adminProduct => {
-      const existingIndex = allProducts.findIndex(p => p.id === adminProduct.id);
+      const existingIndex = allProducts.findIndex(p => p.id.toString() === adminProduct.id.toString());
       if (existingIndex >= 0) {
         allProducts[existingIndex] = {
           ...adminProduct,

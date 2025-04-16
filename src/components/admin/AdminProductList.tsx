@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,6 +5,7 @@ import { Search, Edit, Trash2, Image, Save } from 'lucide-react';
 import { useAdmin } from '@/contexts/AdminContext';
 import { useToast } from '@/components/ui/use-toast';
 import { getStoredProducts } from '@/utils/product-utils';
+import { Product as GlobalProduct } from '@/types/product';
 
 interface AdminProductListProps {
   onEdit: (product: any) => void;
@@ -19,7 +19,14 @@ const AdminProductList = ({ onEdit }: AdminProductListProps) => {
   // Load products on mount to ensure we have the latest data
   useEffect(() => {
     const storedProducts = getStoredProducts();
-    const adminProducts = storedProducts.filter(p => p.id.toString().startsWith('admin-'));
+    // Convert the product type and filter for admin products
+    const adminProducts = storedProducts
+      .filter(p => p.id.toString().startsWith('admin-'))
+      .map(p => ({
+        ...p,
+        id: p.id.toString(), // Ensure id is always a string
+      }));
+      
     if (adminProducts.length > 0) {
       setProducts(adminProducts);
     }
@@ -136,7 +143,6 @@ const AdminProductList = ({ onEdit }: AdminProductListProps) => {
   );
 };
 
-// Separate component for product row to better handle image errors
 const ProductRow = ({ product, onEdit, onDelete }) => {
   const [hasImageError, setHasImageError] = useState(false);
   const placeholderImage = 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png';
