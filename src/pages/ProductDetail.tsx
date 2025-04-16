@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -7,16 +8,24 @@ import { ShoppingBag, ChevronLeft, Minus, Plus, Heart } from 'lucide-react';
 import PromoBanner from '../components/PromoBanner';
 import { useCart } from '../contexts/CartContext';
 import { useToast } from '@/components/ui/use-toast';
-import { products as dataProducts } from '../data/products';
+import { Product, products as dataProducts } from '../data/products';
+
+// Extend product type for admin products
+interface ExtendedProduct extends Product {
+  id: string | number;
+  ingredients: string;
+  weight: string;
+  description?: string;
+}
 
 // Get complete product list including admin-added products
-const getAllProducts = () => {
+const getAllProducts = (): ExtendedProduct[] => {
   try {
     const storedProducts = localStorage.getItem('adminProducts');
     const adminProducts = storedProducts ? JSON.parse(storedProducts) : [];
     
     // Map admin products to ensure they have all required fields
-    const formattedAdminProducts = adminProducts.map(product => ({
+    const formattedAdminProducts = adminProducts.map((product: any) => ({
       ...product,
       ingredients: product.ingredients || 'Keine Angaben zu Zutaten verfügbar.',
       weight: product.weight || 'Keine Angaben zum Gewicht verfügbar.'

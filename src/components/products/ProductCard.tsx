@@ -1,21 +1,19 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ShoppingBag, Shield } from 'lucide-react';
 import { useCart } from '../../contexts/CartContext';
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  category: string;
-  ageRestricted?: boolean;
-}
+import { Product } from '../../data/products';
 
 interface ProductCardProps {
-  product: Product;
+  product: {
+    id: number | string;
+    name: string;
+    price: number;
+    image: string;
+    category: string;
+    ageRestricted?: boolean;
+  };
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {

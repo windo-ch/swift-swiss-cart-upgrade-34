@@ -1,14 +1,32 @@
-
 // Product data
-export const products = [
-  // Original products
+export interface Product {
+  id: number;
+  name: string;
+  image: string;
+  price: number;
+  category: string;
+  ageRestricted: boolean;
+  isNew?: boolean;
+  isFeatured?: boolean;
+  ingredients?: string;
+  weight?: string;
+  description?: string;
+}
+
+// Products array with updated type
+export const products: Product[] = [
   {
     id: 1,
     name: 'Zweifel Chips Paprika',
     image: 'https://brings-delivery.ch/cdn/shop/products/zweifel-paprika-155g-550_600x.jpg',
     price: 5.90,
     category: 'chips',
-    ageRestricted: false
+    ageRestricted: false,
+    isNew: false,
+    isFeatured: true,
+    ingredients: 'Kartoffeln, Sonnenblumenöl, Paprika-Gewürz, Salz.',
+    weight: '155g',
+    description: 'Knusprige Kartoffelchips mit Paprika-Geschmack.'
   },
   {
     id: 2,
@@ -66,7 +84,6 @@ export const products = [
     category: 'sweets',
     ageRestricted: false
   },
-  // Soft Drinks
   {
     id: 9,
     name: 'Valser Prickelnd',
@@ -195,7 +212,6 @@ export const products = [
     category: 'drinks',
     ageRestricted: false
   },
-  // Snacks
   {
     id: 25,
     name: 'Zweifel Nature Chips',
@@ -284,7 +300,6 @@ export const products = [
     category: 'snacks',
     ageRestricted: false
   },
-  // Non-food
   {
     id: 36,
     name: 'Babywindel Gr.4 (8 Stk.)',
@@ -341,7 +356,6 @@ export const products = [
     category: 'non-food',
     ageRestricted: false
   },
-  // Smoking - Age restricted
   {
     id: 43,
     name: 'American Spirit Blue Tabak',
@@ -406,7 +420,6 @@ export const products = [
     category: 'tobacco',
     ageRestricted: true
   },
-  // Alcoholic Beverages - Age restricted
   {
     id: 51,
     name: 'Feldschlösschen Original 0.33L',
@@ -572,7 +585,7 @@ export const categories = [
   { id: 'non-food', name: 'Non-Food', icon: '🧻' },
   { id: 'tobacco', name: 'Tabak', icon: '🚬' },
   { id: 'alcohol', name: 'Alkohol', icon: '🍺' },
-  { id: 'spirits', name: 'Spirituose', icon: '🥃' },
+  { id: 'spirits', name: 'Spirituose', icon: '����' },
 ];
 
 // Local storage helper

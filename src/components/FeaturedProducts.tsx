@@ -4,9 +4,8 @@ import { Link } from 'react-router-dom';
 import ProductCard from './ProductCard';
 import { useAgeVerification } from '../contexts/AgeVerificationContext';
 import { Button } from '@/components/ui/button';
-import { products as dataProducts } from '../data/products';
+import { products as dataProducts, Product } from '../data/products';
 
-// We'll use the products directly from data/products.ts instead of redefining them here
 const FeaturedProducts = () => {
   const { isAdult } = useAgeVerification();
   
@@ -37,6 +36,7 @@ const FeaturedProducts = () => {
               category={product.category}
               isNew={product.isNew || false}
               isFeatured={product.isFeatured || false}
+              ageRestricted={product.ageRestricted}
             />
           ))}
         </div>
