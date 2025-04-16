@@ -1,6 +1,24 @@
 
 import { Product } from '../types/product';
 import { products as storeProducts } from '../data/products-data';
+import { supabase } from '../integrations/supabase/client';
+
+const SUPABASE_URL = "https://zbvdlkfnpufqfhrptfhz.supabase.co";
+const DEFAULT_BUCKET = 'product-images';
+
+export const getProductImageUrl = (imageName: string): string => {
+  if (!imageName) {
+    return 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png';
+  }
+  
+  // If it's already a full URL, return it
+  if (imageName.startsWith('http')) {
+    return imageName;
+  }
+  
+  // Construct Supabase storage URL
+  return `${SUPABASE_URL}/storage/v1/object/public/${DEFAULT_BUCKET}/${imageName}`;
+};
 
 export const getStoredProducts = (): Product[] => {
   try {
@@ -11,7 +29,8 @@ export const getStoredProducts = (): Product[] => {
     const formattedStoreProducts = storeProducts.map(product => ({
       ...product,
       id: product.id.toString(),
-      image: product.image || 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png'
+      // Use the getProductImageUrl helper for all images
+      image: getProductImageUrl(product.image)
     }));
     
     // Combine and deduplicate products based on ID
@@ -21,9 +40,15 @@ export const getStoredProducts = (): Product[] => {
     adminProducts.forEach(adminProduct => {
       const existingIndex = allProducts.findIndex(p => p.id === adminProduct.id);
       if (existingIndex >= 0) {
-        allProducts[existingIndex] = adminProduct;
+        allProducts[existingIndex] = {
+          ...adminProduct,
+          image: getProductImageUrl(adminProduct.image)
+        };
       } else {
-        allProducts.push(adminProduct);
+        allProducts.push({
+          ...adminProduct,
+          image: getProductImageUrl(adminProduct.image)
+        });
       }
     });
     
@@ -35,17 +60,3 @@ export const getStoredProducts = (): Product[] => {
   }
 };
 
-// Helper to add a URL prefix to image paths if needed
-export const getProductImageUrl = (imagePath: string): string => {
-  if (!imagePath) {
-    return 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png';
-  }
-  
-  // If it's already a full URL, return it
-  if (imagePath.startsWith('http')) {
-    return imagePath;
-  }
-  
-  // Handle relative paths (for future uploads)
-  return imagePath;
-};
