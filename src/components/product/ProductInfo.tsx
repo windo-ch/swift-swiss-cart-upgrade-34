@@ -40,12 +40,12 @@ const ProductInfo = ({ product, quantity, onQuantityChange }: ProductInfoProps) 
         <p className="text-brings-primary font-semibold text-xl mt-2">CHF {product.price.toFixed(2)}</p>
       </div>
       
-      <p className="text-gray-700">{product.description}</p>
+      <p className="text-gray-700">{product.description || 'Kei Beschribig verfüegbar'}</p>
       
       <div className="border-t border-b border-gray-200 py-4">
         <div className="flex justify-between text-sm text-gray-600">
           <span>Gwicht/Inhalt:</span>
-          <span className="font-medium">{product.weight}</span>
+          <span className="font-medium">{product.weight || 'N/A'}</span>
         </div>
         <div className="flex justify-between text-sm text-gray-600 mt-2">
           <span>Kategorie:</span>
@@ -53,10 +53,12 @@ const ProductInfo = ({ product, quantity, onQuantityChange }: ProductInfoProps) 
         </div>
       </div>
       
-      <div>
-        <h3 className="font-medium text-gray-800 mb-2">Zuetate:</h3>
-        <p className="text-sm text-gray-600">{product.ingredients}</p>
-      </div>
+      {product.ingredients && (
+        <div>
+          <h3 className="font-medium text-gray-800 mb-2">Zuetate:</h3>
+          <p className="text-sm text-gray-600">{product.ingredients}</p>
+        </div>
+      )}
       
       <div className="flex items-center space-x-4">
         <span className="text-gray-700">Anzahl:</span>

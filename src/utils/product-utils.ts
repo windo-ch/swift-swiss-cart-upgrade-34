@@ -16,7 +16,7 @@ export const getProductImageUrl = (imageName: string): string => {
     return imageName;
   }
   
-  // Construct Supabase storage URL
+  // Construct Supabase storage URL with proper format
   return `${SUPABASE_URL}/storage/v1/object/public/${DEFAULT_BUCKET}/${imageName}`;
 };
 
@@ -29,7 +29,7 @@ export const getStoredProducts = (): Product[] => {
     const formattedStoreProducts = storeProducts.map(product => ({
       ...product,
       id: product.id.toString(),
-      // Use the getProductImageUrl helper for all images
+      // Ensure image paths are properly formatted
       image: getProductImageUrl(product.image)
     }));
     

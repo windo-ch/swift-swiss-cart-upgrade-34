@@ -23,5 +23,17 @@ export const energyDrinks: Product[] = [
     ageRestricted: false,
     ingredients: 'Wasser, Säureregulator (Natriumcitrate, Magnesiumcarbonat), Kohlensäure, Zitronensäure, Taurin (0.4%), Süßungsmittel (Acesulfam K, Aspartam), Koffein (0.03%), Vitamine, Aromen, Farbstoffe.',
     weight: '250ml'
+  },
+  {
+    id: 21,
+    name: 'Arizona Green Tea',
+    image: 'Brings-delivery.ch-ArizonaGreenTea-300x300.png',
+    price: 3.50,
+    category: 'energy',
+    description: 'Arizona Green Tea with honey and ginseng',
+    ageRestricted: false,
+    ingredients: 'Wasser, Zucker, Honig, Grüner Tee, Ginseng, Zitronensäure, natürliche Aromen.',
+    weight: '500ml',
+    isNew: true
   }
 ];

@@ -1,19 +1,29 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, Edit, Trash2, Image, Save } from 'lucide-react';
 import { useAdmin } from '@/contexts/AdminContext';
 import { useToast } from '@/components/ui/use-toast';
+import { getStoredProducts } from '@/utils/product-utils';
 
 interface AdminProductListProps {
   onEdit: (product: any) => void;
 }
 
 const AdminProductList = ({ onEdit }: AdminProductListProps) => {
-  const { products, deleteProduct } = useAdmin();
+  const { products, deleteProduct, setProducts } = useAdmin();
   const [searchTerm, setSearchTerm] = useState('');
   const { toast } = useToast();
+
+  // Load products on mount to ensure we have the latest data
+  useEffect(() => {
+    const storedProducts = getStoredProducts();
+    const adminProducts = storedProducts.filter(p => p.id.toString().startsWith('admin-'));
+    if (adminProducts.length > 0) {
+      setProducts(adminProducts);
+    }
+  }, [setProducts]);
 
   // Filter products based on search term
   const filteredProducts = products.filter(product =>
@@ -99,59 +109,12 @@ const AdminProductList = ({ onEdit }: AdminProductListProps) => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredProducts.map((product) => (
-                <tr key={product.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0 h-10 w-10">
-                        {product.image ? (
-                          <img 
-                            className="h-10 w-10 rounded-md object-cover" 
-                            src={product.image} 
-                            alt={product.name}
-                            onError={(e) => {
-                              const target = e.target as HTMLImageElement;
-                              target.src = 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png';
-                            }} 
-                          />
-                        ) : (
-                          <div className="h-10 w-10 rounded-md bg-gray-200 flex items-center justify-center">
-                            <Image size={16} className="text-gray-500" />
-                          </div>
-                        )}
-                      </div>
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">{product.name}</div>
-                        <div className="text-sm text-gray-500">{product.weight}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                      {product.category}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    CHF {product.price.toFixed(2)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      onClick={() => onEdit(product)}
-                      className="text-brings-primary hover:text-brings-primary/80 mr-2"
-                    >
-                      <Edit size={16} />
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      onClick={() => handleDelete(product.id)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      <Trash2 size={16} />
-                    </Button>
-                  </td>
-                </tr>
+                <ProductRow 
+                  key={product.id} 
+                  product={product} 
+                  onEdit={onEdit} 
+                  onDelete={handleDelete} 
+                />
               ))}
             </tbody>
           </table>
@@ -170,6 +133,66 @@ const AdminProductList = ({ onEdit }: AdminProductListProps) => {
         </div>
       )}
     </div>
+  );
+};
+
+// Separate component for product row to better handle image errors
+const ProductRow = ({ product, onEdit, onDelete }) => {
+  const [hasImageError, setHasImageError] = useState(false);
+  const placeholderImage = 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png';
+
+  return (
+    <tr className="hover:bg-gray-50">
+      <td className="px-6 py-4 whitespace-nowrap">
+        <div className="flex items-center">
+          <div className="flex-shrink-0 h-10 w-10">
+            {product.image ? (
+              <img 
+                className="h-10 w-10 rounded-md object-cover" 
+                src={hasImageError ? placeholderImage : product.image} 
+                alt={product.name}
+                onError={() => setHasImageError(true)}
+                loading="lazy"
+              />
+            ) : (
+              <div className="h-10 w-10 rounded-md bg-gray-200 flex items-center justify-center">
+                <Image size={16} className="text-gray-500" />
+              </div>
+            )}
+          </div>
+          <div className="ml-4">
+            <div className="text-sm font-medium text-gray-900">{product.name}</div>
+            <div className="text-sm text-gray-500">{product.weight}</div>
+          </div>
+        </div>
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap">
+        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+          {product.category}
+        </span>
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+        CHF {product.price.toFixed(2)}
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+        <Button 
+          variant="ghost" 
+          size="sm"
+          onClick={() => onEdit(product)}
+          className="text-brings-primary hover:text-brings-primary/90 mr-2"
+        >
+          <Edit size={16} />
+        </Button>
+        <Button 
+          variant="ghost" 
+          size="sm"
+          onClick={() => onDelete(product.id)}
+          className="text-red-600 hover:text-red-800"
+        >
+          <Trash2 size={16} />
+        </Button>
+      </td>
+    </tr>
   );
 };
 
