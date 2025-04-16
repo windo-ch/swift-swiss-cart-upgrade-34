@@ -1,15 +1,20 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import OrderTrackingList from '@/components/admin/OrderTrackingList';
-import { Loader2 } from 'lucide-react';
+import { Loader2, RefreshCw } from 'lucide-react';
 import { Order, OrderAddress } from '@/types/order';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
 
 const AdminOrderTracking = () => {
-  const { data: orders, isLoading, error } = useQuery({
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const { toast } = useToast();
+  
+  const { data: orders, isLoading, error, refetch } = useQuery({
     queryKey: ['admin-orders'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -64,6 +69,27 @@ const AdminOrderTracking = () => {
     }
   });
 
+  const handleRefreshOrders = async () => {
+    setIsRefreshing(true);
+    try {
+      await refetch();
+      toast({
+        title: "Bestellungen aktualisiert",
+        description: "Die Bestellungsliste wurde erfolgreich aktualisiert.",
+        duration: 3000,
+      });
+    } catch (error) {
+      toast({
+        title: "Fehler",
+        description: "Fehler beim Aktualisieren der Bestellungen.",
+        duration: 3000,
+        variant: "destructive"
+      });
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <AdminLayout>
@@ -82,6 +108,13 @@ const AdminOrderTracking = () => {
       <AdminLayout>
         <div className="bg-red-50 p-4 rounded-md border border-red-200 text-red-700">
           <p>Fehler bim Lade vo de Bstellige. Bitte versucheds spöter nomal.</p>
+          <Button 
+            variant="outline" 
+            className="mt-2"
+            onClick={handleRefreshOrders}
+          >
+            Erneut versuchen
+          </Button>
         </div>
       </AdminLayout>
     );
@@ -89,39 +122,55 @@ const AdminOrderTracking = () => {
 
   return (
     <AdminLayout>
-      <Tabs defaultValue="pending">
-        <TabsList className="mb-6">
-          <TabsTrigger value="pending">Offe</TabsTrigger>
-          <TabsTrigger value="in_delivery">In Lieferig</TabsTrigger>
-          <TabsTrigger value="delivered">Abgschlossen</TabsTrigger>
-          <TabsTrigger value="all">Alli</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="pending">
-          <OrderTrackingList 
-            orders={orders?.filter(order => order.status === 'pending') || []} 
-            status="pending"
-          />
-        </TabsContent>
-        
-        <TabsContent value="in_delivery">
-          <OrderTrackingList 
-            orders={orders?.filter(order => order.status === 'in_delivery') || []} 
-            status="in_delivery"
-          />
-        </TabsContent>
-        
-        <TabsContent value="delivered">
-          <OrderTrackingList 
-            orders={orders?.filter(order => order.status === 'delivered') || []} 
-            status="delivered"
-          />
-        </TabsContent>
-        
-        <TabsContent value="all">
-          <OrderTrackingList orders={orders || []} status="all" />
-        </TabsContent>
-      </Tabs>
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-lg font-semibold">Bestellungen verfolgen</h2>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={handleRefreshOrders}
+            disabled={isRefreshing}
+            className="flex items-center gap-2"
+          >
+            <RefreshCw size={16} className={isRefreshing ? "animate-spin" : ""} />
+            Aktualisieren
+          </Button>
+        </div>
+
+        <Tabs defaultValue="pending" className="w-full">
+          <TabsList className="mb-6 w-full justify-start">
+            <TabsTrigger value="pending" className="flex-1 sm:flex-none">Offe</TabsTrigger>
+            <TabsTrigger value="in_delivery" className="flex-1 sm:flex-none">In Lieferig</TabsTrigger>
+            <TabsTrigger value="delivered" className="flex-1 sm:flex-none">Abgschlossen</TabsTrigger>
+            <TabsTrigger value="all" className="flex-1 sm:flex-none">Alli</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="pending">
+            <OrderTrackingList 
+              orders={orders?.filter(order => order.status === 'pending') || []} 
+              status="pending"
+            />
+          </TabsContent>
+          
+          <TabsContent value="in_delivery">
+            <OrderTrackingList 
+              orders={orders?.filter(order => order.status === 'in_delivery') || []} 
+              status="in_delivery"
+            />
+          </TabsContent>
+          
+          <TabsContent value="delivered">
+            <OrderTrackingList 
+              orders={orders?.filter(order => order.status === 'delivered') || []} 
+              status="delivered"
+            />
+          </TabsContent>
+          
+          <TabsContent value="all">
+            <OrderTrackingList orders={orders || []} status="all" />
+          </TabsContent>
+        </Tabs>
+      </div>
     </AdminLayout>
   );
 };

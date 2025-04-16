@@ -5,8 +5,22 @@ import { useToast } from '@/components/ui/use-toast';
 import SearchBar from './SearchBar';
 import ProductTable from './ProductTable';
 import { Product } from '@/types/product';
-import { Loader2 } from 'lucide-react';
+import { Loader2, SlidersHorizontal } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from '@/components/ui/select';
+import { categories } from '@/data/categories-data';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 interface AdminProductListProps {
   onEdit: (product: Product) => void;
@@ -15,8 +29,10 @@ interface AdminProductListProps {
 const AdminProductList = ({ onEdit }: AdminProductListProps) => {
   const { products, deleteProduct, refreshProducts, isLoading } = useAdmin();
   const [searchTerm, setSearchTerm] = useState('');
-  const { toast } = useToast();
   const [showRestricted, setShowRestricted] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [sortBy, setSortBy] = useState('name');
+  const { toast } = useToast();
 
   // Load products on mount to ensure we have the latest data
   useEffect(() => {
@@ -50,29 +66,43 @@ const AdminProductList = ({ onEdit }: AdminProductListProps) => {
     });
   };
 
-  // Filter products based on search term and age restriction
-  const filteredProducts = products.filter(product => 
-    (product.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-     product.category.toLowerCase().includes(searchTerm.toLowerCase())) &&
-    (showRestricted || !product.ageRestricted)
-  );
+  // Filter and sort products
+  const filteredProducts = products
+    .filter(product => 
+      // Search filter
+      (product.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+       product.category.toLowerCase().includes(searchTerm.toLowerCase())) &&
+      // Age restriction filter
+      (showRestricted || !product.ageRestricted) &&
+      // Category filter
+      (selectedCategory === 'all' || product.category === selectedCategory)
+    )
+    .sort((a, b) => {
+      // Sort products
+      switch (sortBy) {
+        case 'name':
+          return a.name.localeCompare(b.name);
+        case 'name-desc':
+          return b.name.localeCompare(a.name);
+        case 'price':
+          return Number(a.price) - Number(b.price);
+        case 'price-desc':
+          return Number(b.price) - Number(a.price);
+        case 'stock':
+          return (a.stock || 0) - (b.stock || 0);
+        case 'stock-desc':
+          return (b.stock || 0) - (a.stock || 0);
+        default:
+          return 0;
+      }
+    });
 
   const totalProducts = products.length;
   const restrictedProducts = products.filter(p => p.ageRestricted).length;
+  const lowStockProducts = products.filter(p => (p.stock || 0) < 10).length;
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex gap-2">
-          <Badge variant="outline" className="bg-blue-50 text-blue-700">
-            {totalProducts} Produkte Total
-          </Badge>
-          <Badge variant="outline" className="bg-amber-50 text-amber-700" onClick={() => setShowRestricted(!showRestricted)}>
-            {restrictedProducts} 18+ Produkte {showRestricted ? '(angezeigt)' : '(ausgeblendet)'}
-          </Badge>
-        </div>
-      </div>
-
       <SearchBar 
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
@@ -80,6 +110,84 @@ const AdminProductList = ({ onEdit }: AdminProductListProps) => {
         onToggleRestricted={() => setShowRestricted(!showRestricted)}
         showRestricted={showRestricted}
       />
+
+      <Accordion type="single" collapsible className="mb-4">
+        <AccordionItem value="filters">
+          <AccordionTrigger className="py-2">
+            <div className="flex items-center">
+              <SlidersHorizontal size={16} className="mr-2" />
+              Erweiterte Filter
+            </div>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+              <div>
+                <label className="text-sm font-medium mb-1 block">Kategorie</label>
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Alle Kategorien" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Alle Kategorien</SelectItem>
+                    {categories.filter(cat => cat.id !== 'all').map(category => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium mb-1 block">Sortieren nach</label>
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sortieren nach" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="name">Name (A-Z)</SelectItem>
+                    <SelectItem value="name-desc">Name (Z-A)</SelectItem>
+                    <SelectItem value="price">Preis (aufsteigend)</SelectItem>
+                    <SelectItem value="price-desc">Preis (absteigend)</SelectItem>
+                    <SelectItem value="stock">Lagerbestand (aufsteigend)</SelectItem>
+                    <SelectItem value="stock-desc">Lagerbestand (absteigend)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+
+      <div className="flex flex-wrap gap-2 mb-4">
+        <Badge variant="outline" className="bg-blue-50 text-blue-700">
+          {totalProducts} Produkte Total
+        </Badge>
+        <Badge 
+          variant={showRestricted ? "default" : "outline"} 
+          className={showRestricted ? "bg-amber-500" : "bg-amber-50 text-amber-700"} 
+          onClick={() => setShowRestricted(!showRestricted)}
+        >
+          {restrictedProducts} 18+ Produkte
+        </Badge>
+        <Badge variant="outline" className="bg-red-50 text-red-700">
+          {lowStockProducts} mit niedrigem Bestand
+        </Badge>
+        {selectedCategory !== 'all' && (
+          <Badge 
+            variant="default" 
+            className="bg-green-600"
+          >
+            Filter: {categories.find(c => c.id === selectedCategory)?.name || selectedCategory}
+            <button 
+              className="ml-1 hover:text-white/80" 
+              onClick={() => setSelectedCategory('all')}
+            >
+              ✕
+            </button>
+          </Badge>
+        )}
+      </div>
 
       {isLoading ? (
         <div className="text-center py-12">

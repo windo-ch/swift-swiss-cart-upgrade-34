@@ -6,6 +6,7 @@ import AdminProductList from '../components/admin/AdminProductList';
 import { Product } from '../types/product';
 import { initializeAdminProducts, logAdminProducts } from '../utils/admin-utils';
 import { useToast } from '@/components/ui/use-toast';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const Admin = () => {
   const [editingProduct, setEditingProduct] = useState<Product | undefined>();
@@ -52,11 +53,13 @@ const Admin = () => {
 
   const handleEdit = (product: Product) => {
     setEditingProduct(product);
-    // Scroll to the form when editing
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+    // Scroll to the form when editing on mobile
+    if (window.innerWidth < 768) {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
   };
 
   const handleCancel = () => {
@@ -69,11 +72,13 @@ const Admin = () => {
       isRefreshing={isInitializing}
     >
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-1 lg:sticky lg:top-24 self-start">
-          <AdminProductForm 
-            initialData={editingProduct} 
-            onCancel={handleCancel}
-          />
+        <div className="lg:col-span-1 lg:sticky lg:top-24 self-start max-h-[calc(100vh-200px)]">
+          <ScrollArea className="h-full pr-4">
+            <AdminProductForm 
+              initialData={editingProduct} 
+              onCancel={handleCancel}
+            />
+          </ScrollArea>
         </div>
         
         <div className="lg:col-span-2">

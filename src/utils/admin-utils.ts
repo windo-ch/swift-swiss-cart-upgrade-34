@@ -14,9 +14,9 @@ export const initializeAdminProducts = (): void => {
     // Convert all store products to admin format with stock
     const formattedStoreProducts = storeProducts.map(product => ({
       ...product,
-      id: product.id.toString(), // Ensure id is always a string
+      id: String(product.id), // Ensure id is always a string
       name: product.name,
-      price: typeof product.price === 'number' ? product.price : parseFloat(product.price.toString()),
+      price: typeof product.price === 'number' ? product.price : parseFloat(String(product.price)),
       category: product.category,
       description: product.description || '',
       weight: product.weight || '',

@@ -38,7 +38,7 @@ const ProductRow = ({ product, onEdit, onDelete }: ProductRowProps) => {
   const handleStockBlur = () => {
     const newStock = parseInt(stockValue);
     if (!isNaN(newStock) && newStock >= 0) {
-      updateStock(product.id.toString(), newStock);
+      updateStock(String(product.id), newStock);
       toast({
         title: "Lagerbestand aktualisiert",
         description: `Lagerbestand für ${product.name} wurde auf ${newStock} aktualisiert.`,
@@ -94,7 +94,7 @@ const ProductRow = ({ product, onEdit, onDelete }: ProductRowProps) => {
         </span>
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-        CHF {typeof product.price === 'number' ? product.price.toFixed(2) : parseFloat(product.price.toString()).toFixed(2)}
+        CHF {typeof product.price === 'number' ? product.price.toFixed(2) : parseFloat(String(product.price)).toFixed(2)}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm">
         {isEditingStock ? (
@@ -148,7 +148,7 @@ const ProductRow = ({ product, onEdit, onDelete }: ProductRowProps) => {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Abbrechen</AlertDialogCancel>
-              <AlertDialogAction onClick={() => onDelete(product.id.toString())} className="bg-red-600 hover:bg-red-700">
+              <AlertDialogAction onClick={() => onDelete(String(product.id))} className="bg-red-600 hover:bg-red-700">
                 Löschen
               </AlertDialogAction>
             </AlertDialogFooter>

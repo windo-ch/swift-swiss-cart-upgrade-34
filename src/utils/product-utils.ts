@@ -36,9 +36,9 @@ export const getStoredProducts = (): Product[] => {
         // Ensure all products have required fields and proper formatting
         return adminProducts.map((product: Product) => ({
           ...product,
-          id: product.id.toString(), // Ensure id is always a string
+          id: String(product.id), // Ensure id is always a string
           name: product.name,
-          price: typeof product.price === 'number' ? product.price : parseFloat(product.price.toString()),
+          price: typeof product.price === 'number' ? product.price : parseFloat(String(product.price)),
           category: product.category,
           image: getProductImageUrl(product.image), // Properly format image URLs
           description: product.description || '',
@@ -56,9 +56,9 @@ export const getStoredProducts = (): Product[] => {
     
     const formattedStoreProducts = storeProducts.map(product => ({
       ...product,
-      id: product.id.toString(), // Ensure id is always a string
+      id: String(product.id), // Ensure id is always a string
       name: product.name,
-      price: typeof product.price === 'number' ? product.price : parseFloat(product.price.toString()),
+      price: typeof product.price === 'number' ? product.price : parseFloat(String(product.price)),
       category: product.category,
       description: product.description || '', // Ensure description has a default
       weight: product.weight || '', // Ensure weight has a default

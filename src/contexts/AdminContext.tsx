@@ -51,9 +51,9 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
         // Make sure all products have required fields
         const productsWithRequiredFields = allProducts.map(product => ({
           ...product,
-          id: product.id.toString(),
+          id: String(product.id),
           name: product.name || 'Unnamed Product',
-          price: typeof product.price === 'number' ? product.price : parseFloat(product.price?.toString() || '0'),
+          price: typeof product.price === 'number' ? product.price : parseFloat(String(product.price) || '0'),
           category: product.category || 'other',
           image: product.image || 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png',
           description: product.description || '',
@@ -70,9 +70,9 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
         // If no products are in storage, initialize with store products
         const initialProducts = storeProducts.map(product => ({
           ...product,
-          id: product.id.toString(),
+          id: String(product.id),
           name: product.name,
-          price: typeof product.price === 'number' ? product.price : parseFloat(product.price.toString()),
+          price: typeof product.price === 'number' ? product.price : parseFloat(String(product.price)),
           category: product.category,
           image: product.image,
           description: product.description || '',
@@ -145,7 +145,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     console.log("AdminContext - Updating product:", updatedProduct.id);
     setProducts(prev => 
       prev.map(product => 
-        product.id.toString() === updatedProduct.id.toString() ? updatedProduct : product
+        String(product.id) === String(updatedProduct.id) ? updatedProduct : product
       )
     );
     
@@ -159,9 +159,9 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
   const deleteProduct = (id: string) => {
     console.log("AdminContext - Deleting product:", id);
     // Find product name before deleting for toast message
-    const productToDelete = products.find(p => p.id.toString() === id);
+    const productToDelete = products.find(p => String(p.id) === id);
     
-    setProducts(prev => prev.filter(product => product.id.toString() !== id));
+    setProducts(prev => prev.filter(product => String(product.id) !== id));
     
     toast({
       title: "Produkt gelöscht",
@@ -176,7 +176,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     console.log("AdminContext - Updating stock for product:", id, newStock);
     setProducts(prev => 
       prev.map(product => 
-        product.id.toString() === id ? { ...product, stock: newStock } : product
+        String(product.id) === id ? { ...product, stock: newStock } : product
       )
     );
   };
