@@ -13,6 +13,7 @@ interface ProductProps {
   category: string;
   isNew?: boolean;
   isFeatured?: boolean;
+  ageRestricted?: boolean;
 }
 
 const ProductCard: React.FC<ProductProps> = ({ 
@@ -22,7 +23,8 @@ const ProductCard: React.FC<ProductProps> = ({
   image, 
   category,
   isNew = false,
-  isFeatured = false
+  isFeatured = false,
+  ageRestricted = false
 }) => {
   const { addToCart } = useCart();
   
@@ -53,6 +55,9 @@ const ProductCard: React.FC<ProductProps> = ({
         )}
         {isFeatured && !isNew && (
           <span className="absolute top-2 left-2 bg-brings-secondary text-brings-dark text-xs font-bold px-2 py-1 rounded">BELIEBT</span>
+        )}
+        {ageRestricted && (
+          <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">18+</span>
         )}
         
         {/* Quick Add Button */}
