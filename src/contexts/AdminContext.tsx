@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product as ProductType } from '@/types/product';
 import { getStoredProducts } from '@/utils/product-utils';
+import { products as storeProducts } from '@/data/products'; // Import shop products directly
 
 // Define our context product type based on the global Product type
 export type Product = ProductType;
@@ -33,14 +34,30 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     console.log("AdminContext - Loading products from store");
     const allProducts = getStoredProducts();
     
-    // Make sure all products have a stock value
-    const productsWithStock = allProducts.map(product => ({
-      ...product,
-      stock: product.stock !== undefined ? product.stock : 50 // Default stock of 50 for existing products
-    }));
-    
-    setProducts(productsWithStock);
-    localStorage.setItem('adminProducts', JSON.stringify(productsWithStock));
+    if (allProducts.length > 0) {
+      console.log(`AdminContext - Found ${allProducts.length} products in storage`);
+      // Make sure all products have a stock value
+      const productsWithStock = allProducts.map(product => ({
+        ...product,
+        stock: product.stock !== undefined ? product.stock : 50 // Default stock of 50 for existing products
+      }));
+      setProducts(productsWithStock);
+    } else {
+      console.log("AdminContext - No products in storage, initializing from store");
+      // If no products are in storage, initialize with store products
+      const initialProducts = storeProducts.map(product => ({
+        ...product,
+        id: product.id.toString(),
+        image: product.image,
+        description: product.description || '',
+        weight: product.weight || '',
+        ingredients: product.ingredients || '',
+        ageRestricted: product.ageRestricted || false,
+        stock: 50 // Default stock of 50
+      }));
+      setProducts(initialProducts);
+      localStorage.setItem('adminProducts', JSON.stringify(initialProducts));
+    }
   }, []);
 
   // Save products to localStorage whenever they change

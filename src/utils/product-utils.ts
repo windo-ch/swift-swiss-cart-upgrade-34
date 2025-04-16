@@ -36,7 +36,7 @@ export const getStoredProducts = (): Product[] => {
       }));
     }
     
-    // Otherwise, use the store products as a fallback
+    // Otherwise, use the store products and format them
     console.log("No admin products found, using store products");
     // Ensure each store product has an ID as a string and all required fields
     const formattedStoreProducts = storeProducts.map(product => ({

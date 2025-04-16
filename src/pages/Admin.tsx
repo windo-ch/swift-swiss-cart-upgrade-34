@@ -10,15 +10,29 @@ import { Product } from '../types/product';
 import { Button } from '@/components/ui/button';
 import { Truck, Package } from 'lucide-react';
 import { initializeAdminProducts } from '../utils/admin-utils';
+import { useToast } from '@/components/ui/use-toast';
 
 const Admin = () => {
   const [editingProduct, setEditingProduct] = useState<Product | undefined>();
+  const { toast } = useToast();
 
-  // Initialize sample products when the Admin page loads
+  // Initialize products when the Admin page loads
   useEffect(() => {
     console.log("Initializing admin products");
     initializeAdminProducts();
-  }, []);
+
+    // Show notification that products are loaded
+    const storedProducts = localStorage.getItem('adminProducts');
+    const productCount = storedProducts ? JSON.parse(storedProducts).length : 0;
+    
+    if (productCount > 0) {
+      toast({
+        title: "Produkte gladen",
+        description: `${productCount} Produkte sind verfügbar für d'Bearbeitung.`,
+        duration: 3000,
+      });
+    }
+  }, [toast]);
 
   const handleEdit = (product: Product) => {
     setEditingProduct(product);

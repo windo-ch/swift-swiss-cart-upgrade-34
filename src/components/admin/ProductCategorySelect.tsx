@@ -4,14 +4,7 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/comp
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { UseFormReturn } from 'react-hook-form';
 import { ProductFormValues } from '@/schemas/productSchema';
-
-const categories = [
-  { id: 'chips', name: 'Chips & Snacks' },
-  { id: 'drinks', name: 'Getränk' },
-  { id: 'sweets', name: 'Süssigkeite' },
-  { id: 'alcohol', name: 'Alkohol' },
-  { id: 'energy', name: 'Energy Drinks' },
-];
+import { categories } from '@/data/categories-data';
 
 interface ProductCategorySelectProps {
   form: UseFormReturn<ProductFormValues>;
@@ -32,9 +25,10 @@ const ProductCategorySelect = ({ form }: ProductCategorySelectProps) => {
               </SelectTrigger>
             </FormControl>
             <SelectContent>
-              {categories.map(category => (
+              {/* Skip the 'all' category which is just for filtering */}
+              {categories.filter(category => category.id !== 'all').map(category => (
                 <SelectItem key={category.id} value={category.id}>
-                  {category.name}
+                  {category.icon} {category.name}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -47,4 +41,3 @@ const ProductCategorySelect = ({ form }: ProductCategorySelectProps) => {
 };
 
 export default ProductCategorySelect;
-
