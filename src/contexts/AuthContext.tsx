@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Session, User, Provider } from '@supabase/supabase-js';
@@ -15,6 +16,21 @@ interface AuthContextType {
   hasAppliedDiscount: boolean;
   applyFirstTimeDiscount: () => Promise<void>;
 }
+
+// Define the expected return types for our queries to fix type issues
+type OrdersType = {
+  id: string;
+  user_id: string;
+}[];
+
+type UserDiscountType = {
+  id: string;
+  user_id: string;
+  discount_code: string;
+  discount_percent: number;
+  is_used: boolean;
+  valid_until: string | null;
+}[];
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
@@ -54,22 +70,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // Check if this is a first-time user with no previous orders
   const checkFirstTimeUser = async (userId: string) => {
     try {
+      // Use explicit type for orders query with .returns<>
       const { data: orders } = await supabase
         .from('orders')
         .select('id')
         .eq('user_id', userId)
         .limit(1)
-        .returns<{ id: string }[]>();
+        .returns<OrdersType>();
         
       // If no orders, check if discount already applied
       if (!orders || orders.length === 0) {
+        // Use explicit type for discounts query with .returns<>
         const { data: discounts } = await supabase
           .from('user_discounts')
           .select('id')
           .eq('user_id', userId)
           .eq('discount_code', 'FIRSTTIME')
           .limit(1)
-          .returns<{ id: string }[]>();
+          .returns<UserDiscountType>();
           
         setIsFirstTimeUser(true);
         setHasAppliedDiscount(discounts !== null && discounts.length > 0);
@@ -93,7 +111,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           is_used: false,
           valid_until: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days
         })
-        .returns<never>();
+        .returns<{id: string}>();
         
       if (error) throw error;
       
