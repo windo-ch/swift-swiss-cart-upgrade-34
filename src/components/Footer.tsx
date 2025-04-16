@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Twitter, MapPin, Phone, Mail } from 'lucide-react';
@@ -11,7 +10,13 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
           {/* Company Info */}
           <div>
-            <h3 className="font-bold text-brings-secondary text-lg mb-4">Brings</h3>
+            <div className="mb-4">
+              <img 
+                src="/lovable-uploads/e526c616-4ec5-42f8-8ae8-476c840f320e.png" 
+                alt="Brings Logo" 
+                className="h-12"
+              />
+            </div>
             <p className="text-gray-300 mb-4">
               Snacks & Getränk - sofort zu dir glieferet. I 30 Minute bi dir in Züri.
             </p>

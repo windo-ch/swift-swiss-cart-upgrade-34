@@ -6,7 +6,7 @@ const LoadingAnimation = () => {
     <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
       <div className="flex flex-col items-center">
         <img 
-          src="/lovable-uploads/e4d3037b-5d79-4749-a7ff-ea9a4c991cbb.png" 
+          src="/lovable-uploads/e526c616-4ec5-42f8-8ae8-476c840f320e.png" 
           alt="Brings Logo" 
           className="h-20 animate-pulse"
         />

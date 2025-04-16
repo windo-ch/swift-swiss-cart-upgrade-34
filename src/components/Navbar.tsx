@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, ShoppingBag, Search } from 'lucide-react';
@@ -22,9 +21,9 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <img 
-              src="/lovable-uploads/e4d3037b-5d79-4749-a7ff-ea9a4c991cbb.png" 
+              src="/lovable-uploads/e526c616-4ec5-42f8-8ae8-476c840f320e.png" 
               alt="Brings Logo" 
-              className="h-12" /* Increased height from h-8 to h-12 */
+              className="h-12" 
             />
             {isAdult && (
               <span className="ml-2 text-xs font-bold bg-red-500 text-white px-1.5 py-0.5 rounded">18+</span>
