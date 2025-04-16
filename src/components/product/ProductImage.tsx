@@ -7,10 +7,11 @@ interface ProductImageProps {
   name: string;
 }
 
+const PLACEHOLDER_IMAGE = 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-product-placeholder.png';
+
 const ProductImage = ({ image, name }: ProductImageProps) => {
   const [hasError, setHasError] = useState(false);
   const [imageSrc, setImageSrc] = useState('');
-  const placeholderImage = 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png';
 
   useEffect(() => {
     // Reset error state when image prop changes
@@ -30,7 +31,7 @@ const ProductImage = ({ image, name }: ProductImageProps) => {
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow-md">
       <img 
-        src={hasError ? placeholderImage : imageSrc} 
+        src={hasError ? PLACEHOLDER_IMAGE : imageSrc} 
         alt={name} 
         className="w-full h-auto object-cover aspect-square"
         onError={handleImageError}
