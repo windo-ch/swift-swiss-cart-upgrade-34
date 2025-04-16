@@ -1,7 +1,7 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Session, User } from '@supabase/supabase-js';
+import { Session, User, Provider } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
 interface AuthContextType {
@@ -10,7 +10,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
-  signInWithSocial: (provider: 'google' | 'facebook' | 'twitter' | 'instagram') => Promise<void>;
+  signInWithSocial: (provider: Provider) => Promise<void>;
   loading: boolean;
 }
 
@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (error) throw error;
   };
 
-  const signInWithSocial = async (provider: 'google' | 'facebook' | 'twitter' | 'instagram') => {
+  const signInWithSocial = async (provider: Provider) => {
     const { error } = await supabase.auth.signInWithOAuth({ 
       provider,
       options: {

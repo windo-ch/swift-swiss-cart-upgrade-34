@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Facebook, Twitter, Instagram, Mail } from 'lucide-react';
+import { Facebook, Twitter, Mail } from 'lucide-react';
+import type { Provider } from '@supabase/supabase-js';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -45,7 +46,7 @@ const Auth = () => {
     }
   };
 
-  const handleSocialLogin = async (provider: 'google' | 'facebook' | 'twitter' | 'instagram') => {
+  const handleSocialLogin = async (provider: Provider) => {
     try {
       await signInWithSocial(provider);
     } catch (error) {
@@ -104,15 +105,7 @@ const Auth = () => {
             <Twitter className="mr-2 h-5 w-5" />
             Twitter
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => handleSocialLogin('instagram')}
-            className="w-full"
-          >
-            <Instagram className="mr-2 h-5 w-5" />
-            Instagram
-          </Button>
+          {/* Remove Instagram as it's not a valid Supabase provider */}
         </div>
 
         <div className="relative">
