@@ -4,13 +4,9 @@ import { products as storeProducts } from '../data/products';
 import { getProductImageUrl } from './product-utils';
 
 export const initializeAdminProducts = (): void => {
-  // Check if we already have admin products
-  const existingProducts = localStorage.getItem('adminProducts');
-  if (existingProducts && JSON.parse(existingProducts).length > 0) {
-    console.log("Admin products already exist, not initializing sample data");
-    return;
-  }
-
+  // Clear any existing products to ensure a fresh start
+  localStorage.removeItem('adminProducts');
+  
   // Convert all store products to admin format with stock
   const formattedStoreProducts = storeProducts.map(product => ({
     ...product,

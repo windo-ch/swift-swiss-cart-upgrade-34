@@ -19,6 +19,7 @@ const Admin = () => {
   // Initialize products when the Admin page loads
   useEffect(() => {
     console.log("Initializing admin products");
+    // Force reinitialize products from the store data
     initializeAdminProducts();
 
     // Show notification that products are loaded

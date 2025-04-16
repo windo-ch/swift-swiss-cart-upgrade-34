@@ -1,3 +1,4 @@
+
 import { Product } from '../types/product';
 import { products as storeProducts } from '../data/products/index';
 
@@ -21,24 +22,26 @@ export const getProductImageUrl = (imageName: string): string => {
 export const getStoredProducts = (): Product[] => {
   console.log("Getting stored products...");
   try {
-    // Get admin products from localStorage
+    // First try to get products from localStorage that might have been modified in admin panel
     const storedProducts = localStorage.getItem('adminProducts');
-    const adminProducts = storedProducts ? JSON.parse(storedProducts) : [];
-    console.log("Admin products from localStorage:", adminProducts.length);
     
-    // If we have admin products, use those
-    if (adminProducts.length > 0) {
-      console.log("Using admin products as the source of truth");
-      return adminProducts.map(product => ({
-        ...product,
-        id: product.id.toString(), // Ensure id is always a string
-        image: getProductImageUrl(product.image), // Properly format image URLs
-      }));
+    if (storedProducts) {
+      const adminProducts = JSON.parse(storedProducts);
+      console.log("Admin products from localStorage:", adminProducts.length);
+      
+      // If we have admin products, use those
+      if (adminProducts && adminProducts.length > 0) {
+        console.log("Using admin products as the source of truth");
+        return adminProducts.map((product: Product) => ({
+          ...product,
+          id: product.id.toString(), // Ensure id is always a string
+          image: getProductImageUrl(product.image), // Properly format image URLs
+        }));
+      }
     }
     
-    // Otherwise, use the store products and format them
+    // If no admin products, fall back to the store products
     console.log("No admin products found, using store products");
-    // Ensure each store product has an ID as a string and all required fields
     const formattedStoreProducts = storeProducts.map(product => ({
       ...product,
       id: product.id.toString(), // Ensure id is always a string
@@ -51,9 +54,13 @@ export const getStoredProducts = (): Product[] => {
     }));
     
     console.log("Formatted store products:", formattedStoreProducts.length);
+    // Save to localStorage so admin can edit them
+    localStorage.setItem('adminProducts', JSON.stringify(formattedStoreProducts));
     return formattedStoreProducts;
   } catch (error) {
     console.error('Error loading products from localStorage:', error);
+    // If there's an error, clear localStorage and return empty array
+    localStorage.removeItem('adminProducts');
     return [];
   }
 };

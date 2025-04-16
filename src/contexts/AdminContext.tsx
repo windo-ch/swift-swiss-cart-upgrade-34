@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product as ProductType } from '@/types/product';
 import { getStoredProducts } from '@/utils/product-utils';
-import { products as storeProducts } from '@/data/products'; // Import shop products directly
+import { products as storeProducts } from '@/data/products';
 
 // Define our context product type based on the global Product type
 export type Product = ProductType;
