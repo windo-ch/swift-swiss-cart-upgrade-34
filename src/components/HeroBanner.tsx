@@ -10,7 +10,7 @@ const HeroBanner = () => {
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold">
               Snacks & Getränk <span className="text-brings-secondary">sofort</span> zu dir glieferet
             </h1>
-            <p className="text-lg text-gray-200 max-w-md">Alles was du für en gmüetliche Film-Abig oder spontane Party bruuchsch - direkt zu dir gliferet.</p>
+            <p className="text-lg text-gray-200 max-w-md">Alles was du für en gmüetliche Film-Abig oder e spontani Party bruuchsch - direkt zu dir gliferet.</p>
             <div className="flex flex-wrap gap-4">
               <Link to="/order">
                 <Button className="bg-brings-primary hover:bg-brings-primary/90 text-white px-6 py-6 rounded-xl">
