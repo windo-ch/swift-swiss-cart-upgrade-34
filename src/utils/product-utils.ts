@@ -1,6 +1,6 @@
 
 import { Product } from '../types/product';
-import { products as storeProducts } from '../data/products-data';
+import { products as storeProducts } from '../data/products/index';
 import { supabase } from '../integrations/supabase/client';
 
 const SUPABASE_URL = "https://zbvdlkfnpufqfhrptfhz.supabase.co";
@@ -59,4 +59,3 @@ export const getStoredProducts = (): Product[] => {
     return [];
   }
 };
-
