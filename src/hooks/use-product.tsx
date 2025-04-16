@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Product } from '../types/product';
-import { getStoredProducts } from '../utils/product-utils';
+import { getStoredProducts, getProductImageUrl } from '../utils/product-utils';
 
 export const useProduct = (productId: string | undefined) => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -24,12 +24,22 @@ export const useProduct = (productId: string | undefined) => {
   
   console.log("useProduct hook: Found product:", product);
   
+  // Ensure image URLs are properly formatted
+  const formattedProduct = product ? {
+    ...product,
+    image: getProductImageUrl(product.image)
+  } : undefined;
+  
   const relatedProducts = products
     .filter(p => p.category === product?.category && p.id.toString() !== productId)
-    .slice(0, 4);
+    .slice(0, 4)
+    .map(p => ({
+      ...p,
+      image: getProductImageUrl(p.image)
+    }));
     
   return {
-    product,
+    product: formattedProduct,
     relatedProducts,
     isLoading: isLoading || products.length === 0
   };

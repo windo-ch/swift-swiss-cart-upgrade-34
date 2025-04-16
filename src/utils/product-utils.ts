@@ -15,8 +15,8 @@ export const getProductImageUrl = (imageName: string): string => {
     return imageName;
   }
   
-  // Construct Supabase storage URL with proper format
-  return `${SUPABASE_URL}/storage/v1/object/public/${DEFAULT_BUCKET}/${imageName}`;
+  // Construct Supabase storage URL with proper format, avoiding double slashes
+  return `${SUPABASE_URL}/storage/v1/object/public/${DEFAULT_BUCKET}/${imageName.replace(/^\/+/, '')}`;
 };
 
 export const getStoredProducts = (): Product[] => {

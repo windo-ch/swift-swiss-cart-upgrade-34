@@ -27,7 +27,7 @@ export const energyDrinks: Product[] = [
   {
     id: 21,
     name: 'Arizona Green Tea',
-    image: 'arizona-green-tea-500ml.jpg',
+    image: 'arizona-green-tea-500ml-787.jpg',
     price: 3.50,
     category: 'energy',
     description: 'Arizona Green Tea with honey and ginseng',
