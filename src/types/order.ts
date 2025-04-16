@@ -26,10 +26,12 @@ export interface Order {
   delivery_fee: number;
   discount_amount: number;
   delivery_address: OrderAddress;
-  status: string;
+  status: "pending" | "in_delivery" | "delivered";
   created_at: string;
   updated_at: string;
   payment_method: string;
   estimated_delivery_time: string | null;
   order_items: OrderItem[];
+  delivery_photo?: string | null;
+  marketing_consent?: boolean;
 }
