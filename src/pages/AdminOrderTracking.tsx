@@ -49,6 +49,9 @@ const AdminOrderTracking = () => {
           deliveryAddress = order.delivery_address as OrderAddress;
         }
         
+        // Cast status to the allowed union type
+        const orderStatus = order.status as "pending" | "in_delivery" | "delivered";
+        
         return {
           id: order.id,
           user_id: order.user_id,
@@ -56,7 +59,7 @@ const AdminOrderTracking = () => {
           delivery_fee: order.delivery_fee || 0,
           discount_amount: order.discount_amount || 0,
           delivery_address: deliveryAddress,
-          status: order.status,
+          status: orderStatus,
           created_at: order.created_at,
           updated_at: order.updated_at,
           payment_method: order.payment_method,

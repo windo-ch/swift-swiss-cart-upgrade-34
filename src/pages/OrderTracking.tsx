@@ -63,6 +63,9 @@ const OrderTracking = () => {
           deliveryAddress = data.delivery_address;
         }
         
+        // Cast status to the allowed union type
+        const orderStatus = data.status as "pending" | "in_delivery" | "delivered";
+        
         const transformedOrder: Order = {
           id: data.id,
           user_id: data.user_id,
@@ -70,7 +73,7 @@ const OrderTracking = () => {
           delivery_fee: data.delivery_fee || 0,
           discount_amount: data.discount_amount || 0,
           delivery_address: deliveryAddress,
-          status: data.status,
+          status: orderStatus,
           created_at: data.created_at,
           updated_at: data.updated_at,
           payment_method: data.payment_method,

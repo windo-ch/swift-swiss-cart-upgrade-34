@@ -52,9 +52,11 @@ export type Database = {
           created_at: string | null
           delivery_address: Json
           delivery_fee: number | null
+          delivery_photo: string | null
           discount_amount: number | null
           estimated_delivery_time: string | null
           id: string
+          marketing_consent: boolean | null
           payment_method: string
           status: string
           total_amount: number
@@ -65,9 +67,11 @@ export type Database = {
           created_at?: string | null
           delivery_address: Json
           delivery_fee?: number | null
+          delivery_photo?: string | null
           discount_amount?: number | null
           estimated_delivery_time?: string | null
           id?: string
+          marketing_consent?: boolean | null
           payment_method: string
           status?: string
           total_amount: number
@@ -78,9 +82,11 @@ export type Database = {
           created_at?: string | null
           delivery_address?: Json
           delivery_fee?: number | null
+          delivery_photo?: string | null
           discount_amount?: number | null
           estimated_delivery_time?: string | null
           id?: string
+          marketing_consent?: boolean | null
           payment_method?: string
           status?: string
           total_amount?: number
