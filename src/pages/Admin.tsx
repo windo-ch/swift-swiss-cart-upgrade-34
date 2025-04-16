@@ -8,30 +8,46 @@ import AdminProductForm from '../components/admin/AdminProductForm';
 import AdminProductList from '../components/admin/AdminProductList';
 import { Product } from '../types/product';
 import { Button } from '@/components/ui/button';
-import { Truck, Package } from 'lucide-react';
-import { initializeAdminProducts } from '../utils/admin-utils';
+import { Truck, Package, RefreshCw } from 'lucide-react';
+import { initializeAdminProducts, logAdminProducts } from '../utils/admin-utils';
 import { useToast } from '@/components/ui/use-toast';
 
 const Admin = () => {
   const [editingProduct, setEditingProduct] = useState<Product | undefined>();
+  const [isInitializing, setIsInitializing] = useState(false);
   const { toast } = useToast();
 
   // Initialize products when the Admin page loads
   useEffect(() => {
     console.log("Initializing admin products");
-    // Force reinitialize products from the store data
-    initializeAdminProducts();
-
-    // Show notification that products are loaded
-    const storedProducts = localStorage.getItem('adminProducts');
-    const productCount = storedProducts ? JSON.parse(storedProducts).length : 0;
+    setIsInitializing(true);
     
-    if (productCount > 0) {
+    try {
+      // Force reinitialize products from the store data
+      initializeAdminProducts();
+      logAdminProducts(); // Debug: log admin products after initialization
+      
+      // Show notification that products are loaded
+      const storedProducts = localStorage.getItem('adminProducts');
+      const productCount = storedProducts ? JSON.parse(storedProducts).length : 0;
+      
+      if (productCount > 0) {
+        toast({
+          title: "Produkte gladen",
+          description: `${productCount} Produkte sind verfügbar für d'Bearbeitung.`,
+          duration: 3000,
+        });
+      }
+    } catch (error) {
+      console.error("Error initializing admin products:", error);
       toast({
-        title: "Produkte gladen",
-        description: `${productCount} Produkte sind verfügbar für d'Bearbeitung.`,
+        title: "Fehler",
+        description: "Fehler beim Laden der Produkte.",
         duration: 3000,
+        variant: "destructive"
       });
+    } finally {
+      setIsInitializing(false);
     }
   }, [toast]);
 
@@ -43,6 +59,28 @@ const Admin = () => {
     setEditingProduct(undefined);
   };
 
+  const handleForceRefresh = () => {
+    setIsInitializing(true);
+    try {
+      initializeAdminProducts();
+      toast({
+        title: "Produkte neu geladen",
+        description: "Alle Produkte wurden erfolgreich neu geladen.",
+        duration: 3000,
+      });
+    } catch (error) {
+      console.error("Error refreshing products:", error);
+      toast({
+        title: "Fehler",
+        description: "Fehler beim Neuladen der Produkte.",
+        duration: 3000,
+        variant: "destructive"
+      });
+    } finally {
+      setIsInitializing(false);
+    }
+  };
+
   return (
     <AdminProvider>
       <div className="min-h-screen flex flex-col">
@@ -52,6 +90,15 @@ const Admin = () => {
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold">Admin-Bereich</h1>
             <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                className="flex items-center gap-2"
+                onClick={handleForceRefresh}
+                disabled={isInitializing}
+              >
+                <RefreshCw size={16} className={isInitializing ? "animate-spin" : ""} />
+                Produkte neu laden
+              </Button>
               <Link to="/admin/orders">
                 <Button variant="outline" className="flex items-center gap-2">
                   <Truck size={16} />

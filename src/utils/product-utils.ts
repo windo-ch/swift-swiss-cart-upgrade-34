@@ -42,6 +42,9 @@ export const getStoredProducts = (): Product[] => {
     
     // If no admin products, fall back to the store products
     console.log("No admin products found, using store products");
+    const storeProductsCount = storeProducts.length;
+    console.log(`Found ${storeProductsCount} store products`);
+    
     const formattedStoreProducts = storeProducts.map(product => ({
       ...product,
       id: product.id.toString(), // Ensure id is always a string
@@ -56,6 +59,10 @@ export const getStoredProducts = (): Product[] => {
     console.log("Formatted store products:", formattedStoreProducts.length);
     // Save to localStorage so admin can edit them
     localStorage.setItem('adminProducts', JSON.stringify(formattedStoreProducts));
+    
+    // Dispatch storage event to notify other components of the update
+    window.dispatchEvent(new Event('storage'));
+    
     return formattedStoreProducts;
   } catch (error) {
     console.error('Error loading products from localStorage:', error);

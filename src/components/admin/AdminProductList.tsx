@@ -12,21 +12,39 @@ interface AdminProductListProps {
 }
 
 const AdminProductList = ({ onEdit }: AdminProductListProps) => {
-  const { products, deleteProduct, setProducts } = useAdmin();
+  const { products, deleteProduct, setProducts, refreshProducts } = useAdmin();
   const [searchTerm, setSearchTerm] = useState('');
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(true);
 
   // Load products on mount to ensure we have the latest data
   useEffect(() => {
+    console.log("AdminProductList: Initial products count:", products.length);
+    
     const loadProducts = () => {
+      setIsLoading(true);
       console.log("AdminProductList: Loading products");
-      const allStoredProducts = getStoredProducts();
-      console.log("AdminProductList: All stored products:", allStoredProducts.length);
       
-      if (allStoredProducts.length > 0) {
-        setProducts(allStoredProducts);
-      } else {
-        console.log("No products found, may need to create some through the form");
+      try {
+        // Attempt to refresh products from context
+        refreshProducts();
+        
+        // Double check if we have products
+        if (products.length === 0) {
+          console.log("Still no products after refresh, fetching directly");
+          const allStoredProducts = getStoredProducts();
+          console.log("AdminProductList: All stored products:", allStoredProducts.length);
+          
+          if (allStoredProducts.length > 0) {
+            setProducts(allStoredProducts);
+          } else {
+            console.log("No products found, may need to create some through the form");
+          }
+        }
+      } catch (error) {
+        console.error("Error loading products:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -35,7 +53,12 @@ const AdminProductList = ({ onEdit }: AdminProductListProps) => {
     // Also listen for storage events to reload when admin products change
     window.addEventListener('storage', loadProducts);
     return () => window.removeEventListener('storage', loadProducts);
-  }, [setProducts]);
+  }, [setProducts, refreshProducts]);
+
+  // Debug: log products when they change
+  useEffect(() => {
+    console.log("AdminProductList: Current products:", products.length);
+  }, [products]);
 
   // Handle delete product
   const handleDelete = (id: string) => {
@@ -77,13 +100,25 @@ const AdminProductList = ({ onEdit }: AdminProductListProps) => {
         onExport={handleExportProducts}
       />
 
-      <ProductTable
-        products={products}
-        searchTerm={searchTerm}
-        onEdit={onEdit}
-        onDelete={handleDelete}
-        onResetSearch={() => setSearchTerm('')}
-      />
+      {isLoading ? (
+        <div className="text-center py-12">
+          <p className="text-gray-500 text-lg">Produkte werden geladen...</p>
+        </div>
+      ) : (
+        <ProductTable
+          products={products}
+          searchTerm={searchTerm}
+          onEdit={onEdit}
+          onDelete={handleDelete}
+          onResetSearch={() => setSearchTerm('')}
+        />
+      )}
+      
+      {!isLoading && products.length === 0 && (
+        <div className="text-center py-12">
+          <p className="text-gray-500 text-lg">Keine Produkte gefunden. Fügen Sie ein Produkt hinzu.</p>
+        </div>
+      )}
     </div>
   );
 };

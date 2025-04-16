@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product as ProductType } from '@/types/product';
 import { getStoredProducts } from '@/utils/product-utils';
 import { products as storeProducts } from '@/data/products';
+import { logAdminProducts } from '@/utils/admin-utils';
 
 // Define our context product type based on the global Product type
 export type Product = ProductType;
@@ -14,6 +15,7 @@ interface AdminContextType {
   updateProduct: (product: Product) => void;
   deleteProduct: (id: string) => void;
   updateStock: (id: string, newStock: number) => void;
+  refreshProducts: () => void;
 }
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
@@ -29,9 +31,11 @@ export const useAdmin = () => {
 export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
   const [products, setProducts] = useState<Product[]>([]);
   
-  // Load all products on mount
-  useEffect(() => {
-    console.log("AdminContext - Loading products from store");
+  // Function to load products from localStorage
+  const refreshProducts = () => {
+    console.log("AdminContext - Refreshing products from localStorage");
+    logAdminProducts(); // Debug: log current admin products
+    
     const allProducts = getStoredProducts();
     
     if (allProducts.length > 0) {
@@ -58,6 +62,20 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
       setProducts(initialProducts);
       localStorage.setItem('adminProducts', JSON.stringify(initialProducts));
     }
+  };
+  
+  // Load all products on mount
+  useEffect(() => {
+    refreshProducts();
+    
+    // Listen for storage events to refresh products
+    const handleStorageChange = () => {
+      console.log("Storage event detected, refreshing products");
+      refreshProducts();
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   // Save products to localStorage whenever they change
@@ -65,7 +83,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     if (products.length > 0) {
       console.log("AdminContext - Saving products to localStorage:", products.length);
       localStorage.setItem('adminProducts', JSON.stringify(products));
-      window.dispatchEvent(new Event('storage'));
+      // Don't dispatch storage event here to avoid infinite loops
     }
   }, [products]);
 
@@ -110,7 +128,8 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
       addProduct,
       updateProduct,
       deleteProduct,
-      updateStock
+      updateStock,
+      refreshProducts
     }}>
       {children}
     </AdminContext.Provider>

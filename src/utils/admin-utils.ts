@@ -22,4 +22,18 @@ export const initializeAdminProducts = (): void => {
   // Store all products as admin products
   localStorage.setItem('adminProducts', JSON.stringify(formattedStoreProducts));
   console.log("Initialized admin products from store:", formattedStoreProducts.length);
+  
+  // Dispatch storage event to notify other components of the update
+  window.dispatchEvent(new Event('storage'));
+};
+
+// Utility function to debug the admin products
+export const logAdminProducts = (): void => {
+  const storedProducts = localStorage.getItem('adminProducts');
+  if (storedProducts) {
+    const products = JSON.parse(storedProducts);
+    console.log("Current admin products:", products.length, products);
+  } else {
+    console.log("No admin products found in localStorage");
+  }
 };
