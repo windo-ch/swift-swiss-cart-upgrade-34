@@ -7,6 +7,7 @@ import Footer from '../components/Footer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import OrderTrackingList from '@/components/admin/OrderTrackingList';
 import { Loader2 } from 'lucide-react';
+import { Order } from '@/types/order';
 
 const AdminOrderTracking = () => {
   const { data: orders, isLoading, error } = useQuery({
@@ -21,7 +22,12 @@ const AdminOrderTracking = () => {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return data;
+
+      // Transform the data to match our Order type
+      return data.map((order: any): Order => ({
+        ...order,
+        order_items: order.order_items || []
+      }));
     }
   });
 

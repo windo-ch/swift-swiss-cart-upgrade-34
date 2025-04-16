@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Table, 
@@ -31,28 +32,7 @@ import {
 import OrderDetails from './OrderDetails';
 import UpdateOrderStatus from './UpdateOrderStatus';
 import { formatCurrency } from '@/utils/format-utils';
-
-interface Order {
-  id: string;
-  user_id: string;
-  total_amount: number;
-  delivery_fee: number;
-  discount_amount: number;
-  delivery_address: {
-    street: string;
-    city: string;
-    postcode: string;
-  };
-  status: 'pending' | 'in_delivery' | 'delivered';
-  created_at: string;
-  order_items: Array<{
-    id: string;
-    product_id: string;
-    product_name: string;
-    quantity: number;
-    price: number;
-  }>;
-}
+import { Order } from '@/types/order';
 
 interface OrderTrackingListProps {
   orders: Order[];
@@ -89,7 +69,10 @@ const OrderTrackingList = ({ orders, status }: OrderTrackingListProps) => {
   };
 
   const formatAddress = (address: any) => {
-    return `${address.street}, ${address.city}, ${address.postcode}`;
+    if (address.street) {
+      return `${address.street}, ${address.city}, ${address.postcode}`;
+    }
+    return `${address.address}, ${address.city}, ${address.postalCode}`;
   };
 
   const handleViewDetails = (order: Order) => {

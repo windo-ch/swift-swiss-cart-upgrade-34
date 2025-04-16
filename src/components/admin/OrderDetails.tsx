@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {
   Dialog,
@@ -21,33 +22,7 @@ import {
   Image
 } from 'lucide-react';
 import { formatCurrency } from '@/utils/format-utils';
-
-interface Order {
-  id: string;
-  created_at: string;
-  status: string;
-  total_amount: number;
-  delivery_fee: number;
-  discount_amount: number;
-  delivery_address: {
-    firstName: string;
-    lastName: string;
-    address: string;
-    city: string;
-    postalCode: string;
-    email: string;
-    phone: string;
-  };
-  order_items: Array<{
-    id: string;
-    product_id: string;
-    product_name: string;
-    quantity: number;
-    price: number;
-  }>;
-  delivery_photo?: string;
-  marketing_consent?: boolean;
-}
+import { Order } from '@/types/order';
 
 interface OrderDetailsProps {
   order: Order;
@@ -55,7 +30,7 @@ interface OrderDetailsProps {
   onClose: () => void;
 }
 
-const OrderDetails = ({ order }: OrderDetailsProps) => {
+const OrderDetails = ({ order, isOpen, onClose }: OrderDetailsProps) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleString('de-CH', {

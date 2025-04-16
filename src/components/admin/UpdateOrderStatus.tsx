@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -18,11 +17,7 @@ import {
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Truck, CheckCircle, Clock, Upload, Loader2 } from 'lucide-react';
-
-interface Order {
-  id: string;
-  status: string;
-}
+import { Order } from '@/types/order';
 
 interface UpdateOrderStatusProps {
   order: Order;
@@ -51,15 +46,12 @@ const UpdateOrderStatus = ({ order, isOpen, onClose }: UpdateOrderStatusProps) =
     try {
       let photoUrl = null;
       
-      // Upload photo if provided and status is delivered
       if (status === 'delivered' && deliveryPhoto) {
         setIsUploading(true);
         
-        // Generate unique filename
         const fileExt = deliveryPhoto.name.split('.').pop();
         const fileName = `${order.id}_${Math.random().toString(36).substring(2)}.${fileExt}`;
         
-        // Upload to Supabase Storage
         const { data: uploadData, error: uploadError } = await supabase
           .storage
           .from('delivery-photos')
@@ -69,7 +61,6 @@ const UpdateOrderStatus = ({ order, isOpen, onClose }: UpdateOrderStatusProps) =
           throw uploadError;
         }
         
-        // Get public URL
         const { data: urlData } = supabase
           .storage
           .from('delivery-photos')
@@ -79,10 +70,8 @@ const UpdateOrderStatus = ({ order, isOpen, onClose }: UpdateOrderStatusProps) =
         setIsUploading(false);
       }
       
-      // Update order status
       const updateData: any = { status };
       
-      // Add photo URL and marketing consent if available
       if (photoUrl) {
         updateData.delivery_photo = photoUrl;
         updateData.marketing_consent = marketingConsent;
@@ -97,16 +86,13 @@ const UpdateOrderStatus = ({ order, isOpen, onClose }: UpdateOrderStatusProps) =
         throw updateError;
       }
       
-      // Show success message
       toast({
         title: "Status aktualisiert",
         description: "Dr Bstellstatus isch erfolgriich aktualisiert worde.",
       });
       
-      // Refresh data
       queryClient.invalidateQueries({ queryKey: ['admin-orders'] });
       
-      // Close dialog
       onClose();
       
     } catch (error) {
