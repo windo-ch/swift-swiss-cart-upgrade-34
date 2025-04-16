@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Product } from '@/types/product';
@@ -31,8 +30,16 @@ const RelatedProductItem = ({ product }: { product: Product }) => {
   
   useEffect(() => {
     setHasImageError(false);
-    const processedUrl = getProductImageUrl(product.image);
-    setImageSrc(processedUrl);
+    if (product.image) {
+      if (product.image.startsWith('http')) {
+        setImageSrc(product.image);
+      } else {
+        const processedUrl = getProductImageUrl(product.image);
+        setImageSrc(processedUrl);
+      }
+    } else {
+      setImageSrc(PLACEHOLDER_IMAGE);
+    }
   }, [product.image]);
 
   return (

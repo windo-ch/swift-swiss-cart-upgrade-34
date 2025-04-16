@@ -22,9 +22,14 @@ const ImageUpload = ({ onImageUploaded, existingImageUrl }: ImageUploadProps) =>
   // Process existing image URL to show correctly in preview
   useEffect(() => {
     if (existingImageUrl) {
-      const processedUrl = getProductImageUrl(existingImageUrl);
-      setPreviewUrl(processedUrl);
-      setHasImageError(false);
+      try {
+        // For preview, we use the full URL
+        setPreviewUrl(existingImageUrl);
+        setHasImageError(false);
+      } catch (error) {
+        console.error("Error setting preview URL:", error);
+        setHasImageError(true);
+      }
     } else {
       setPreviewUrl('');
     }
@@ -58,16 +63,13 @@ const ImageUpload = ({ onImageUploaded, existingImageUrl }: ImageUploadProps) =>
       console.log("Upload successful, data:", data);
 
       // Get the public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('product-images')
-        .getPublicUrl(filePath);
-
+      const publicUrl = `https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/${filePath}`;
       console.log("Generated public URL:", publicUrl);
       
       // Update the preview
       setPreviewUrl(publicUrl);
       
-      // Store the complete Supabase URL
+      // Pass the file path to parent component
       onImageUploaded(publicUrl);
       
       toast({
@@ -95,7 +97,7 @@ const ImageUpload = ({ onImageUploaded, existingImageUrl }: ImageUploadProps) =>
             src={hasImageError ? PLACEHOLDER_IMAGE : previewUrl} 
             alt="Product preview"
             className="w-full h-full object-cover"
-            onError={(e) => {
+            onError={() => {
               console.error(`Error loading image preview: ${previewUrl}`);
               setHasImageError(true);
             }}
