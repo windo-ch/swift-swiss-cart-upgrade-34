@@ -5,7 +5,7 @@ export const energyDrinks: Product[] = [
   {
     id: 5,
     name: 'Red Bull Energy Drink',
-    image: 'red-bull-energy-drink-250ml-787.jpg',
+    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-ch-red-bull-250ml-300x300.png',
     price: 3.50,
     category: 'energy',
     description: 'Red Bull Original energy drink',
@@ -16,7 +16,7 @@ export const energyDrinks: Product[] = [
   {
     id: 20,
     name: 'Red Bull Sugarfree',
-    image: 'red-bull-sugarfree-250ml-787.jpg',
+    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-ch-red-bull-sugarfree-250ml-300x300.png',
     price: 3.50,
     category: 'energy',
     description: 'Red Bull Sugarfree energy drink',
@@ -27,7 +27,7 @@ export const energyDrinks: Product[] = [
   {
     id: 21,
     name: 'Arizona Green Tea',
-    image: 'arizona-green-tea-500ml-787.jpg',
+    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-ch-arizona-green-tea-500ml-300x300.png',
     price: 3.50,
     category: 'energy',
     description: 'Arizona Green Tea with honey and ginseng',

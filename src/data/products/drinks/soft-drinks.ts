@@ -5,7 +5,7 @@ export const softDrinks: Product[] = [
   {
     id: 2,
     name: 'Coca Cola 0.5L',
-    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images//gobrings-ch-cocacola-500ml-300x300.png',
+    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-ch-cocacola-500ml-300x300.png',
     price: 2.50,
     category: 'drinks',
     description: 'Coca-Cola Classic',
@@ -16,7 +16,7 @@ export const softDrinks: Product[] = [
   {
     id: 3,
     name: 'Rivella Rot 0.5L',
-    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images//gobrings-ch-rivella-rot-300x300.png',
+    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-ch-rivella-rot-300x300.png',
     price: 2.80,
     category: 'drinks',
     description: 'Swiss soft drink Rivella Red',
@@ -27,7 +27,7 @@ export const softDrinks: Product[] = [
   {
     id: 17,
     name: 'Coca Cola 1.5L',
-    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images//gobrings-ch-cocacola-1500ml-300x300.png',
+    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-ch-cocacola-1500ml-300x300.png',
     price: 5.90,
     category: 'drinks',
     description: 'Coca Cola in a 1.5L bottle',
@@ -38,7 +38,7 @@ export const softDrinks: Product[] = [
   {
     id: 18,
     name: 'Coca Cola Zero',
-    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images//gobrings-ch-cocacola-zero-500ml-300x300.png',
+    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-ch-cocacola-zero-500ml-300x300.png',
     price: 2.50,
     category: 'drinks',
     description: 'Coca Cola Zero',
@@ -49,7 +49,7 @@ export const softDrinks: Product[] = [
   {
     id: 19,
     name: 'Fanta 1.5L',
-    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images//gobrings-ch-fanta-orange-1500ml-300x300.png',
+    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-ch-fanta-orange-1500ml-300x300.png',
     price: 5.90,
     category: 'drinks',
     description: 'Fanta in a 1.5L bottle',
@@ -60,7 +60,7 @@ export const softDrinks: Product[] = [
   {
     id: 23,
     name: 'Sinalco Original',
-    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images//gobrings-ch-sinalco-originalm-300x300.png',
+    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-ch-sinalco-originalm-300x300.png',
     price: 2.50,
     category: 'drinks',
     description: 'Sinalco Original soft drink',
@@ -71,7 +71,7 @@ export const softDrinks: Product[] = [
   {
     id: 24,
     name: 'Uludag Original',
-    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images//gobrings-ch-uludag-gazoz-500ml-300x300.png',
+    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-ch-uludag-gazoz-500ml-300x300.png',
     price: 2.50,
     category: 'drinks',
     description: 'Uludag Original soft drink',

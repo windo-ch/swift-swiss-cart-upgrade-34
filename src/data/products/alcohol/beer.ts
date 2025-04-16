@@ -1,10 +1,11 @@
+
 import { Product } from '../../../types/product';
 
 export const beer: Product[] = [
   {
     id: 51,
     name: 'Feldschlösschen Original 0.33L',
-    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images//gobrings-ch-Fekdschloesschen-Orginal-Dose-300x300.png',
+    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-ch-Fekdschloesschen-Orginal-Dose-300x300.png',
     price: 2.50,
     category: 'alcohol',
     description: 'Original Feldschlösschen beer in a 0.33l bottle',
@@ -15,7 +16,7 @@ export const beer: Product[] = [
   {
     id: 7,
     name: 'Feldschlösschen Bier',
-    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images//gobrings-ch-Fekdschloesschen-Orginal-Dose-300x300.png',
+    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-ch-Fekdschloesschen-Orginal-Dose-300x300.png',
     price: 3.50,
     category: 'alcohol',
     description: 'Original Feldschlösschen beer',
@@ -26,7 +27,7 @@ export const beer: Product[] = [
   {
     id: 52,
     name: 'Quöllfrisch 0.33L',
-    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images//gobrings-ch-appenzeller-quellfrisch-300x300.png',
+    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-ch-appenzeller-quellfrisch-300x300.png',
     price: 2.50,
     category: 'alcohol',
     description: 'Quöllfrisch beer',
@@ -37,7 +38,7 @@ export const beer: Product[] = [
   {
     id: 53,
     name: 'Quöllfrisch 0.5L',
-    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images//gobrings-ch-appenzeller-quellfrisch-300x300.png',
+    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-ch-appenzeller-quellfrisch-300x300.png',
     price: 3.50,
     category: 'alcohol',
     description: 'Quöllfrisch beer',
@@ -48,7 +49,7 @@ export const beer: Product[] = [
   {
     id: 54,
     name: 'Birra Ichnusa non Filtrata',
-    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images//gobrings-ch-birra-ichnusa-nonFiltrata-300x300.png',
+    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-ch-birra-ichnusa-nonFiltrata-300x300.png',
     price: 3.90,
     category: 'alcohol',
     description: 'Unfiltered Birra Ichnusa beer',
@@ -59,7 +60,7 @@ export const beer: Product[] = [
   {
     id: 55,
     name: 'Birra Morreti',
-    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images//gobrings-ch-birra-moretti-300x300.png',
+    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-ch-birra-moretti-300x300.png',
     price: 2.80,
     category: 'alcohol',
     description: 'Birra Morreti beer',
@@ -70,7 +71,7 @@ export const beer: Product[] = [
   {
     id: 56,
     name: 'Desperados Original',
-    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images//gobrings-desperados-original-tequila-beer-300x300.jpeg',
+    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-desperados-original-tequila-beer-300x300.jpeg',
     price: 3.60,
     category: 'alcohol',
     description: 'Original Desperados beer',
@@ -81,7 +82,7 @@ export const beer: Product[] = [
   {
     id: 57,
     name: 'Früh Kölsch 0.33L',
-    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images//gobrings-ch-kolsch-330ml-300x300.png',
+    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-ch-kolsch-330ml-300x300.png',
     price: 3.50,
     category: 'alcohol',
     description: 'Früh Kölsch beer in a 0.33l bottle',
@@ -92,7 +93,7 @@ export const beer: Product[] = [
   {
     id: 58,
     name: 'Heineken Premium 0.33L',
-    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images//gobrings-ch-heineken-premium-beer-300x300.png',
+    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-ch-heineken-premium-beer-300x300.png',
     price: 2.50,
     category: 'alcohol',
     description: 'Heineken Premium beer',
@@ -103,7 +104,7 @@ export const beer: Product[] = [
   {
     id: 59,
     name: 'Heineken Premium 0.5L',
-    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images//gobrings-ch-heineken-premium-beer-300x300.png',
+    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-ch-heineken-premium-beer-300x300.png',
     price: 3.60,
     category: 'alcohol',
     description: 'Heineken Premium beer',
@@ -114,7 +115,7 @@ export const beer: Product[] = [
   {
     id: 60,
     name: 'Mönchshof Kellerbier 0.5L',
-    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images//gobrings-ch-monchshof-500ml-300x300.png',
+    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-ch-monchshof-500ml-300x300.png',
     price: 3.90,
     category: 'alcohol',
     description: 'Mönchshof Kellerbier in a 0.5l bottle',
@@ -125,7 +126,7 @@ export const beer: Product[] = [
   {
     id: 61,
     name: 'Rothaus Tannenzäpfle 0.33L',
-    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images//gobrings-ch-rothaus-tannenzapfle-330ml-300x300.png',
+    image: 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-ch-rothaus-tannenzapfle-330ml-300x300.png',
     price: 3.20,
     category: 'alcohol',
     description: 'Rothaus Tannenzäpfle beer in a 0.33l bottle',
