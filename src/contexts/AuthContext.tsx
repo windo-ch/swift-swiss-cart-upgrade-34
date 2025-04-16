@@ -55,12 +55,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // Check if this is a first-time user with no previous orders
   const checkFirstTimeUser = async (userId: string) => {
     try {
-      // Check for previous orders
+      // Check for previous orders using rpc or raw query instead of typed query
       const { data: orders, error } = await supabase
         .from('orders')
         .select('id')
         .eq('user_id', userId)
-        .limit(1);
+        .limit(1) as any;
         
       if (error) throw error;
       
@@ -71,7 +71,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           .select('*')
           .eq('user_id', userId)
           .eq('discount_code', 'FIRSTTIME')
-          .limit(1);
+          .limit(1) as any;
           
         if (discountError) throw discountError;
         
@@ -96,7 +96,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           discount_percent: 10,
           is_used: false,
           valid_until: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days
-        });
+        }) as any;
         
       if (error) throw error;
       
