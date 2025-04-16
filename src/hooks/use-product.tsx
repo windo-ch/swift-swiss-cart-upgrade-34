@@ -1,13 +1,13 @@
 
 import { useState, useEffect } from 'react';
 import { Product } from '../types/product';
-import { getAllProducts } from '../utils/product-utils';
+import { getStoredProducts } from '../utils/product-utils';
 
 export const useProduct = (productId: string | undefined) => {
   const [products, setProducts] = useState<Product[]>([]);
   
   useEffect(() => {
-    setProducts(getAllProducts());
+    setProducts(getStoredProducts());
   }, []);
   
   const product = products.find(p => p.id.toString() === productId);
