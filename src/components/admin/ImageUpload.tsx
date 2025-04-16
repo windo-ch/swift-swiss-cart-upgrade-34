@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Upload, Image as ImageIcon } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
@@ -16,10 +16,19 @@ const PLACEHOLDER_IMAGE = 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/o
 const ImageUpload = ({ onImageUploaded, existingImageUrl }: ImageUploadProps) => {
   const [isUploading, setIsUploading] = useState(false);
   const [hasImageError, setHasImageError] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string>('');
   const { toast } = useToast();
   
   // Process existing image URL to show correctly in preview
-  const processedExistingUrl = existingImageUrl ? getProductImageUrl(existingImageUrl) : '';
+  useEffect(() => {
+    if (existingImageUrl) {
+      const processedUrl = getProductImageUrl(existingImageUrl);
+      setPreviewUrl(processedUrl);
+      setHasImageError(false);
+    } else {
+      setPreviewUrl('');
+    }
+  }, [existingImageUrl]);
 
   const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -27,6 +36,7 @@ const ImageUpload = ({ onImageUploaded, existingImageUrl }: ImageUploadProps) =>
 
     try {
       setIsUploading(true);
+      setHasImageError(false);
 
       // Create a unique file name
       const fileExt = file.name.split('.').pop();
@@ -54,6 +64,9 @@ const ImageUpload = ({ onImageUploaded, existingImageUrl }: ImageUploadProps) =>
 
       console.log("Generated public URL:", publicUrl);
       
+      // Update the preview
+      setPreviewUrl(publicUrl);
+      
       // Store the complete Supabase URL
       onImageUploaded(publicUrl);
       
@@ -63,6 +76,7 @@ const ImageUpload = ({ onImageUploaded, existingImageUrl }: ImageUploadProps) =>
       });
     } catch (error) {
       console.error('Error uploading image:', error);
+      setHasImageError(true);
       toast({
         title: "Fehler bim Uelade",
         description: "S'Bild het nöd chöne glade werde. Bitte nomol probiere.",
@@ -75,14 +89,14 @@ const ImageUpload = ({ onImageUploaded, existingImageUrl }: ImageUploadProps) =>
 
   return (
     <div className="space-y-4">
-      {processedExistingUrl && (
+      {previewUrl && (
         <div className="relative w-full h-40 bg-gray-100 rounded-lg overflow-hidden">
           <img
-            src={hasImageError ? PLACEHOLDER_IMAGE : processedExistingUrl} 
+            src={hasImageError ? PLACEHOLDER_IMAGE : previewUrl} 
             alt="Product preview"
             className="w-full h-full object-cover"
             onError={(e) => {
-              console.error(`Error loading image preview: ${processedExistingUrl}`);
+              console.error(`Error loading image preview: ${previewUrl}`);
               setHasImageError(true);
             }}
           />

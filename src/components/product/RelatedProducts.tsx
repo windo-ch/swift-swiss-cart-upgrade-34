@@ -1,7 +1,8 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Product } from '@/types/product';
+import { getProductImageUrl } from '@/utils/product-utils';
 
 interface RelatedProductsProps {
   products: Product[];
@@ -26,6 +27,13 @@ const RelatedProducts = ({ products }: RelatedProductsProps) => {
 
 const RelatedProductItem = ({ product }: { product: Product }) => {
   const [hasImageError, setHasImageError] = useState(false);
+  const [imageSrc, setImageSrc] = useState('');
+  
+  useEffect(() => {
+    setHasImageError(false);
+    const processedUrl = getProductImageUrl(product.image);
+    setImageSrc(processedUrl);
+  }, [product.image]);
 
   return (
     <Link 
@@ -34,7 +42,7 @@ const RelatedProductItem = ({ product }: { product: Product }) => {
     >
       <div className="relative h-40">
         <img 
-          src={hasImageError ? PLACEHOLDER_IMAGE : product.image} 
+          src={hasImageError ? PLACEHOLDER_IMAGE : imageSrc} 
           alt={product.name} 
           className="w-full h-full object-cover"
           onError={() => setHasImageError(true)}

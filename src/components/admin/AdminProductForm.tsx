@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
@@ -26,7 +26,17 @@ const AdminProductForm = ({ initialData, onCancel }: AdminProductFormProps) => {
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
-    defaultValues: initialData || {
+    defaultValues: initialData ? {
+      name: initialData.name || '',
+      price: initialData.price || 0,
+      category: initialData.category || '',
+      description: initialData.description || '',
+      image: initialData.image || '',
+      weight: initialData.weight || '',
+      ingredients: initialData.ingredients || '',
+      stock: initialData.stock !== undefined ? initialData.stock : 0,
+      ageRestricted: initialData.ageRestricted || false,
+    } : {
       name: '',
       price: 0,
       category: '',
@@ -38,6 +48,36 @@ const AdminProductForm = ({ initialData, onCancel }: AdminProductFormProps) => {
       ageRestricted: false,
     },
   });
+
+  // Reset form when initialData changes (when editing a different product)
+  useEffect(() => {
+    if (initialData) {
+      console.log("Setting form values from initialData:", initialData);
+      form.reset({
+        name: initialData.name || '',
+        price: initialData.price || 0,
+        category: initialData.category || '',
+        description: initialData.description || '',
+        image: initialData.image || '',
+        weight: initialData.weight || '',
+        ingredients: initialData.ingredients || '',
+        stock: initialData.stock !== undefined ? initialData.stock : 0,
+        ageRestricted: initialData.ageRestricted || false,
+      });
+    } else {
+      form.reset({
+        name: '',
+        price: 0,
+        category: '',
+        description: '',
+        image: '',
+        weight: '',
+        ingredients: '',
+        stock: 0,
+        ageRestricted: false,
+      });
+    }
+  }, [initialData, form]);
 
   const onSubmit = (data: ProductFormValues) => {
     if (isEditing && initialData) {
@@ -65,6 +105,7 @@ const AdminProductForm = ({ initialData, onCancel }: AdminProductFormProps) => {
   };
 
   const handleImageUploaded = (url: string) => {
+    console.log("Image uploaded, setting form value:", url);
     form.setValue('image', url);
   };
 
