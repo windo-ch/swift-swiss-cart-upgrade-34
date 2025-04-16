@@ -23,7 +23,6 @@ const categories = [
 
 // Product form schema
 const productSchema = z.object({
-  id: z.string().optional(),
   name: z.string().min(3, { message: 'Name muess mindestens 3 Zeiche ha' }),
   price: z.coerce.number().min(0.1, { message: 'Priis muess grösser als 0 si' }),
   category: z.string({ required_error: 'Bitte wähl e Kategorie us' }),
@@ -60,17 +59,21 @@ const AdminProductForm = ({ initialData, onCancel }: AdminProductFormProps) => {
 
   const onSubmit = (data: ProductFormValues) => {
     if (isEditing && initialData) {
+      // For updating, we need to include the id from initialData
       updateProduct({
         ...data,
         id: initialData.id,
-      });
+      } as Product); // Cast to Product since we know all required fields are present
+      
       toast({
         title: "Produkt aktualisiert",
         description: `${data.name} isch erfolgrich aktualisiert worde.`,
         duration: 3000,
       });
     } else {
-      addProduct(data);
+      // For adding a new product, we properly type it as Omit<Product, "id">
+      addProduct(data as Omit<Product, "id">);
+      
       toast({
         title: "Produkt hinzuegfüegt",
         description: `${data.name} isch erfolgrich hinzuegfüegt worde.`,
