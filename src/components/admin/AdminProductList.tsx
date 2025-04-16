@@ -4,23 +4,10 @@ import { useAdmin } from '@/contexts/AdminContext';
 import { useToast } from '@/components/ui/use-toast';
 import SearchBar from './SearchBar';
 import ProductTable from './ProductTable';
+import ProductFilters from './ProductFilters';
+import ProductStats from './ProductStats';
+import ProductLoadingState from './ProductLoadingState';
 import { Product } from '@/types/product';
-import { Loader2, SlidersHorizontal } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from '@/components/ui/select';
-import { categories } from '@/data/categories-data';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 
 interface AdminProductListProps {
   onEdit: (product: Product) => void;
@@ -97,10 +84,6 @@ const AdminProductList = ({ onEdit }: AdminProductListProps) => {
       }
     });
 
-  const totalProducts = products.length;
-  const restrictedProducts = products.filter(p => p.ageRestricted).length;
-  const lowStockProducts = products.filter(p => (p.stock || 0) < 10).length;
-
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
       <SearchBar 
@@ -111,89 +94,23 @@ const AdminProductList = ({ onEdit }: AdminProductListProps) => {
         showRestricted={showRestricted}
       />
 
-      <Accordion type="single" collapsible className="mb-4">
-        <AccordionItem value="filters">
-          <AccordionTrigger className="py-2">
-            <div className="flex items-center">
-              <SlidersHorizontal size={16} className="mr-2" />
-              Erweiterte Filter
-            </div>
-          </AccordionTrigger>
-          <AccordionContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-              <div>
-                <label className="text-sm font-medium mb-1 block">Kategorie</label>
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Alle Kategorien" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Alle Kategorien</SelectItem>
-                    {categories.filter(cat => cat.id !== 'all').map(category => (
-                      <SelectItem key={category.id} value={category.id}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div>
-                <label className="text-sm font-medium mb-1 block">Sortieren nach</label>
-                <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sortieren nach" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="name">Name (A-Z)</SelectItem>
-                    <SelectItem value="name-desc">Name (Z-A)</SelectItem>
-                    <SelectItem value="price">Preis (aufsteigend)</SelectItem>
-                    <SelectItem value="price-desc">Preis (absteigend)</SelectItem>
-                    <SelectItem value="stock">Lagerbestand (aufsteigend)</SelectItem>
-                    <SelectItem value="stock-desc">Lagerbestand (absteigend)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+      <ProductFilters
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+      />
 
-      <div className="flex flex-wrap gap-2 mb-4">
-        <Badge variant="outline" className="bg-blue-50 text-blue-700">
-          {totalProducts} Produkte Total
-        </Badge>
-        <Badge 
-          variant={showRestricted ? "default" : "outline"} 
-          className={showRestricted ? "bg-amber-500" : "bg-amber-50 text-amber-700"} 
-          onClick={() => setShowRestricted(!showRestricted)}
-        >
-          {restrictedProducts} 18+ Produkte
-        </Badge>
-        <Badge variant="outline" className="bg-red-50 text-red-700">
-          {lowStockProducts} mit niedrigem Bestand
-        </Badge>
-        {selectedCategory !== 'all' && (
-          <Badge 
-            variant="default" 
-            className="bg-green-600"
-          >
-            Filter: {categories.find(c => c.id === selectedCategory)?.name || selectedCategory}
-            <button 
-              className="ml-1 hover:text-white/80" 
-              onClick={() => setSelectedCategory('all')}
-            >
-              ✕
-            </button>
-          </Badge>
-        )}
-      </div>
+      <ProductStats
+        products={products}
+        showRestricted={showRestricted}
+        setShowRestricted={setShowRestricted}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+      />
 
       {isLoading ? (
-        <div className="text-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-brings-primary mx-auto mb-4" />
-          <p className="text-gray-500 text-lg">Produkte werden geladen...</p>
-        </div>
+        <ProductLoadingState />
       ) : (
         <ProductTable
           products={filteredProducts}
