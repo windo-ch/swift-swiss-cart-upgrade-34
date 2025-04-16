@@ -59,7 +59,7 @@ const ProductRow = ({ product, onEdit, onDelete }: ProductRowProps) => {
         <Button 
           variant="ghost" 
           size="sm"
-          onClick={() => onDelete(product.id)}
+          onClick={() => onDelete(product.id.toString())}
           className="text-red-600 hover:text-red-800"
         >
           <Trash2 size={16} />

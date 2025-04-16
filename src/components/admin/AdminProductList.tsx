@@ -5,6 +5,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { getStoredProducts } from '@/utils/product-utils';
 import SearchBar from './SearchBar';
 import ProductTable from './ProductTable';
+import { Product } from '@/types/product';
 
 interface AdminProductListProps {
   onEdit: (product: any) => void;
@@ -34,7 +35,7 @@ const AdminProductList = ({ onEdit }: AdminProductListProps) => {
           description: p.description || '', 
           weight: p.weight || '', 
           ingredients: p.ingredients || '',
-          ageRestricted: !!p.ageRestricted
+          ageRestricted: p.ageRestricted || false // Set default to false if undefined
         }));
       
       console.log("AdminProductList: Found admin products:", adminOnlyProducts.length);
@@ -95,7 +96,7 @@ const AdminProductList = ({ onEdit }: AdminProductListProps) => {
       />
 
       <ProductTable
-        products={products}
+        products={products as Product[]}
         searchTerm={searchTerm}
         onEdit={onEdit}
         onDelete={handleDelete}

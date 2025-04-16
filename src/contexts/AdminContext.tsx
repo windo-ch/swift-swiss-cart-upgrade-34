@@ -1,18 +1,12 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { Product as ProductType } from '@/types/product';
 
-// Define a strict product type
-export interface Product {
+// Define our context product type based on the global Product type
+export type Product = Omit<ProductType, 'isNew' | 'isFeatured'> & {
   id: string;
-  name: string;
-  image: string;
-  price: number;
-  category: string;
-  description: string;
-  weight: string;
-  ingredients?: string;
   ageRestricted?: boolean;
-}
+};
 
 interface AdminContextType {
   products: Product[];
@@ -59,6 +53,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     const newProduct: Product = {
       ...productData,
       id: `admin-${Date.now()}`,
+      ageRestricted: productData.ageRestricted || false, // Ensure ageRestricted has a default value
     };
     setProducts(prev => [...prev, newProduct]);
   };
