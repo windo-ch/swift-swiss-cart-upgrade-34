@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ShoppingBag, Shield, Heart, ShoppingCart } from 'lucide-react';
@@ -18,6 +18,8 @@ interface ProductCardProps {
   ageRestricted?: boolean;
 }
 
+const PLACEHOLDER_IMAGE = 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-product-placeholder.png';
+
 const ProductCard = ({ 
   product,
   id, 
@@ -30,6 +32,7 @@ const ProductCard = ({
   ageRestricted = false 
 }: ProductCardProps) => {
   const { addToCart } = useCart();
+  const [hasImageError, setHasImageError] = useState(false);
 
   // Handle both ways of passing props (as a product object or as individual props)
   const productId = product?.id?.toString() || id;
@@ -61,9 +64,14 @@ const ProductCard = ({
       <div className="relative overflow-hidden">
         <Link to={`/product/${productId}`}>
           <img 
-            src={productImage} 
+            src={hasImageError ? PLACEHOLDER_IMAGE : productImage} 
             alt={productName} 
             className="product-image transition-transform duration-300 group-hover:scale-105"
+            onError={() => {
+              console.error(`Error loading product image: ${productImage} for ${productName}`);
+              setHasImageError(true);
+            }}
+            loading="lazy"
           />
         </Link>
         

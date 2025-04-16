@@ -24,12 +24,13 @@ interface ProductRowProps {
   onDelete: (id: string) => void;
 }
 
+const PLACEHOLDER_IMAGE = 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-product-placeholder.png';
+
 const ProductRow = ({ product, onEdit, onDelete }: ProductRowProps) => {
   const [hasImageError, setHasImageError] = useState(false);
   const [isEditingStock, setIsEditingStock] = useState(false);
   const [stockValue, setStockValue] = useState(product.stock?.toString() || "0");
   const { updateStock } = useAdmin();
-  const placeholderImage = 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png';
 
   const handleStockChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setStockValue(e.target.value);
@@ -66,7 +67,7 @@ const ProductRow = ({ product, onEdit, onDelete }: ProductRowProps) => {
             {product.image ? (
               <img 
                 className="h-10 w-10 rounded-md object-cover" 
-                src={hasImageError ? placeholderImage : product.image} 
+                src={hasImageError ? PLACEHOLDER_IMAGE : product.image} 
                 alt={product.name}
                 onError={() => {
                   console.error(`Error loading admin product image: ${product.image} for ${product.name}`);

@@ -11,11 +11,12 @@ interface ImageUploadProps {
   existingImageUrl?: string;
 }
 
+const PLACEHOLDER_IMAGE = 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-product-placeholder.png';
+
 const ImageUpload = ({ onImageUploaded, existingImageUrl }: ImageUploadProps) => {
   const [isUploading, setIsUploading] = useState(false);
   const [hasImageError, setHasImageError] = useState(false);
   const { toast } = useToast();
-  const placeholderImage = 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png';
   
   // Process existing image URL to show correctly in preview
   const processedExistingUrl = existingImageUrl ? getProductImageUrl(existingImageUrl) : '';
@@ -77,7 +78,7 @@ const ImageUpload = ({ onImageUploaded, existingImageUrl }: ImageUploadProps) =>
       {processedExistingUrl && (
         <div className="relative w-full h-40 bg-gray-100 rounded-lg overflow-hidden">
           <img
-            src={hasImageError ? placeholderImage : processedExistingUrl} 
+            src={hasImageError ? PLACEHOLDER_IMAGE : processedExistingUrl} 
             alt="Product preview"
             className="w-full h-full object-cover"
             onError={(e) => {

@@ -19,6 +19,8 @@ interface ProductCardProps {
   stock?: number;
 }
 
+const PLACEHOLDER_IMAGE = 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-product-placeholder.png';
+
 const ProductCard = ({ 
   product,
   id,
@@ -33,7 +35,6 @@ const ProductCard = ({
 }: ProductCardProps) => {
   const { addToCart } = useCart();
   const [hasImageError, setHasImageError] = useState(false);
-  const placeholderImage = 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png';
 
   // Handle both ways of passing props (as a product object or as individual props)
   const productId = product?.id?.toString() || id;
@@ -68,7 +69,7 @@ const ProductCard = ({
       <div className="relative overflow-hidden">
         <Link to={`/product/${productId}`}>
           <img 
-            src={hasImageError ? placeholderImage : productImage} 
+            src={hasImageError ? PLACEHOLDER_IMAGE : productImage} 
             alt={productName} 
             className={`w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105 ${isOutOfStock ? 'opacity-50' : ''}`}
             onError={() => {

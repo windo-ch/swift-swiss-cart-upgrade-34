@@ -7,6 +7,8 @@ interface RelatedProductsProps {
   products: Product[];
 }
 
+const PLACEHOLDER_IMAGE = 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-product-placeholder.png';
+
 const RelatedProducts = ({ products }: RelatedProductsProps) => {
   if (products.length === 0) return null;
 
@@ -24,7 +26,6 @@ const RelatedProducts = ({ products }: RelatedProductsProps) => {
 
 const RelatedProductItem = ({ product }: { product: Product }) => {
   const [hasImageError, setHasImageError] = useState(false);
-  const placeholderImage = 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png';
 
   return (
     <Link 
@@ -33,7 +34,7 @@ const RelatedProductItem = ({ product }: { product: Product }) => {
     >
       <div className="relative h-40">
         <img 
-          src={hasImageError ? placeholderImage : product.image} 
+          src={hasImageError ? PLACEHOLDER_IMAGE : product.image} 
           alt={product.name} 
           className="w-full h-full object-cover"
           onError={() => setHasImageError(true)}

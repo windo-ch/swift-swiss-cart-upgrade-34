@@ -1,13 +1,15 @@
+
 import { Product } from '../types/product';
 import { products as storeProducts } from '../data/products/index';
 import { seedProductsData } from './seed-products';
 
 const SUPABASE_URL = "https://zbvdlkfnpufqfhrptfhz.supabase.co";
 const DEFAULT_BUCKET = 'product-images';
+const PLACEHOLDER_IMAGE = 'https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/gobrings-product-placeholder.png';
 
 export const getProductImageUrl = (imageName: string): string => {
   if (!imageName) {
-    return 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png';
+    return PLACEHOLDER_IMAGE;
   }
   
   // If it's already a full URL with the correct Supabase domain, return it as is
@@ -15,9 +17,10 @@ export const getProductImageUrl = (imageName: string): string => {
     return imageName;
   }
   
-  // If it's a full URL but not from Supabase, keep it as is (might be external)
+  // If it's a full URL but not from Supabase, return the placeholder
   if (imageName.startsWith('http')) {
-    return imageName;
+    console.log(`Non-Supabase URL detected: ${imageName}, using placeholder`);
+    return PLACEHOLDER_IMAGE;
   }
   
   // Remove any leading slashes to avoid double slashes in URL
