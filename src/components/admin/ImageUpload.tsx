@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Upload, Image as ImageIcon } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { getProductImageUrl } from '../../utils/product-utils';
 
 interface ImageUploadProps {
   onImageUploaded: (url: string) => void;
@@ -15,6 +16,9 @@ const ImageUpload = ({ onImageUploaded, existingImageUrl }: ImageUploadProps) =>
   const [hasImageError, setHasImageError] = useState(false);
   const { toast } = useToast();
   const placeholderImage = 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png';
+  
+  // Process existing image URL to show correctly in preview
+  const processedExistingUrl = existingImageUrl ? getProductImageUrl(existingImageUrl) : '';
 
   const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -49,6 +53,7 @@ const ImageUpload = ({ onImageUploaded, existingImageUrl }: ImageUploadProps) =>
 
       console.log("Generated public URL:", publicUrl);
       
+      // Store the complete Supabase URL
       onImageUploaded(publicUrl);
       
       toast({
@@ -69,14 +74,14 @@ const ImageUpload = ({ onImageUploaded, existingImageUrl }: ImageUploadProps) =>
 
   return (
     <div className="space-y-4">
-      {existingImageUrl && (
+      {processedExistingUrl && (
         <div className="relative w-full h-40 bg-gray-100 rounded-lg overflow-hidden">
           <img
-            src={hasImageError ? placeholderImage : existingImageUrl}
+            src={hasImageError ? placeholderImage : processedExistingUrl} 
             alt="Product preview"
             className="w-full h-full object-cover"
             onError={(e) => {
-              console.error(`Error loading image preview: ${existingImageUrl}`);
+              console.error(`Error loading image preview: ${processedExistingUrl}`);
               setHasImageError(true);
             }}
           />

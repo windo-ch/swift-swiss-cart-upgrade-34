@@ -1,4 +1,3 @@
-
 import { Product } from '../types/product';
 import { products as storeProducts } from '../data/products/index';
 import { seedProductsData } from './seed-products';
@@ -11,13 +10,21 @@ export const getProductImageUrl = (imageName: string): string => {
     return 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png';
   }
   
-  // If it's already a full URL, return it
+  // If it's already a full URL with the correct Supabase domain, return it as is
+  if (imageName.includes(SUPABASE_URL)) {
+    return imageName;
+  }
+  
+  // If it's a full URL but not from Supabase, keep it as is (might be external)
   if (imageName.startsWith('http')) {
     return imageName;
   }
   
+  // Remove any leading slashes to avoid double slashes in URL
+  const cleanImageName = imageName.replace(/^\/+/, '');
+  
   // Construct Supabase storage URL with proper format
-  return `${SUPABASE_URL}/storage/v1/object/public/${DEFAULT_BUCKET}/${imageName.replace(/^\/+/, '')}`;
+  return `${SUPABASE_URL}/storage/v1/object/public/${DEFAULT_BUCKET}/${cleanImageName}`;
 };
 
 export const getStoredProducts = (): Product[] => {
@@ -34,14 +41,14 @@ export const getStoredProducts = (): Product[] => {
       if (adminProducts && adminProducts.length > 0) {
         console.log("✅ Using admin products as the source of truth");
         
-        // Ensure all products have required fields and proper formatting
+        // Ensure all products have required fields and proper formatting but DO NOT modify image URLs
         return adminProducts.map((product: Product) => ({
           ...product,
           id: String(product.id), // Ensure id is always a string
           name: product.name,
           price: typeof product.price === 'number' ? product.price : parseFloat(String(product.price)),
           category: product.category,
-          image: product.image, // Do not modify image URLs here as they should be correct already
+          image: product.image, // Keep the image URL as is
           description: product.description || '',
           weight: product.weight || '',
           ingredients: product.ingredients || '',
