@@ -14,7 +14,7 @@ import { AddressCard } from '@/components/profile/AddressCard';
 import { AddAddressForm } from '@/components/profile/AddAddressForm';
 import { Order } from '@/types/order';
 import { Badge } from '@/components/ui/badge';
-import { formatCurrency } from '@/utils/formatters';
+import { formatCurrency } from '@/utils/format-utils';
 import { Link } from 'react-router-dom';
 
 const Profile = () => {
