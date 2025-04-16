@@ -1,25 +1,14 @@
 import { Product } from '../types/product';
 
 export const products: Product[] = [
-  {
-    id: 1,
-    name: 'Zweifel Chips Paprika',
-    image: 'https://brings-delivery.ch/cdn/shop/products/zweifel-paprika-155g-550_600x.jpg',
-    price: 5.90,
-    category: 'chips',
-    ageRestricted: false,
-    isNew: false,
-    isFeatured: true,
-    ingredients: 'Kartoffeln, Sonnenblumenöl, Paprika-Gewürz, Salz.',
-    weight: '155g',
-    description: 'Knusprige Kartoffelchips mit Paprika-Geschmack.'
-  },
+  // Soft Drinks
   {
     id: 2,
     name: 'Coca Cola 0.5L',
     image: 'https://brings-delivery.ch/cdn/shop/products/coca-cola-classic-500ml-787_600x.jpg',
     price: 2.50,
     category: 'drinks',
+    description: 'Coca-Cola Classic',
     ageRestricted: false
   },
   {
@@ -28,46 +17,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/rivella-rot-500ml-787_600x.jpg',
     price: 2.80,
     category: 'drinks',
-    ageRestricted: false
-  },
-  {
-    id: 4,
-    name: 'Kägi Fret Mini',
-    image: 'https://brings-delivery.ch/cdn/shop/products/kagi-fret-mini-165g-250_600x.jpg',
-    price: 3.90,
-    category: 'sweets',
-    ageRestricted: false
-  },
-  {
-    id: 5,
-    name: 'Red Bull Energy Drink',
-    image: 'https://brings-delivery.ch/cdn/shop/products/red-bull-energy-drink-250ml-787_600x.jpg',
-    price: 3.50,
-    category: 'energy',
-    ageRestricted: false
-  },
-  {
-    id: 6,
-    name: 'Zweifel Chips Nature',
-    image: 'https://brings-delivery.ch/cdn/shop/products/zweifel-nature-155g-550_600x.jpg',
-    price: 5.90,
-    category: 'chips',
-    ageRestricted: false
-  },
-  {
-    id: 7,
-    name: 'Feldschlösschen Bier',
-    image: 'https://brings-delivery.ch/cdn/shop/products/feldschlosschen-original-500ml-787_600x.jpg',
-    price: 3.90,
-    category: 'alcohol',
-    ageRestricted: true
-  },
-  {
-    id: 8,
-    name: 'Ovomaltine Schokolade',
-    image: 'https://brings-delivery.ch/cdn/shop/products/cailler-milch-1_600x.jpg',
-    price: 2.90,
-    category: 'sweets',
+    description: 'Swiss soft drink Rivella Red',
     ageRestricted: false
   },
   {
@@ -76,6 +26,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/valser-classic-500ml-787_600x.jpg',
     price: 2.50,
     category: 'drinks',
+    description: 'Valser sparkling water',
     ageRestricted: false
   },
   {
@@ -84,14 +35,16 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/valser-silence-500ml-787_600x.jpg',
     price: 2.50,
     category: 'drinks',
+    description: 'Valser still water',
     ageRestricted: false
   },
-  {
+    {
     id: 11,
     name: 'Lauretana mit Kohlensäure',
     image: 'https://brings-delivery.ch/cdn/shop/products/lauretana-mineralwasser-mit-kohlensaure-1000ml-787_600x.jpg',
     price: 3.50,
     category: 'drinks',
+    description: 'Lauretana sparkling water',
     ageRestricted: false
   },
   {
@@ -100,6 +53,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/lauretana-mineralwasser-ohne-kohlensaure-1000ml-787_600x.jpg',
     price: 3.50,
     category: 'drinks',
+    description: 'Lauretana still water',
     ageRestricted: false
   },
   {
@@ -108,6 +62,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/arizona-honey-500ml-787_600x.jpg',
     price: 3.50,
     category: 'drinks',
+    description: 'AriZona Honey Ice Tea',
     ageRestricted: false
   },
   {
@@ -116,6 +71,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/arizona-honey-1500ml-787_600x.jpg',
     price: 6.50,
     category: 'drinks',
+    description: 'AriZona Honey Ice Tea in a 1.5L bottle',
     ageRestricted: false
   },
   {
@@ -124,6 +80,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/arizona-peach-1500ml-787_600x.jpg',
     price: 6.50,
     category: 'drinks',
+    description: 'AriZona Peach Ice Tea in a 1.5L bottle',
     ageRestricted: false
   },
   {
@@ -132,6 +89,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/capri-sun-multivitamin-330ml-787_600x.jpg',
     price: 2.00,
     category: 'drinks',
+    description: 'Capri-Sun Multivitamin juice drink',
     ageRestricted: false
   },
   {
@@ -140,6 +98,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/coca-cola-classic-1500ml-787_600x.jpg',
     price: 5.90,
     category: 'drinks',
+    description: 'Coca Cola in a 1.5L bottle',
     ageRestricted: false
   },
   {
@@ -148,22 +107,25 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/coca-cola-zero-500ml-787_600x.jpg',
     price: 2.50,
     category: 'drinks',
+    description: 'Coca Cola Zero',
     ageRestricted: false
   },
+  {
+        id: 2,
+        name: 'Coca-Cola Classic',
+        image: 'https://brings-delivery.ch/cdn/shop/products/coca-cola-classic-500ml-787_600x.jpg',
+        price: 2.50,
+        category: 'drinks',
+        description: 'Coca-Cola Classic',
+        ageRestricted: false
+    },
   {
     id: 19,
     name: 'Fanta 1.5L',
     image: 'https://brings-delivery.ch/cdn/shop/products/fanta-orange-1500ml-787_600x.jpg',
     price: 5.90,
     category: 'drinks',
-    ageRestricted: false
-  },
-  {
-    id: 20,
-    name: 'Red Bull Sugarfree',
-    image: 'https://brings-delivery.ch/cdn/shop/products/red-bull-sugarfree-250ml-787_600x.jpg',
-    price: 3.50,
-    category: 'energy',
+    description: 'Fanta in a 1.5L bottle',
     ageRestricted: false
   },
   {
@@ -172,6 +134,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/san-benedetto-ice-tea-lemon-500ml-787_600x.jpg',
     price: 2.50,
     category: 'drinks',
+    description: 'San Benedetto Lemon Ice Tea',
     ageRestricted: false
   },
   {
@@ -180,6 +143,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/san-benedetto-ice-tea-peach-500ml-787_600x.jpg',
     price: 2.50,
     category: 'drinks',
+    description: 'San Benedetto Peach Ice Tea',
     ageRestricted: false
   },
   {
@@ -188,6 +152,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/sinalco-original-330ml-787_600x.jpg',
     price: 2.50,
     category: 'drinks',
+    description: 'Sinalco Original soft drink',
     ageRestricted: false
   },
   {
@@ -196,14 +161,49 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/uludag-gazoz-500ml-787_600x.jpg',
     price: 2.50,
     category: 'drinks',
+    description: 'Uludag Original soft drink',
+    ageRestricted: false
+  },
+  // Energy Drinks
+  {
+    id: 5,
+    name: 'Red Bull Energy Drink',
+    image: 'https://brings-delivery.ch/cdn/shop/products/red-bull-energy-drink-250ml-787_600x.jpg',
+    price: 3.50,
+    category: 'energy',
+    description: 'Red Bull Original energy drink',
     ageRestricted: false
   },
   {
+    id: 20,
+    name: 'Red Bull Sugarfree',
+    image: 'https://brings-delivery.ch/cdn/shop/products/red-bull-sugarfree-250ml-787_600x.jpg',
+    price: 3.50,
+    category: 'energy',
+    description: 'Red Bull Sugarfree energy drink',
+    ageRestricted: false
+  },
+  // Snacks and Chips
+  {
+    id: 1,
+    name: 'Zweifel Chips Paprika',
+    image: 'https://brings-delivery.ch/cdn/shop/products/zweifel-paprika-155g-550_600x.jpg',
+    price: 4.90,
+    category: 'chips',
+    description: 'Zweifel Paprika flavored chips',
+    ageRestricted: false,
+    isNew: false,
+    isFeatured: true,
+    ingredients: 'Kartoffeln, Sonnenblumenöl, Paprika-Gewürz, Salz.',
+    weight: '155g'
+  },
+    {
     id: 25,
     name: 'Zweifel Nature Chips',
     image: 'https://brings-delivery.ch/cdn/shop/products/zweifel-nature-155g-550_600x.jpg',
     price: 4.90,
     category: 'chips',
+    description: 'Zweifel Nature flavored chips',
     ageRestricted: false
   },
   {
@@ -212,6 +212,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/zweifel-paprika-155g-550_600x.jpg',
     price: 4.90,
     category: 'chips',
+    description: 'Zweifel Paprika flavored chips',
     ageRestricted: false
   },
   {
@@ -220,6 +221,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/fonzies-cheese-100g-250_600x.jpg',
     price: 4.90,
     category: 'chips',
+    description: 'Fonzies Original Cheese flavored chips',
     ageRestricted: false
   },
   {
@@ -228,6 +230,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/grissini-275g-550_600x.jpg',
     price: 5.90,
     category: 'snacks',
+    description: 'Granforno Traditional Grissini breadsticks',
     ageRestricted: false
   },
   {
@@ -236,6 +239,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/kinder-schokolade-1-riegel-1-stueck_600x.jpg',
     price: 0.70,
     category: 'sweets',
+    description: 'Kinder Chocolate, price per piece',
     ageRestricted: false
   },
   {
@@ -244,6 +248,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/kinder-bueno-1-riegel-44g-250_600x.jpg',
     price: 1.60,
     category: 'sweets',
+    description: 'Kinder Bueno chocolate bar',
     ageRestricted: false
   },
   {
@@ -252,6 +257,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/kinder-milchschnitte-1-packung-28g-250_600x.jpg',
     price: 1.20,
     category: 'sweets',
+    description: 'Kinder Milk Slice',
     ageRestricted: false
   },
   {
@@ -260,6 +266,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/nippon-hosta-90g-837_600x.jpg',
     price: 4.90,
     category: 'snacks',
+    description: 'Nippon Hosta snack',
     ageRestricted: false
   },
   {
@@ -268,6 +275,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/oreo-original-154g-550_600x.jpg',
     price: 4.90,
     category: 'sweets',
+    description: 'Oreo Original cookies',
     ageRestricted: false
   },
   {
@@ -276,6 +284,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/smoki-50g-250_600x.jpg',
     price: 3.90,
     category: 'snacks',
+    description: 'Smoki Peanut Flips',
     ageRestricted: false
   },
   {
@@ -284,14 +293,17 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/tuc-original-100g-550_600x.jpg',
     price: 2.90,
     category: 'snacks',
+    description: 'TUC Original LU salted crackers',
     ageRestricted: false
   },
+  // Non-Food Items
   {
     id: 36,
     name: 'Babywindel Gr.4 (8 Stk.)',
     image: 'https://brings-delivery.ch/cdn/shop/products/babywindeln-groesse-4-8-stueck-550_600x.jpg',
     price: 5.50,
     category: 'non-food',
+    description: 'Baby diapers, size 4, pack of 8',
     ageRestricted: false
   },
   {
@@ -300,6 +312,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/kosmetik-tuecher-550_600x.jpg',
     price: 4.90,
     category: 'non-food',
+    description: 'Box of facial tissues',
     ageRestricted: false
   },
   {
@@ -308,6 +321,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/ob-procomfort-mini-8-stueck-550_600x.jpg',
     price: 3.90,
     category: 'non-food',
+    description: 'o.b. ProComfort mini tampons',
     ageRestricted: false
   },
   {
@@ -316,6 +330,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/shot-becher-550_600x.jpg',
     price: 0.30,
     category: 'non-food',
+    description: 'Plastic shot glasses',
     ageRestricted: false
   },
   {
@@ -324,6 +339,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/plastikbecher-550_600x.jpg',
     price: 0.30,
     category: 'non-food',
+    description: 'Plastic cups',
     ageRestricted: false
   },
   {
@@ -332,6 +348,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/taschentuch-2er-pack-550_600x.jpg',
     price: 2.20,
     category: 'non-food',
+    description: 'Pack of tissues, 2 pieces',
     ageRestricted: false
   },
   {
@@ -340,14 +357,17 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/wc-papier-1-stueck-550_600x.jpg',
     price: 2.40,
     category: 'non-food',
+    description: 'Toilet paper, 1 roll',
     ageRestricted: false
   },
+  // Tobacco Products (all age restricted)
   {
     id: 43,
     name: 'American Spirit Blue Tabak',
     image: 'https://brings-delivery.ch/cdn/shop/products/american-spirit-blue-tobacco-30g-550_600x.jpg',
     price: 11.90,
     category: 'tobacco',
+    description: 'American Spirit Blue tobacco',
     ageRestricted: true
   },
   {
@@ -356,6 +376,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/vogue-blue-550_600x.jpg',
     price: 12.90,
     category: 'tobacco',
+    description: 'Vogue Slim Blue cigarettes',
     ageRestricted: true
   },
   {
@@ -364,6 +385,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/sullana-tabak-30g-550_600x.jpg',
     price: 11.90,
     category: 'tobacco',
+    description: 'Sullana rolling tobacco',
     ageRestricted: true
   },
   {
@@ -372,6 +394,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/parisienne-jaune-550_600x.jpg',
     price: 12.90,
     category: 'tobacco',
+    description: 'Parisienne Jaune cigarettes',
     ageRestricted: true
   },
   {
@@ -380,6 +403,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/philip-morris-quantum-blue-550_600x.jpg',
     price: 13.90,
     category: 'tobacco',
+    description: 'Philip Morris Quantum Blue cigarettes',
     ageRestricted: true
   },
   {
@@ -388,6 +412,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/marlboro-gold-550_600x.jpg',
     price: 12.90,
     category: 'tobacco',
+    description: 'Marlboro Gold cigarettes',
     ageRestricted: true
   },
   {
@@ -396,6 +421,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/marlboro-red-550_600x.jpg',
     price: 12.90,
     category: 'tobacco',
+    description: 'Marlboro Red cigarettes',
     ageRestricted: true
   },
   {
@@ -404,14 +430,26 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/smoking-blue-king-size-550_600x.jpg',
     price: 2.50,
     category: 'tobacco',
+    description: 'Smoking Blue King Size rolling papers',
     ageRestricted: true
   },
+  // Alcoholic Beverages (all age restricted)
   {
     id: 51,
     name: 'Feldschlösschen Original 0.33L',
     image: 'https://brings-delivery.ch/cdn/shop/products/feldschlosschen-original-330ml-787_600x.jpg',
     price: 2.50,
     category: 'alcohol',
+    description: 'Original Feldschlösschen beer in a 0.33l bottle',
+    ageRestricted: true
+  },
+    {
+    id: 7,
+    name: 'Feldschlösschen Bier',
+    image: 'https://brings-delivery.ch/cdn/shop/products/feldschlosschen-original-500ml-787_600x.jpg',
+    price: 3.50,
+    category: 'alcohol',
+    description: 'Original Feldschlösschen beer',
     ageRestricted: true
   },
   {
@@ -420,14 +458,16 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/appenzeller-quollfrisch-330ml-787_600x.jpg',
     price: 2.50,
     category: 'alcohol',
+    description: 'Quöllfrisch beer',
     ageRestricted: true
   },
-  {
+    {
     id: 53,
     name: 'Quöllfrisch 0.5L',
     image: 'https://brings-delivery.ch/cdn/shop/products/appenzeller-quollfrisch-500ml-787_600x.jpg',
     price: 3.50,
     category: 'alcohol',
+    description: 'Quöllfrisch beer',
     ageRestricted: true
   },
   {
@@ -436,6 +476,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/birra-ichnusa-non-filtrata-500ml-787_600x.jpg',
     price: 3.90,
     category: 'alcohol',
+    description: 'Unfiltered Birra Ichnusa beer',
     ageRestricted: true
   },
   {
@@ -444,6 +485,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/birra-moretti-330ml-787_600x.jpg',
     price: 2.80,
     category: 'alcohol',
+    description: 'Birra Morreti beer',
     ageRestricted: true
   },
   {
@@ -452,6 +494,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/desperados-330ml-787_600x.jpg',
     price: 3.60,
     category: 'alcohol',
+    description: 'Original Desperados beer',
     ageRestricted: true
   },
   {
@@ -460,6 +503,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/fruh-kolsch-330ml-787_600x.jpg',
     price: 3.50,
     category: 'alcohol',
+    description: 'Früh Kölsch beer in a 0.33l bottle',
     ageRestricted: true
   },
   {
@@ -468,14 +512,16 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/heineken-330ml-787_600x.jpg',
     price: 2.50,
     category: 'alcohol',
+    description: 'Heineken Premium beer',
     ageRestricted: true
   },
-  {
+    {
     id: 59,
     name: 'Heineken Premium 0.5L',
     image: 'https://brings-delivery.ch/cdn/shop/products/heineken-500ml-787_600x.jpg',
     price: 3.60,
     category: 'alcohol',
+    description: 'Heineken Premium beer',
     ageRestricted: true
   },
   {
@@ -484,6 +530,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/monchshof-kellerbier-500ml-787_600x.jpg',
     price: 3.90,
     category: 'alcohol',
+    description: 'Mönchshof Kellerbier in a 0.5l bottle',
     ageRestricted: true
   },
   {
@@ -492,6 +539,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/rothaus-tannenzapfle-330ml-787_600x.jpg',
     price: 3.20,
     category: 'alcohol',
+    description: 'Rothaus Tannenzäpfle beer in a 0.33l bottle',
     ageRestricted: true
   },
   {
@@ -500,6 +548,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/bluesecco-blu-rose-200ml-787_600x.jpg',
     price: 4.20,
     category: 'alcohol',
+    description: 'Bluesecco Blu Rosé sparkling wine from the Rubicone region, Italy',
     ageRestricted: true
   },
   {
@@ -508,6 +557,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/bluesecco-blu-200ml-787_600x.jpg',
     price: 4.20,
     category: 'alcohol',
+    description: 'Bluesecco Blu sparkling wine from the Trevenezie region, Italy',
     ageRestricted: true
   },
   {
@@ -516,6 +566,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/ballantines-07l-550_600x.jpg',
     price: 34.00,
     category: 'spirits',
+    description: 'Ballantine\'s Finest Scotch Whisky',
     ageRestricted: true
   },
   {
@@ -524,6 +575,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/jack-daniels-07l-550_600x.jpg',
     price: 49.00,
     category: 'spirits',
+    description: 'Jack Daniel\'s Tennessee Whiskey',
     ageRestricted: true
   },
   {
@@ -532,6 +584,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/jagermeister-07l-550_600x.jpg',
     price: 39.00,
     category: 'spirits',
+    description: 'Jägermeister herbal liqueur, 70cl bottle',
     ageRestricted: true
   },
   {
@@ -540,6 +593,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/johnnie-walker-red-label-07l-550_600x.jpg',
     price: 39.00,
     category: 'spirits',
+    description: 'Johnnie Walker Red Label Scotch Whisky, 70cl bottle',
     ageRestricted: true
   },
   {
@@ -548,6 +602,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/absolut-vodka-07l-550_600x.jpg',
     price: 46.00,
     category: 'spirits',
+    description: 'Absolut Vodka, 70cl bottle',
     ageRestricted: true
   },
   {
@@ -556,6 +611,7 @@ export const products: Product[] = [
     image: 'https://brings-delivery.ch/cdn/shop/products/wodka-gorbatschow-07l-550_600x.jpg',
     price: 26.00,
     category: 'spirits',
+    description: 'Wodka Gorbatschow, 70cl bottle',
     ageRestricted: true
   },
 ];
