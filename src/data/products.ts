@@ -1,6 +1,6 @@
 
-// Re-export everything from the separate files
+// Re-export everything from the products folder
+export { products } from './products';
 export type { Product } from '../types/product';
 export { categories } from './categories-data';
-export { products } from './products-data';
 export { getStoredProducts } from '../utils/product-utils';
