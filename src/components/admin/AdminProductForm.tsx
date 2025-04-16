@@ -1,38 +1,17 @@
+
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Form } from '@/components/ui/form';
 import { Plus } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { useAdmin, Product } from '@/contexts/AdminContext';
 import ImageUpload from './ImageUpload';
-
-// Available categories
-const categories = [
-  { id: 'chips', name: 'Chips & Snacks' },
-  { id: 'drinks', name: 'Getränk' },
-  { id: 'sweets', name: 'Süssigkeite' },
-  { id: 'alcohol', name: 'Alkohol' },
-  { id: 'energy', name: 'Energy Drinks' },
-];
-
-// Product form schema
-const productSchema = z.object({
-  name: z.string().min(3, { message: 'Name muess mindestens 3 Zeiche ha' }),
-  price: z.coerce.number().min(0.1, { message: 'Priis muess grösser als 0 si' }),
-  category: z.string({ required_error: 'Bitte wähl e Kategorie us' }),
-  description: z.string().min(10, { message: 'Beschribig muess mindestens 10 Zeiche ha' }),
-  image: z.string().min(1, { message: 'Bitte lad es Bild ufe' }),
-  weight: z.string().min(1, { message: 'Bitte gib s Gwicht/Inhalt a' }),
-  ingredients: z.string().optional(),
-});
-
-type ProductFormValues = z.infer<typeof productSchema>;
+import ProductBasicInfo from './ProductBasicInfo';
+import ProductCategorySelect from './ProductCategorySelect';
+import ProductDetails from './ProductDetails';
+import { productSchema, type ProductFormValues } from '@/schemas/productSchema';
 
 interface AdminProductFormProps {
   initialData?: Product;
@@ -90,74 +69,8 @@ const AdminProductForm = ({ initialData, onCancel }: AdminProductFormProps) => {
       
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Produktname" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          <div className="grid grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Priis (CHF)</FormLabel>
-                  <FormControl>
-                    <Input type="number" step="0.1" placeholder="0.00" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="weight"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Gwicht/Inhalt</FormLabel>
-                  <FormControl>
-                    <Input placeholder="100g, 0.5L, etc." {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          
-          <FormField
-            control={form.control}
-            name="category"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Kategorie</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Kategorie uswähle" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {categories.map(category => (
-                      <SelectItem key={category.id} value={category.id}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <ProductBasicInfo form={form} />
+          <ProductCategorySelect form={form} />
           
           <FormField
             control={form.control}
@@ -176,41 +89,7 @@ const AdminProductForm = ({ initialData, onCancel }: AdminProductFormProps) => {
             )}
           />
           
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Beschribig</FormLabel>
-                <FormControl>
-                  <Textarea 
-                    placeholder="Beschriib s'Produkt..." 
-                    className="resize-none min-h-[100px]"
-                    {...field} 
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          <FormField
-            control={form.control}
-            name="ingredients"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Zuetate (optional)</FormLabel>
-                <FormControl>
-                  <Textarea 
-                    placeholder="Zuetate vom Produkt..." 
-                    className="resize-none min-h-[80px]"
-                    {...field} 
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <ProductDetails form={form} />
           
           <div className="flex gap-2 pt-2">
             {isEditing ? (
@@ -236,3 +115,4 @@ const AdminProductForm = ({ initialData, onCancel }: AdminProductFormProps) => {
 };
 
 export default AdminProductForm;
+
