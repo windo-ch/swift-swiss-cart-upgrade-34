@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {
   Dialog,
@@ -21,7 +20,7 @@ import {
   Calendar,
   Image
 } from 'lucide-react';
-import { formatCurrency } from '@/utils/product-utils';
+import { formatCurrency } from '@/utils/format-utils';
 
 interface Order {
   id: string;
@@ -56,7 +55,7 @@ interface OrderDetailsProps {
   onClose: () => void;
 }
 
-const OrderDetails = ({ order, isOpen, onClose }: OrderDetailsProps) => {
+const OrderDetails = ({ order }: OrderDetailsProps) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleString('de-CH', {

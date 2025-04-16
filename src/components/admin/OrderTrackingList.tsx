@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Table, 
@@ -31,16 +30,28 @@ import {
 } from 'lucide-react';
 import OrderDetails from './OrderDetails';
 import UpdateOrderStatus from './UpdateOrderStatus';
+import { formatCurrency } from '@/utils/format-utils';
 
 interface Order {
   id: string;
-  created_at: string;
-  status: string;
+  user_id: string;
   total_amount: number;
-  delivery_address: any;
-  order_items: any[];
-  delivery_photo?: string;
-  marketing_consent?: boolean;
+  delivery_fee: number;
+  discount_amount: number;
+  delivery_address: {
+    street: string;
+    city: string;
+    postcode: string;
+  };
+  status: 'pending' | 'in_delivery' | 'delivered';
+  created_at: string;
+  order_items: Array<{
+    id: string;
+    product_id: string;
+    product_name: string;
+    quantity: number;
+    price: number;
+  }>;
 }
 
 interface OrderTrackingListProps {
@@ -78,7 +89,7 @@ const OrderTrackingList = ({ orders, status }: OrderTrackingListProps) => {
   };
 
   const formatAddress = (address: any) => {
-    return `${address.firstName} ${address.lastName}, ${address.address}, ${address.postalCode} ${address.city}`;
+    return `${address.street}, ${address.city}, ${address.postcode}`;
   };
 
   const handleViewDetails = (order: Order) => {
@@ -121,7 +132,7 @@ const OrderTrackingList = ({ orders, status }: OrderTrackingListProps) => {
                   <TableCell>{formatDate(order.created_at)}</TableCell>
                   <TableCell>{formatAddress(order.delivery_address)}</TableCell>
                   <TableCell>{statusBadge(order.status)}</TableCell>
-                  <TableCell className="text-right">CHF {order.total_amount.toFixed(2)}</TableCell>
+                  <TableCell className="text-right">CHF {formatCurrency(order.total_amount)}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <Button 
