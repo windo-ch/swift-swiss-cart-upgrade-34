@@ -11,6 +11,7 @@ export interface Product {
   description: string;
   weight: string;
   ingredients?: string;
+  ageRestricted?: boolean;
 }
 
 interface AdminContextType {
@@ -35,6 +36,7 @@ export const useAdmin = () => {
 const getStoredAdminProducts = (): Product[] => {
   try {
     const stored = localStorage.getItem('adminProducts');
+    console.log("AdminContext - Stored products from localStorage:", stored ? "Found" : "None");
     return stored ? JSON.parse(stored) : [];
   } catch (error) {
     console.error('Error loading admin products:', error);
@@ -47,19 +49,22 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Save products to localStorage whenever they change
   useEffect(() => {
+    console.log("AdminContext - Saving products to localStorage:", products.length);
     localStorage.setItem('adminProducts', JSON.stringify(products));
     window.dispatchEvent(new Event('storage'));
   }, [products]);
 
   const addProduct = (productData: Omit<Product, 'id'>) => {
+    console.log("AdminContext - Adding new product:", productData.name);
     const newProduct: Product = {
       ...productData,
-      id: Date.now().toString(),
+      id: `admin-${Date.now()}`,
     };
     setProducts(prev => [...prev, newProduct]);
   };
 
   const updateProduct = (updatedProduct: Product) => {
+    console.log("AdminContext - Updating product:", updatedProduct.id);
     setProducts(prev => 
       prev.map(product => 
         product.id === updatedProduct.id ? updatedProduct : product
@@ -68,6 +73,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const deleteProduct = (id: string) => {
+    console.log("AdminContext - Deleting product:", id);
     setProducts(prev => prev.filter(product => product.id !== id));
   };
 

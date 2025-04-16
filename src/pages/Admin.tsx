@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -9,9 +9,15 @@ import AdminProductList from '../components/admin/AdminProductList';
 import { Product } from '../contexts/AdminContext';
 import { Button } from '@/components/ui/button';
 import { Truck, Package } from 'lucide-react';
+import { initializeAdminProducts } from '../utils/admin-utils';
 
 const Admin = () => {
   const [editingProduct, setEditingProduct] = useState<Product | undefined>();
+
+  // Initialize sample products when the Admin page loads
+  useEffect(() => {
+    initializeAdminProducts();
+  }, []);
 
   const handleEdit = (product: Product) => {
     setEditingProduct(product);

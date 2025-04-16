@@ -27,7 +27,7 @@ export const getStoredProducts = (): Product[] => {
     const adminProducts = storedProducts ? JSON.parse(storedProducts) : [];
     console.log("Admin products from localStorage:", adminProducts.length);
     
-    // Convert store products to match admin product format with necessary defaults
+    // Ensure each store product has an ID as a string
     const formattedStoreProducts = storeProducts.map(product => ({
       ...product,
       id: product.id.toString(), // Ensure id is always a string
@@ -39,30 +39,8 @@ export const getStoredProducts = (): Product[] => {
     
     console.log("Formatted store products:", formattedStoreProducts.length);
     
-    // Combine and deduplicate products based on ID
-    const allProducts = [...formattedStoreProducts];
-    
-    // Add or update with admin products
-    adminProducts.forEach(adminProduct => {
-      const existingIndex = allProducts.findIndex(p => p.id.toString() === adminProduct.id.toString());
-      if (existingIndex >= 0) {
-        allProducts[existingIndex] = {
-          ...adminProduct,
-          image: getProductImageUrl(adminProduct.image),
-          description: adminProduct.description || '',
-          weight: adminProduct.weight || '',
-          ingredients: adminProduct.ingredients || ''
-        };
-      } else {
-        allProducts.push({
-          ...adminProduct,
-          image: getProductImageUrl(adminProduct.image),
-          description: adminProduct.description || '',
-          weight: adminProduct.weight || '',
-          ingredients: adminProduct.ingredients || ''
-        });
-      }
-    });
+    // Combine all products
+    const allProducts = [...formattedStoreProducts, ...adminProducts];
     
     console.log(`Loaded ${allProducts.length} total products (${formattedStoreProducts.length} from store, ${adminProducts.length} from admin)`);
     return allProducts;
