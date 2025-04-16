@@ -60,37 +60,35 @@ const AdminProductForm = ({ initialData, onCancel }: AdminProductFormProps) => {
     if (onCancel) onCancel();
   };
 
+  const handleImageUploaded = (url: string) => {
+    form.setValue('image', url);
+  };
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-xl font-semibold mb-4">
-        {isEditing ? 'Produkt bearbeite' : 'Neus Produkt hinzuefüege'}
+      <h2 className="text-xl font-semibold mb-6">
+        {initialData ? 'Produkt bearbeite' : 'Neus Produkt erstelle'}
       </h2>
       
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <ProductBasicInfo form={form} />
           <ProductCategorySelect form={form} />
           
-          <FormField
-            control={form.control}
-            name="image"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Produktbild</FormLabel>
-                <FormControl>
-                  <ImageUpload
-                    onImageUploaded={(url) => field.onChange(url)}
-                    existingImageUrl={field.value}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+          <div className="space-y-4">
+            <h3 className="text-md font-medium">Produktbild</h3>
+            <ImageUpload 
+              onImageUploaded={handleImageUploaded} 
+              existingImageUrl={form.watch('image')}
+            />
+            {form.formState.errors.image && (
+              <p className="text-sm text-red-500">{form.formState.errors.image.message}</p>
             )}
-          />
+          </div>
           
           <ProductDetails form={form} />
           
-          <div className="flex gap-2 pt-2">
+          <div className="flex justify-end gap-2">
             {isEditing ? (
               <>
                 <Button type="submit" className="flex-1 bg-brings-primary hover:bg-brings-primary/90">

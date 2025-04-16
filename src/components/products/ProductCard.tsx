@@ -1,9 +1,11 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ShoppingBag, Shield } from 'lucide-react';
 import { useCart } from '../../contexts/CartContext';
 import { Product } from '../../types/product';
+import { getProductImageUrl } from '../../utils/product-utils';
 
 interface ProductCardProps {
   product: Product;
@@ -33,7 +35,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       <div className="relative overflow-hidden">
         <Link to={`/product/${product.id}`}>
           <img 
-            src={product.image} 
+            src={getProductImageUrl(product.image)} 
             alt={product.name} 
             className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
             onError={handleImageError}
