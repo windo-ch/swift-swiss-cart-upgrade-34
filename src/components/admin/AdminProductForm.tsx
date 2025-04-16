@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,6 +11,7 @@ import ImageUpload from './ImageUpload';
 import ProductBasicInfo from './ProductBasicInfo';
 import ProductCategorySelect from './ProductCategorySelect';
 import ProductDetails from './ProductDetails';
+import { Checkbox } from '@/components/ui/checkbox';
 import { productSchema, type ProductFormValues } from '@/schemas/productSchema';
 
 interface AdminProductFormProps {
@@ -32,6 +34,8 @@ const AdminProductForm = ({ initialData, onCancel }: AdminProductFormProps) => {
       image: '',
       weight: '',
       ingredients: '',
+      stock: 0,
+      ageRestricted: false,
     },
   });
 
@@ -74,6 +78,26 @@ const AdminProductForm = ({ initialData, onCancel }: AdminProductFormProps) => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <ProductBasicInfo form={form} />
           <ProductCategorySelect form={form} />
+          
+          <FormField
+            control={form.control}
+            name="ageRestricted"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>
+                    18+ Altersbestätigung erforderlich
+                  </FormLabel>
+                </div>
+              </FormItem>
+            )}
+          />
           
           <div className="space-y-4">
             <h3 className="text-md font-medium">Produktbild</h3>

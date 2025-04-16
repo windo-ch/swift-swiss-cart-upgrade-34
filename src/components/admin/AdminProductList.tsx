@@ -23,21 +23,10 @@ const AdminProductList = ({ onEdit }: AdminProductListProps) => {
       const allStoredProducts = getStoredProducts();
       console.log("AdminProductList: All stored products:", allStoredProducts.length);
       
-      // Only get admin products (those with IDs starting with 'admin-')
-      const adminOnlyProducts = allStoredProducts
-        .filter(p => typeof p.id === 'string' && p.id.toString().startsWith('admin-'))
-        .map(p => ({
-          ...p,
-          id: p.id.toString()
-        }));
-      
-      console.log("AdminProductList: Found admin products:", adminOnlyProducts.length);
-      
-      // Check if we have any admin products
-      if (adminOnlyProducts.length > 0) {
-        setProducts(adminOnlyProducts);
+      if (allStoredProducts.length > 0) {
+        setProducts(allStoredProducts);
       } else {
-        console.log("No admin products found, may need to create some through the form");
+        console.log("No products found, may need to create some through the form");
       }
     };
 

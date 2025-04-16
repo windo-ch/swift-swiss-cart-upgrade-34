@@ -1,4 +1,3 @@
-
 import { Product } from '../types/product';
 import { products as storeProducts } from '../data/products/index';
 
@@ -27,7 +26,19 @@ export const getStoredProducts = (): Product[] => {
     const adminProducts = storedProducts ? JSON.parse(storedProducts) : [];
     console.log("Admin products from localStorage:", adminProducts.length);
     
-    // Ensure each store product has an ID as a string
+    // If we have admin products, use those
+    if (adminProducts.length > 0) {
+      console.log("Using admin products as the source of truth");
+      return adminProducts.map(product => ({
+        ...product,
+        id: product.id.toString(), // Ensure id is always a string
+        image: getProductImageUrl(product.image), // Properly format image URLs
+      }));
+    }
+    
+    // Otherwise, use the store products as a fallback
+    console.log("No admin products found, using store products");
+    // Ensure each store product has an ID as a string and all required fields
     const formattedStoreProducts = storeProducts.map(product => ({
       ...product,
       id: product.id.toString(), // Ensure id is always a string
@@ -35,16 +46,12 @@ export const getStoredProducts = (): Product[] => {
       weight: product.weight || '', // Ensure weight has a default
       ingredients: product.ingredients || '', // Ensure ingredients has a default
       image: getProductImageUrl(product.image), // Properly format image URLs
-      ageRestricted: product.ageRestricted || false // Ensure ageRestricted has a default
+      ageRestricted: product.ageRestricted || false, // Ensure ageRestricted has a default
+      stock: 50 // Default stock value
     }));
     
     console.log("Formatted store products:", formattedStoreProducts.length);
-    
-    // Combine all products - use a unique ID prefix to prevent collisions
-    const allProducts = [...formattedStoreProducts, ...adminProducts];
-    
-    console.log(`Loaded ${allProducts.length} total products (${formattedStoreProducts.length} from store, ${adminProducts.length} from admin)`);
-    return allProducts;
+    return formattedStoreProducts;
   } catch (error) {
     console.error('Error loading products from localStorage:', error);
     return [];

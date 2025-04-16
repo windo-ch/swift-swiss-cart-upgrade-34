@@ -9,7 +9,8 @@ export const productSchema = z.object({
   image: z.string().min(1, { message: 'Bitte lad es Bild ufe' }),
   weight: z.string().min(1, { message: 'Bitte gib s Gwicht/Inhalt a' }),
   ingredients: z.string().optional(),
+  stock: z.coerce.number().nonnegative({ message: 'Lagerbestand muess e Zahl grösser als 0 si' }).default(0),
+  ageRestricted: z.boolean().default(false),
 });
 
 export type ProductFormValues = z.infer<typeof productSchema>;
-

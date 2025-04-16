@@ -2,7 +2,9 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Edit, Trash2, Image } from 'lucide-react';
+import { useAdmin } from '@/contexts/AdminContext';
 import { Product } from '@/types/product';
+import { Input } from '@/components/ui/input';
 
 interface ProductRowProps {
   product: Product;
@@ -12,7 +14,33 @@ interface ProductRowProps {
 
 const ProductRow = ({ product, onEdit, onDelete }: ProductRowProps) => {
   const [hasImageError, setHasImageError] = useState(false);
+  const [isEditingStock, setIsEditingStock] = useState(false);
+  const [stockValue, setStockValue] = useState(product.stock?.toString() || "0");
+  const { updateStock } = useAdmin();
   const placeholderImage = 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png';
+
+  const handleStockChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setStockValue(e.target.value);
+  };
+
+  const handleStockBlur = () => {
+    const newStock = parseInt(stockValue);
+    if (!isNaN(newStock) && newStock >= 0) {
+      updateStock(product.id.toString(), newStock);
+    } else {
+      setStockValue(product.stock?.toString() || "0");
+    }
+    setIsEditingStock(false);
+  };
+
+  const handleStockKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleStockBlur();
+    } else if (e.key === 'Escape') {
+      setIsEditingStock(false);
+      setStockValue(product.stock?.toString() || "0");
+    }
+  };
 
   return (
     <tr className="hover:bg-gray-50">
@@ -46,6 +74,27 @@ const ProductRow = ({ product, onEdit, onDelete }: ProductRowProps) => {
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
         CHF {product.price.toFixed(2)}
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm">
+        {isEditingStock ? (
+          <Input 
+            type="number"
+            min="0"
+            value={stockValue}
+            onChange={handleStockChange}
+            onBlur={handleStockBlur}
+            onKeyDown={handleStockKeyDown}
+            className="w-24 text-center"
+            autoFocus
+          />
+        ) : (
+          <div
+            onClick={() => setIsEditingStock(true)}
+            className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded w-16 text-center"
+          >
+            {product.stock || 0}
+          </div>
+        )}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
         <Button 

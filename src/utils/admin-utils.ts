@@ -11,21 +11,19 @@ export const initializeAdminProducts = (): void => {
     return;
   }
 
-  // Convert store products to admin format
+  // Convert all store products to admin format with stock
   const formattedStoreProducts = storeProducts.map(product => ({
     ...product,
-    id: `admin-store-${product.id}`, // Prefix with admin-store to distinguish them
+    id: product.id.toString(), // Ensure id is always a string
     description: product.description || '',
     weight: product.weight || '',
     ingredients: product.ingredients || '',
     image: getProductImageUrl(product.image),
-    ageRestricted: product.ageRestricted || false
+    ageRestricted: product.ageRestricted || false,
+    stock: 50 // Default stock value
   }));
 
-  // Use the first 10 store products as admin products for a better starting point
-  const initialAdminProducts = formattedStoreProducts.slice(0, 10);
-
-  // Store the admin products
-  localStorage.setItem('adminProducts', JSON.stringify(initialAdminProducts));
-  console.log("Initialized admin products from store:", initialAdminProducts.length);
+  // Store all products as admin products
+  localStorage.setItem('adminProducts', JSON.stringify(formattedStoreProducts));
+  console.log("Initialized admin products from store:", formattedStoreProducts.length);
 };

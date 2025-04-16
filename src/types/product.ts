@@ -11,6 +11,7 @@ export interface Product {
   ingredients?: string;
   weight?: string;
   description?: string;
+  stock?: number; // Added stock field for inventory tracking
 }
 
 export interface Category {

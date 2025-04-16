@@ -55,9 +55,22 @@ const ProductBasicInfo = ({ form }: ProductBasicInfoProps) => {
           )}
         />
       </div>
+      
+      <FormField
+        control={form.control}
+        name="stock"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Lagerbestand</FormLabel>
+            <FormControl>
+              <Input type="number" min="0" placeholder="Menge" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
     </>
   );
 };
 
 export default ProductBasicInfo;
-
