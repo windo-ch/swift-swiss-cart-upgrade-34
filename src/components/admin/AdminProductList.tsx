@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,6 +26,9 @@ const AdminProductList = ({ onEdit }: AdminProductListProps) => {
       .map(p => ({
         ...p,
         id: p.id.toString(), // Ensure id is always a string
+        description: p.description || '', // Ensure description is not optional
+        weight: p.weight || '', // Ensure weight is not optional
+        ingredients: p.ingredients || '', // Provide a default for optional properties
       }));
       
     if (adminProducts.length > 0) {
