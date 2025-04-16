@@ -629,4 +629,121 @@ export const products: Product[] = [
     id: 59,
     name: 'Heineken Premium 0.5L',
     image: 'https://brings-delivery.ch/cdn/shop/products/heineken-500ml-787_600x.jpg',
-    price
+    price: 3.60,
+    category: 'alcohol',
+    description: 'Heineken Premium beer',
+    ageRestricted: true,
+    ingredients: 'Wasser, Gerstenmalz, Hopfen, Hefe.',
+    weight: '500ml'
+  },
+  {
+    id: 60,
+    name: 'Mönchshof Kellerbier 0.5L',
+    image: 'https://brings-delivery.ch/cdn/shop/products/monchshof-500ml-787_600x.jpg',
+    price: 3.90,
+    category: 'alcohol',
+    description: 'Mönchshof Kellerbier in a 0.5l bottle',
+    ageRestricted: true,
+    ingredients: 'Wasser, Gerstenmalz, Hopfen, Hefe.',
+    weight: '500ml'
+  },
+  {
+    id: 61,
+    name: 'Rothaus Tannenzäpfle 0.33L',
+    image: 'https://brings-delivery.ch/cdn/shop/products/rothaus-330ml-787_600x.jpg',
+    price: 3.20,
+    category: 'alcohol',
+    description: 'Rothaus Tannenzäpfle beer in a 0.33l bottle',
+    ageRestricted: true,
+    ingredients: 'Wasser, Gerstenmalz, Hopfen, Hefe.',
+    weight: '330ml'
+  },
+  {
+    id: 62,
+    name: 'Bluesecco Blu Rosé Rubicone IGT',
+    image: 'https://brings-delivery.ch/cdn/shop/products/bluesecco-rose-187ml-787_600x.jpg',
+    price: 4.20,
+    category: 'alcohol',
+    description: 'Bluesecco Blu Rosé sparkling wine from the Rubicone region, Italy',
+    ageRestricted: true,
+    ingredients: 'Trauben, Sulfite.',
+    weight: '187ml'
+  },
+  {
+    id: 63,
+    name: 'Bluesecco Blu Trevenezie IGT',
+    image: 'https://brings-delivery.ch/cdn/shop/products/bluesecco-white-187ml-787_600x.jpg',
+    price: 4.20,
+    category: 'alcohol',
+    description: 'Bluesecco Blu sparkling wine from the Trevenezie region, Italy',
+    ageRestricted: true,
+    ingredients: 'Trauben, Sulfite.',
+    weight: '187ml'
+  },
+  {
+    id: 64,
+    name: 'Ballantine\'s Finest Scotch',
+    image: 'https://brings-delivery.ch/cdn/shop/products/ballantines-finest-scotch-700ml-787_600x.jpg',
+    price: 34.00,
+    category: 'spirits',
+    description: 'Ballantine\'s Finest Scotch Whisky',
+    ageRestricted: true,
+    ingredients: 'Wasser, Getreide, Hefe.',
+    weight: '700ml'
+  },
+  {
+    id: 65,
+    name: 'Jack Daniel\'s Tennessee Whiskey',
+    image: 'https://brings-delivery.ch/cdn/shop/products/jack-daniels-700ml-787_600x.jpg',
+    price: 49.00,
+    category: 'spirits',
+    description: 'Jack Daniel\'s Tennessee Whiskey',
+    ageRestricted: true,
+    ingredients: 'Wasser, Mais, Roggen, Gerste, Hefe.',
+    weight: '700ml'
+  },
+  {
+    id: 66,
+    name: 'Jägermeister 70cl',
+    image: 'https://brings-delivery.ch/cdn/shop/products/jagermeister-700ml-787_600x.jpg',
+    price: 39.00,
+    category: 'spirits',
+    description: 'Jägermeister herbal liqueur, 70cl bottle',
+    ageRestricted: true,
+    ingredients: 'Wasser, Alkohol, Zucker, Kräuter und Gewürzen.',
+    weight: '700ml'
+  },
+  {
+    id: 67,
+    name: 'Johnnie Walker Red Label 70cl',
+    image: 'https://brings-delivery.ch/cdn/shop/products/johnnie-walker-red-label-700ml-787_600x.jpg',
+    price: 39.00,
+    category: 'spirits',
+    description: 'Johnnie Walker Red Label Scotch Whisky, 70cl bottle',
+    ageRestricted: true,
+    ingredients: 'Wasser, Getreide, Hefe.',
+    weight: '700ml'
+  },
+  {
+    id: 68,
+    name: 'Vodka Absolut 70cl',
+    image: 'https://brings-delivery.ch/cdn/shop/products/absolut-vodka-700ml-787_600x.jpg',
+    price: 46.00,
+    category: 'spirits',
+    description: 'Absolut Vodka, 70cl bottle',
+    ageRestricted: true,
+    ingredients: 'Wasser, Winterweizen.',
+    weight: '700ml'
+  },
+  {
+    id: 69,
+    name: 'Wodka Gorbatschow 70cl',
+    image: 'https://brings-delivery.ch/cdn/shop/products/gorbatschow-vodka-700ml-787_600x.jpg',
+    price: 26.00,
+    category: 'spirits',
+    description: 'Wodka Gorbatschow, 70cl bottle',
+    ageRestricted: true,
+    ingredients: 'Wasser, Getreide.',
+    weight: '700ml'
+  }
+];
