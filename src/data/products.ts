@@ -1,6 +1,7 @@
+
 // Product data
 export interface Product {
-  id: number;
+  id: number | string;
   name: string;
   image: string;
   price: number;

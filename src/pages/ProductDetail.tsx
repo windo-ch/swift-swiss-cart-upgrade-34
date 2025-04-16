@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -12,7 +11,6 @@ import { Product, products as dataProducts } from '../data/products';
 
 // Extend product type for admin products
 interface ExtendedProduct extends Product {
-  id: string | number;
   ingredients: string;
   weight: string;
   description?: string;
