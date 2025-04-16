@@ -1,19 +1,13 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ShoppingBag, Shield } from 'lucide-react';
 import { useCart } from '../../contexts/CartContext';
-import { Product } from '../../data/products';
+import { Product } from '../../types/product';
 
 interface ProductCardProps {
-  product: {
-    id: number | string;
-    name: string;
-    price: number;
-    image: string;
-    category: string;
-    ageRestricted?: boolean;
-  };
+  product: Product;
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
@@ -61,7 +55,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </div>
       </div>
       <div className="p-4">
-        <span className="text-xs text-gray-500 mb-1 block">{product.category}</span>
+        <span className="text-xs text-gray-500 mb-1 block capitalize">{product.category}</span>
         <Link to={`/product/${product.id}`}>
           <h3 className="font-medium text-gray-800 hover:text-brings-primary transition-colors line-clamp-2">{product.name}</h3>
         </Link>

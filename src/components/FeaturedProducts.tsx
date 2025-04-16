@@ -4,15 +4,16 @@ import { Link } from 'react-router-dom';
 import ProductCard from './ProductCard';
 import { useAgeVerification } from '../contexts/AgeVerificationContext';
 import { Button } from '@/components/ui/button';
-import { products as dataProducts, Product } from '../data/products';
+import { getStoredProducts } from '../data/products';
 
 const FeaturedProducts = () => {
   const { isAdult } = useAgeVerification();
+  const allProducts = getStoredProducts();
   
   // Filter out age-restricted products if not adult
   const filteredProducts = isAdult 
-    ? dataProducts 
-    : dataProducts.filter(product => !product.ageRestricted);
+    ? allProducts 
+    : allProducts.filter(product => !product.ageRestricted);
   
   // Only show 8 products on the featured page
   const featuredProducts = filteredProducts.slice(0, 8);
@@ -28,15 +29,8 @@ const FeaturedProducts = () => {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {featuredProducts.map((product) => (
             <ProductCard 
-              key={product.id}
-              id={product.id.toString()}
-              name={product.name}
-              price={product.price}
-              image={product.image}
-              category={product.category}
-              isNew={product.isNew || false}
-              isFeatured={product.isFeatured || false}
-              ageRestricted={product.ageRestricted}
+              key={product.id.toString()}
+              product={product}
             />
           ))}
         </div>

@@ -3,7 +3,7 @@ import React from 'react';
 import ProductCard from './ProductCard';
 import NoProducts from './NoProducts';
 import { useAgeVerification } from '../../contexts/AgeVerificationContext';
-import { Product } from '../../data/products';
+import { Product } from '../../types/product';
 
 interface ProductGridProps {
   products: Product[];
@@ -25,15 +25,8 @@ const ProductGrid = ({ products }: ProductGridProps) => {
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {filteredProducts.map((product) => (
         <ProductCard 
-          key={product.id} 
-          product={{
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            image: product.image,
-            category: product.category,
-            ageRestricted: product.ageRestricted
-          }} 
+          key={product.id.toString()} 
+          product={product} 
         />
       ))}
     </div>

@@ -1,11 +1,12 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import { ShoppingCart, Heart } from 'lucide-react';
-import { useCart } from '../contexts/CartContext';
 import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { ShoppingBag, Shield } from 'lucide-react';
+import { useCart } from '../contexts/CartContext';
+import { Product } from '../types/product';
 
-interface ProductProps {
+interface ProductCardProps {
   id: string;
   name: string;
   price: number;
@@ -16,22 +17,28 @@ interface ProductProps {
   ageRestricted?: boolean;
 }
 
-const ProductCard: React.FC<ProductProps> = ({ 
+const ProductCard = ({ 
   id, 
   name, 
   price, 
   image, 
-  category,
-  isNew = false,
-  isFeatured = false,
-  ageRestricted = false
-}) => {
+  category, 
+  isNew = false, 
+  isFeatured = false, 
+  ageRestricted = false 
+}: ProductCardProps) => {
   const { addToCart } = useCart();
-  
+
   const handleAddToCart = () => {
-    addToCart({ id, name, price, image, category });
+    addToCart({
+      id,
+      name,
+      price,
+      image,
+      category
+    });
   };
-  
+
   return (
     <div className="product-card group">
       {/* Product Image with Overlay */}

@@ -1,15 +1,13 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { ChevronRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { categories } from '../data/products';
+import { categories } from '../data/categories-data';
 
 const CategorySection = () => {
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const navigate = useNavigate();
   
   const handleCategoryClick = (categoryId: string) => {
-    setActiveCategory(categoryId);
     // Navigate to products page with the selected category as a query parameter
     navigate(`/products?category=${categoryId}`);
   };
@@ -23,15 +21,11 @@ const CategorySection = () => {
         </div>
         
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
-          {categories.map((category) => (
+          {categories.filter(category => category.id !== 'all').map((category) => (
             <button
               key={category.id}
               onClick={() => handleCategoryClick(category.id)}
-              className={`category-card flex flex-col items-center justify-center p-6 rounded-lg transition-all duration-300 transform hover:scale-105 ${
-                activeCategory === category.id 
-                  ? 'bg-brings-primary text-white shadow-md' 
-                  : 'bg-white hover:bg-brings-primary/5 text-brings-dark'
-              }`}
+              className="category-card flex flex-col items-center justify-center p-6 rounded-lg transition-all duration-300 transform hover:scale-105 bg-white hover:bg-brings-primary/5 text-brings-dark"
             >
               <span className="text-3xl mb-2">{category.icon}</span>
               <h3 className="text-sm font-medium text-center">{category.name}</h3>

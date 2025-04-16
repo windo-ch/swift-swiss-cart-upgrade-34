@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import PromoBanner from '../components/PromoBanner';
@@ -9,10 +10,26 @@ import ProductGrid from '../components/products/ProductGrid';
 import { getStoredProducts } from '../data/products';
 
 const Products = () => {
-  const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categoryParam = searchParams.get('category') || 'all';
+  
+  const [activeCategory, setActiveCategory] = useState<string>(categoryParam);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [allProducts, setAllProducts] = useState(getStoredProducts());
   const [filteredProducts, setFilteredProducts] = useState(allProducts);
+  
+  // Update category when URL parameter changes
+  useEffect(() => {
+    if (categoryParam) {
+      setActiveCategory(categoryParam);
+    }
+  }, [categoryParam]);
+  
+  // Update URL when category changes
+  const handleCategoryChange = (category: string) => {
+    setActiveCategory(category);
+    setSearchParams({ category });
+  };
   
   // Update products when localStorage changes
   useEffect(() => {
@@ -31,6 +48,9 @@ const Products = () => {
       const matchesCategory = activeCategory === 'all' || product.category === activeCategory;
       return matchesSearch && matchesCategory;
     });
+    
+    console.log(`Filtering for category: ${activeCategory}`);
+    console.log(`Found ${filtered.length} products that match category and search`);
     
     setFilteredProducts(filtered);
   }, [searchTerm, activeCategory, allProducts]);
@@ -53,7 +73,10 @@ const Products = () => {
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
             <ProductSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-            <CategoryFilter activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
+            <CategoryFilter 
+              activeCategory={activeCategory} 
+              setActiveCategory={handleCategoryChange} 
+            />
           </div>
           
           {/* Product grid */}

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Filter } from 'lucide-react';
-import { categories } from '../../data/products';
+import { categories } from '../../data/categories-data';
 
 interface CategoryFilterProps {
   activeCategory: string;
