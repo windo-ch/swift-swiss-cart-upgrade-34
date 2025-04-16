@@ -1,7 +1,6 @@
 
 import { Product } from '../types/product';
 import { products as storeProducts } from '../data/products/index';
-import { supabase } from '../integrations/supabase/client';
 
 const SUPABASE_URL = "https://zbvdlkfnpufqfhrptfhz.supabase.co";
 const DEFAULT_BUCKET = 'product-images';
@@ -21,21 +20,24 @@ export const getProductImageUrl = (imageName: string): string => {
 };
 
 export const getStoredProducts = (): Product[] => {
+  console.log("Getting stored products...");
   try {
+    // Get admin products from localStorage
     const storedProducts = localStorage.getItem('adminProducts');
     const adminProducts = storedProducts ? JSON.parse(storedProducts) : [];
+    console.log("Admin products from localStorage:", adminProducts.length);
     
-    // Convert store products to match admin product format
+    // Convert store products to match admin product format with necessary defaults
     const formattedStoreProducts = storeProducts.map(product => ({
       ...product,
       id: product.id.toString(), // Ensure id is always a string
-      // Ensure all required fields have default values
-      description: product.description || '',
-      weight: product.weight || '',
-      ingredients: product.ingredients || '',
-      // Ensure image paths are properly formatted
-      image: getProductImageUrl(product.image)
+      description: product.description || '', // Ensure description has a default
+      weight: product.weight || '', // Ensure weight has a default
+      ingredients: product.ingredients || '', // Ensure ingredients has a default
+      image: getProductImageUrl(product.image) // Properly format image URLs
     }));
+    
+    console.log("Formatted store products:", formattedStoreProducts.length);
     
     // Combine and deduplicate products based on ID
     const allProducts = [...formattedStoreProducts];
@@ -62,7 +64,7 @@ export const getStoredProducts = (): Product[] => {
       }
     });
     
-    console.log(`Loaded ${allProducts.length} total products (${storeProducts.length} from store, ${adminProducts.length} from admin)`);
+    console.log(`Loaded ${allProducts.length} total products (${formattedStoreProducts.length} from store, ${adminProducts.length} from admin)`);
     return allProducts;
   } catch (error) {
     console.error('Error loading products from localStorage:', error);

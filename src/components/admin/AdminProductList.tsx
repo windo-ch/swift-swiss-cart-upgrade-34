@@ -6,7 +6,7 @@ import { Search, Edit, Trash2, Image, Save } from 'lucide-react';
 import { useAdmin } from '@/contexts/AdminContext';
 import { useToast } from '@/components/ui/use-toast';
 import { getStoredProducts } from '@/utils/product-utils';
-import { Product as GlobalProduct } from '@/types/product';
+import { Product } from '@/types/product';
 
 interface AdminProductListProps {
   onEdit: (product: any) => void;
@@ -19,22 +19,37 @@ const AdminProductList = ({ onEdit }: AdminProductListProps) => {
 
   // Load products on mount to ensure we have the latest data
   useEffect(() => {
-    const storedProducts = getStoredProducts();
-    // Convert the product type and filter for admin products
-    const adminProducts = storedProducts
-      .filter(p => p.id.toString().startsWith('admin-'))
-      .map(p => ({
-        ...p,
-        id: p.id.toString(), // Ensure id is always a string
-        description: p.description || '', // Ensure description is not optional
-        weight: p.weight || '', // Ensure weight is not optional
-        ingredients: p.ingredients || '', // Provide a default for optional properties
-        ageRestricted: !!p.ageRestricted, // Ensure ageRestricted is boolean
-      }));
+    const loadProducts = () => {
+      console.log("AdminProductList: Loading products");
+      const allStoredProducts = getStoredProducts();
       
-    if (adminProducts.length > 0) {
-      setProducts(adminProducts);
-    }
+      // Only get admin products (those with IDs starting with 'admin-')
+      const adminOnlyProducts = allStoredProducts
+        .filter(p => p.id.toString().startsWith('admin-'))
+        .map(p => ({
+          id: p.id.toString(),
+          name: p.name,
+          image: p.image,
+          price: p.price,
+          category: p.category,
+          description: p.description || '', 
+          weight: p.weight || '', 
+          ingredients: p.ingredients || '',
+          ageRestricted: !!p.ageRestricted
+        }));
+      
+      console.log("AdminProductList: Found admin products:", adminOnlyProducts.length);
+      
+      if (adminOnlyProducts.length > 0) {
+        setProducts(adminOnlyProducts);
+      }
+    };
+
+    loadProducts();
+    
+    // Also listen for storage events to reload when admin products change
+    window.addEventListener('storage', loadProducts);
+    return () => window.removeEventListener('storage', loadProducts);
   }, [setProducts]);
 
   // Filter products based on search term
