@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -34,10 +35,11 @@ const formSchema = z.object({
 const Checkout = () => {
   const [step, setStep] = useState<'details' | 'payment'>('details');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false);
   const { cartItems, totalPrice, clearCart } = useCart();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { user, hasAppliedDiscount } = useAuth();
+  const { user, hasAppliedDiscount, signUp } = useAuth();
   
   const form = useForm<CheckoutFormValues>({
     resolver: zodResolver(formSchema),
@@ -57,20 +59,70 @@ const Checkout = () => {
     setStep('payment');
   };
   
-  const handleSubmit = async (data: CheckoutFormValues) => {
-    if (!user) {
+  // Function to create a user account if the user is not logged in
+  const createUserAccount = async (data: CheckoutFormValues) => {
+    if (user) return user.id; // User is already logged in
+    
+    try {
+      setIsCreatingAccount(true);
+      // Generate a random password (this will be reset later)
+      const password = Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+      
+      // Sign up the user
+      await signUp(data.email, password);
+      
+      // Get the newly created user
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData?.user) throw new Error("Failed to create user account");
+      
+      // Add user profile information
+      await supabase
+        .from('profiles')
+        .upsert({
+          id: userData.user.id,
+          full_name: `${data.firstName} ${data.lastName}`,
+        });
+      
+      // Add user address
+      await supabase
+        .from('user_addresses')
+        .insert({
+          user_id: userData.user.id,
+          name: `${data.firstName} ${data.lastName}`,
+          street: data.address,
+          city: data.city,
+          postal_code: data.postalCode,
+          is_default: true,
+        });
+      
+      toast({
+        title: "Konto erstellt",
+        description: "Es isch automatisch es Konto für dich erstellt worde. Check din E-Mail zum es Passwort setze.",
+        duration: 5000,
+      });
+      
+      return userData.user.id;
+    } catch (error) {
+      console.error("Error creating user account:", error);
       toast({
         title: "Fehler",
-        description: "Bitte melde dich a zum bestelle",
+        description: "Es isch en Fehler passiert bim Erstelle vom Konto. Din Bestellig isch aber erfolgrich gspeicheret worde.",
         variant: "destructive",
+        duration: 5000,
       });
-      navigate('/auth');
-      return;
+      return null;
+    } finally {
+      setIsCreatingAccount(false);
     }
-
+  };
+  
+  const handleSubmit = async (data: CheckoutFormValues) => {
     setIsSubmitting(true);
 
     try {
+      // Create user account if not logged in
+      const userId = await createUserAccount(data) || "guest";
+      
       const deliveryFee = totalPrice >= 50 ? 0 : 5.90;
       const discountAmount = hasAppliedDiscount ? totalPrice * 0.10 : 0;
       const finalTotal = totalPrice + deliveryFee - discountAmount;
@@ -78,7 +130,7 @@ const Checkout = () => {
       const { data: order, error: orderError } = await supabase
         .from('orders')
         .insert({
-          user_id: user.id,
+          user_id: userId,
           total_amount: finalTotal,
           delivery_fee: deliveryFee,
           discount_amount: discountAmount,
@@ -202,7 +254,7 @@ const Checkout = () => {
                     form={form} 
                     onSubmit={handleSubmit}
                     onBack={() => setStep('details')}
-                    isSubmitting={isSubmitting}
+                    isSubmitting={isSubmitting || isCreatingAccount}
                   />
                 )}
               </Form>

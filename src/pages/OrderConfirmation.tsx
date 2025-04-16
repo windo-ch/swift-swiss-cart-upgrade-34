@@ -6,7 +6,7 @@ import Footer from '../components/Footer';
 import PromoBanner from '../components/PromoBanner';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { ShoppingBag, Truck, Clock, CheckCircle2, ExternalLink, MapPin } from 'lucide-react';
+import { ShoppingBag, CheckCircle2, MapPin } from 'lucide-react';
 
 const OrderConfirmation = () => {
   const location = useLocation();
@@ -42,17 +42,9 @@ const OrderConfirmation = () => {
               </AlertDescription>
             </Alert>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="text-center p-4 bg-brings-light rounded-lg">
-                <Clock className="w-8 h-8 text-brings-primary mx-auto mb-2" />
-                <h3 className="font-semibold mb-1">Gschätzti Lieferzit</h3>
-                <p>{formattedTime} Uhr</p>
-              </div>
-              <div className="text-center p-4 bg-brings-light rounded-lg">
-                <Truck className="w-8 h-8 text-brings-primary mx-auto mb-2" />
-                <h3 className="font-semibold mb-1">Lieferstatus</h3>
-                <p>I Bearbeitig</p>
-              </div>
+            <div className="text-center p-4 bg-brings-light rounded-lg">
+              <h3 className="font-semibold mb-1">Gschätzti Lieferzit</h3>
+              <p>{formattedTime} Uhr</p>
             </div>
           </div>
 

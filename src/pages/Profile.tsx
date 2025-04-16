@@ -8,18 +8,22 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, User, MapPin, Package, History } from 'lucide-react';
+import { Loader2, User, MapPin, Package, History, ShoppingBag } from 'lucide-react';
 import { OrderCard } from '@/components/profile/OrderCard';
 import { AddressCard } from '@/components/profile/AddressCard';
 import { AddAddressForm } from '@/components/profile/AddAddressForm';
 import { Order } from '@/types/order';
+import { Badge } from '@/components/ui/badge';
+import { formatCurrency } from '@/utils/formatters';
+import { Link } from 'react-router-dom';
 
 const Profile = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [orders, setOrders] = useState<Order[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingOrders, setIsLoadingOrders] = useState(true);
+  const [orderError, setOrderError] = useState(null);
   const [profile, setProfile] = useState({
     fullName: '',
     phone: '',
@@ -35,9 +39,8 @@ const Profile = () => {
     }
 
     const fetchUserData = async () => {
-      setIsLoading(true);
+      setIsLoadingOrders(true);
       try {
-        // Fetch user's orders
         const { data: ordersData, error: ordersError } = await supabase
           .from('orders')
           .select(`
@@ -48,7 +51,6 @@ const Profile = () => {
 
         if (ordersError) throw ordersError;
         
-        // Transform the orders data to match our Order type
         const transformedOrders = ordersData.map((order: any): Order => {
           let deliveryAddress;
           
@@ -88,7 +90,6 @@ const Profile = () => {
 
         setOrders(transformedOrders);
 
-        // Fetch user's addresses
         const { data: addressesData, error: addressesError } = await supabase
           .from('user_addresses')
           .select('*')
@@ -97,7 +98,6 @@ const Profile = () => {
         if (addressesError) throw addressesError;
         setAddresses(addressesData || []);
 
-        // Fetch user's profile
         const { data: profiles, error: profilesError } = await supabase
           .from('profiles')
           .select('full_name, avatar_url')
@@ -113,13 +113,14 @@ const Profile = () => {
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
+        setOrderError(error);
         toast({
           variant: 'destructive',
           title: 'Error',
           description: 'Could not load your profile data. Please try again later.',
         });
       } finally {
-        setIsLoading(false);
+        setIsLoadingOrders(false);
       }
     };
 
@@ -137,13 +138,11 @@ const Profile = () => {
 
   const handleSetDefaultAddress = async (addressId: string) => {
     try {
-      // First, update all addresses to non-default
       await supabase
         .from('user_addresses')
         .update({ is_default: false })
         .eq('user_id', user?.id) as { error: any };
       
-      // Then set the selected address as default
       const { error } = await supabase
         .from('user_addresses')
         .update({ is_default: true })
@@ -151,7 +150,6 @@ const Profile = () => {
       
       if (error) throw error;
       
-      // Update the local state
       setAddresses(prev => 
         prev.map(addr => ({
           ...addr,
@@ -182,7 +180,6 @@ const Profile = () => {
       
       if (error) throw error;
       
-      // Remove from local state
       setAddresses(prev => prev.filter(addr => addr.id !== addressId));
       
       toast({
@@ -239,7 +236,7 @@ const Profile = () => {
     }
   };
 
-  if (isLoading) {
+  if (isLoadingOrders) {
     return (
       <Layout>
         <div className="flex items-center justify-center min-h-[60vh]">
@@ -255,53 +252,74 @@ const Profile = () => {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-6 flex items-center">
-          <User className="mr-2" /> My Profile
-        </h1>
-
-        <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="mb-6">
-            <TabsTrigger value="profile">Profile</TabsTrigger>
-            <TabsTrigger value="addresses">Addresses</TabsTrigger>
-            <TabsTrigger value="orders">Orders</TabsTrigger>
+        <h1 className="text-2xl font-bold mb-6">My Account</h1>
+        
+        <Tabs defaultValue="orders" className="w-full">
+          <TabsList className="mb-8">
+            <TabsTrigger value="orders">My Orders</TabsTrigger>
+            <TabsTrigger value="addresses">My Addresses</TabsTrigger>
+            <TabsTrigger value="settings">Account Settings</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="profile" className="space-y-6">
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
-              
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="fullName">Full Name</Label>
-                  <Input 
-                    id="fullName" 
-                    value={profile.fullName} 
-                    onChange={(e) => setProfile({...profile, fullName: e.target.value})}
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="email">Email</Label>
-                  <Input 
-                    id="email" 
-                    value={profile.email} 
-                    disabled 
-                    className="bg-gray-50"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
-                </div>
-
-                <div className="flex justify-between pt-4">
-                  <Button 
-                    variant="outline" 
-                    onClick={handleLogout}
-                  >
-                    Sign Out
-                  </Button>
-                  <Button onClick={handleUpdateProfile}>Save Changes</Button>
+          <TabsContent value="orders">
+            <h2 className="text-xl font-semibold mb-4">My Orders</h2>
+            {isLoadingOrders ? (
+              <div className="flex justify-center py-8">
+                <Loader2 className="h-8 w-8 animate-spin text-brings-primary" />
+              </div>
+            ) : orderError ? (
+              <div className="bg-red-50 p-4 rounded-md text-red-800 mb-4">
+                There was an error loading your orders. Please try again.
+              </div>
+            ) : orders && orders.length > 0 ? (
+              <div className="grid gap-6">
+                {orders.map(order => (
+                  <div key={order.id} className="bg-white rounded-lg shadow-md p-6">
+                    <div className="flex flex-col md:flex-row justify-between mb-4">
+                      <div>
+                        <span className="text-sm text-gray-500">Order #{order.id.slice(0, 8)}</span>
+                        <p className="font-medium">{new Date(order.created_at).toLocaleDateString()}</p>
+                      </div>
+                      <div className="mt-2 md:mt-0">
+                        <Badge variant="outline" className={`
+                          ${order.status === 'delivered' ? 'bg-green-50 text-green-700 border-green-200' :
+                            order.status === 'in_delivery' ? 'bg-blue-50 text-blue-700 border-blue-200' :
+                            'bg-yellow-50 text-yellow-700 border-yellow-200'}
+                        `}>
+                          {order.status === 'delivered' ? 'Delivered' : 
+                           order.status === 'in_delivery' ? 'On the way' :
+                           'Processing'}
+                        </Badge>
+                      </div>
+                    </div>
+                    
+                    <div className="border-t border-gray-200 pt-4 mt-4">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Total</span>
+                        <span className="font-medium">CHF {formatCurrency(order.total_amount)}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="border-t border-gray-200 pt-4 mt-4">
+                      <Button variant="outline" className="w-full">
+                        View Order Details
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 bg-gray-50 rounded-lg">
+                <ShoppingBag className="mx-auto h-12 w-12 text-gray-400" />
+                <h3 className="mt-2 text-sm font-medium text-gray-900">No orders yet</h3>
+                <p className="mt-1 text-sm text-gray-500">Get started by exploring our products.</p>
+                <div className="mt-6">
+                  <Link to="/products">
+                    <Button>Browse Products</Button>
+                  </Link>
                 </div>
               </div>
-            </div>
+            )}
           </TabsContent>
           
           <TabsContent value="addresses" className="space-y-6">
@@ -345,27 +363,42 @@ const Profile = () => {
             )}
           </TabsContent>
           
-          <TabsContent value="orders" className="space-y-6">
-            <h2 className="text-xl font-semibold flex items-center">
-              <Package className="mr-2" size={20} /> My Orders
-            </h2>
+          <TabsContent value="settings" className="space-y-6">
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
+              
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="fullName">Full Name</Label>
+                  <Input 
+                    id="fullName" 
+                    value={profile.fullName} 
+                    onChange={(e) => setProfile({...profile, fullName: e.target.value})}
+                  />
+                </div>
 
-            {orders.length === 0 ? (
-              <div className="bg-gray-50 p-8 text-center rounded-lg border border-gray-200">
-                <History className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                <h3 className="text-lg font-medium text-gray-900">No orders yet</h3>
-                <p className="mt-2 text-gray-500">When you place an order, it will appear here.</p>
-                <Button className="mt-4" onClick={() => navigate('/products')}>
-                  Browse Products
-                </Button>
+                <div>
+                  <Label htmlFor="email">Email</Label>
+                  <Input 
+                    id="email" 
+                    value={profile.email} 
+                    disabled 
+                    className="bg-gray-50"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
+                </div>
+
+                <div className="flex justify-between pt-4">
+                  <Button 
+                    variant="outline" 
+                    onClick={handleLogout}
+                  >
+                    Sign Out
+                  </Button>
+                  <Button onClick={handleUpdateProfile}>Save Changes</Button>
+                </div>
               </div>
-            ) : (
-              <div className="space-y-6">
-                {orders.map((order) => (
-                  <OrderCard key={order.id} order={order} />
-                ))}
-              </div>
-            )}
+            </div>
           </TabsContent>
         </Tabs>
       </div>

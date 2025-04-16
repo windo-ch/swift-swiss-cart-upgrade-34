@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Order from "./pages/Order";
 import Products from "./pages/Products";
@@ -28,6 +28,7 @@ import InitialLoadingScreen from "./components/InitialLoadingScreen";
 import CartDrawer from "./components/CartDrawer";
 import ScrollToTop from "./components/ScrollToTop";
 import FirstTimeUserBanner from "./components/FirstTimeUserBanner";
+import AdminRoute from "./components/admin/AdminRoute";
 
 const queryClient = new QueryClient();
 
@@ -55,9 +56,22 @@ const App = () => (
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/order-confirmation" element={<OrderConfirmation />} />
                 <Route path="/profile" element={<Profile />} />
-                <Route path="/order-tracking/:id" element={<OrderTracking />} />
-                <Route path="/admin" element={<Admin />} />
-                <Route path="/admin/orders" element={<AdminOrderTracking />} />
+                {/* Order tracking is now only for admin users */}
+                <Route path="/order-tracking/:id" element={
+                  <AdminRoute>
+                    <OrderTracking />
+                  </AdminRoute>
+                } />
+                <Route path="/admin" element={
+                  <AdminRoute>
+                    <Admin />
+                  </AdminRoute>
+                } />
+                <Route path="/admin/orders" element={
+                  <AdminRoute>
+                    <AdminOrderTracking />
+                  </AdminRoute>
+                } />
                 <Route path="/dateschutz" element={<Dateschutz />} />
                 <Route path="/agb" element={<AGB />} />
                 <Route path="/impressum" element={<Impressum />} />
