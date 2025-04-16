@@ -19,10 +19,13 @@ import {
   Phone, 
   Mail,
   Calendar,
-  Image
+  Image,
+  Package
 } from 'lucide-react';
 import { formatCurrency } from '@/utils/format-utils';
 import { Order } from '@/types/order';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface OrderDetailsProps {
   order: Order;
@@ -59,6 +62,11 @@ const OrderDetails = ({ order, isOpen, onClose }: OrderDetailsProps) => {
     return order.order_items.reduce((total, item) => total + (item.price * item.quantity), 0);
   };
 
+  const getProductImageUrl = (product_id: string) => {
+    // Default placeholder image
+    return 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png';
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
@@ -88,12 +96,14 @@ const OrderDetails = ({ order, isOpen, onClose }: OrderDetailsProps) => {
             {order.status === 'delivered' && order.delivery_photo && (
               <div>
                 <h3 className="text-sm font-medium text-gray-500 mb-1">Lieferfoto</h3>
-                <div className="relative aspect-video bg-gray-100 rounded-md overflow-hidden">
-                  <img 
-                    src={order.delivery_photo} 
-                    alt="Lieferfoto" 
-                    className="w-full h-full object-cover" 
-                  />
+                <div className="relative bg-gray-100 rounded-md overflow-hidden">
+                  <AspectRatio ratio={16/9}>
+                    <img 
+                      src={order.delivery_photo} 
+                      alt="Lieferfoto" 
+                      className="w-full h-full object-cover" 
+                    />
+                  </AspectRatio>
                 </div>
                 <p className="text-xs text-gray-500 mt-1 flex items-center">
                   <Image size={12} className="mr-1" />
@@ -111,13 +121,20 @@ const OrderDetails = ({ order, isOpen, onClose }: OrderDetailsProps) => {
               <ul className="divide-y divide-gray-200">
                 {order.order_items.map((item) => (
                   <li key={item.id} className="py-2 first:pt-0 last:pb-0">
-                    <div className="flex justify-between">
-                      <span className="flex-1">
-                        {item.quantity}x {item.product_name}
-                      </span>
-                      <span className="text-right">
+                    <div className="flex items-center gap-2">
+                      <Avatar className="h-8 w-8 rounded-md">
+                        <AvatarImage src={getProductImageUrl(item.product_id)} alt={item.product_name} />
+                        <AvatarFallback className="rounded-md">
+                          <Package size={14} />
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">{item.quantity}x {item.product_name}</p>
+                        <p className="text-xs text-gray-500">ID: {item.product_id.slice(0, 8)}</p>
+                      </div>
+                      <div className="text-right text-sm font-medium">
                         {formatCurrency(item.price * item.quantity)}
-                      </span>
+                      </div>
                     </div>
                   </li>
                 ))}

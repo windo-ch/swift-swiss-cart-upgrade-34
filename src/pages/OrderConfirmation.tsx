@@ -5,7 +5,8 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import PromoBanner from '../components/PromoBanner';
 import { Button } from '@/components/ui/button';
-import { ShoppingBag, Truck, Clock, CheckCircle2 } from 'lucide-react';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { ShoppingBag, Truck, Clock, CheckCircle2, ExternalLink, MapPin } from 'lucide-react';
 
 const OrderConfirmation = () => {
   const location = useLocation();
@@ -33,6 +34,14 @@ const OrderConfirmation = () => {
           </div>
 
           <div className="bg-white p-6 rounded-lg shadow-md mb-8">
+            <Alert className="mb-4 bg-brings-light border-brings-primary/20">
+              <MapPin className="h-4 w-4" />
+              <AlertTitle>Bstellig in Bearbeitig</AlertTitle>
+              <AlertDescription>
+                Din Bstellig wird grad vorbereitet und bald usglieferet.
+              </AlertDescription>
+            </Alert>
+            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="text-center p-4 bg-brings-light rounded-lg">
                 <Clock className="w-8 h-8 text-brings-primary mx-auto mb-2" />

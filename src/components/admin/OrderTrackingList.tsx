@@ -27,7 +27,8 @@ import {
   Eye, 
   ShoppingBag, 
   Calendar, 
-  User
+  User,
+  Package
 } from 'lucide-react';
 import OrderDetails from './OrderDetails';
 import UpdateOrderStatus from './UpdateOrderStatus';
@@ -88,6 +89,10 @@ const OrderTrackingList = ({ orders, status }: OrderTrackingListProps) => {
     return 'Address information unavailable';
   };
 
+  const getProductCount = (order: Order) => {
+    return order.order_items.reduce((sum, item) => sum + item.quantity, 0);
+  };
+
   const handleViewDetails = (order: Order) => {
     setSelectedOrder(order);
     setIsDetailsOpen(true);
@@ -116,6 +121,7 @@ const OrderTrackingList = ({ orders, status }: OrderTrackingListProps) => {
                 <TableHead className="w-[100px]">Bstellnr.</TableHead>
                 <TableHead><Calendar size={14} className="mr-1 inline" /> Datum</TableHead>
                 <TableHead><User size={14} className="mr-1 inline" /> Chund</TableHead>
+                <TableHead><Package size={14} className="mr-1 inline" /> Produkt</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Total</TableHead>
                 <TableHead className="text-right">Aktione</TableHead>
@@ -127,6 +133,13 @@ const OrderTrackingList = ({ orders, status }: OrderTrackingListProps) => {
                   <TableCell className="font-medium">{order.id.slice(0, 8)}</TableCell>
                   <TableCell>{formatDate(order.created_at)}</TableCell>
                   <TableCell>{formatAddress(order.delivery_address)}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center">
+                      <span className="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                        {getProductCount(order)} Artikel
+                      </span>
+                    </div>
+                  </TableCell>
                   <TableCell>{statusBadge(order.status)}</TableCell>
                   <TableCell className="text-right">CHF {formatCurrency(order.total_amount)}</TableCell>
                   <TableCell className="text-right">

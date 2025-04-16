@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '../components/Navbar';
@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import OrderTrackingList from '@/components/admin/OrderTrackingList';
 import { Loader2 } from 'lucide-react';
 import { Order, OrderAddress } from '@/types/order';
+import { AdminProvider } from '@/contexts/AdminContext';
 
 const AdminOrderTracking = () => {
   const { data: orders, isLoading, error } = useQuery({
@@ -95,47 +96,49 @@ const AdminOrderTracking = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-6">Bstellig Tracking</h1>
-        
-        <Tabs defaultValue="pending">
-          <TabsList className="mb-6">
-            <TabsTrigger value="pending">Offe</TabsTrigger>
-            <TabsTrigger value="in_delivery">In Lieferig</TabsTrigger>
-            <TabsTrigger value="delivered">Abgschlossen</TabsTrigger>
-            <TabsTrigger value="all">Alli</TabsTrigger>
-          </TabsList>
+    <AdminProvider>
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-grow container mx-auto px-4 py-8">
+          <h1 className="text-2xl font-bold mb-6">Bstellig Tracking</h1>
           
-          <TabsContent value="pending">
-            <OrderTrackingList 
-              orders={orders?.filter(order => order.status === 'pending') || []} 
-              status="pending"
-            />
-          </TabsContent>
-          
-          <TabsContent value="in_delivery">
-            <OrderTrackingList 
-              orders={orders?.filter(order => order.status === 'in_delivery') || []} 
-              status="in_delivery"
-            />
-          </TabsContent>
-          
-          <TabsContent value="delivered">
-            <OrderTrackingList 
-              orders={orders?.filter(order => order.status === 'delivered') || []} 
-              status="delivered"
-            />
-          </TabsContent>
-          
-          <TabsContent value="all">
-            <OrderTrackingList orders={orders || []} status="all" />
-          </TabsContent>
-        </Tabs>
-      </main>
-      <Footer />
-    </div>
+          <Tabs defaultValue="pending">
+            <TabsList className="mb-6">
+              <TabsTrigger value="pending">Offe</TabsTrigger>
+              <TabsTrigger value="in_delivery">In Lieferig</TabsTrigger>
+              <TabsTrigger value="delivered">Abgschlossen</TabsTrigger>
+              <TabsTrigger value="all">Alli</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="pending">
+              <OrderTrackingList 
+                orders={orders?.filter(order => order.status === 'pending') || []} 
+                status="pending"
+              />
+            </TabsContent>
+            
+            <TabsContent value="in_delivery">
+              <OrderTrackingList 
+                orders={orders?.filter(order => order.status === 'in_delivery') || []} 
+                status="in_delivery"
+              />
+            </TabsContent>
+            
+            <TabsContent value="delivered">
+              <OrderTrackingList 
+                orders={orders?.filter(order => order.status === 'delivered') || []} 
+                status="delivered"
+              />
+            </TabsContent>
+            
+            <TabsContent value="all">
+              <OrderTrackingList orders={orders || []} status="all" />
+            </TabsContent>
+          </Tabs>
+        </main>
+        <Footer />
+      </div>
+    </AdminProvider>
   );
 };
 
