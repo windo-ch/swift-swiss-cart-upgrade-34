@@ -9,7 +9,9 @@ export const products: Product[] = [
     price: 2.50,
     category: 'drinks',
     description: 'Coca-Cola Classic',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Wasser, Zucker, Kohlensäure, Farbstoff E 150d, Säurungsmittel Phosphorsäure, natürliche Aromen einschließlich Koffein.',
+    weight: '500ml'
   },
   {
     id: 3,
@@ -18,7 +20,9 @@ export const products: Product[] = [
     price: 2.80,
     category: 'drinks',
     description: 'Swiss soft drink Rivella Red',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Wasser, Milchserum, Zucker, Kohlensäure, Säuerungsmittel: Milchsäure, Aroma.',
+    weight: '500ml'
   },
   {
     id: 9,
@@ -27,7 +31,9 @@ export const products: Product[] = [
     price: 2.50,
     category: 'drinks',
     description: 'Valser sparkling water',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Natürliches Mineralwasser mit Kohlensäure versetzt.',
+    weight: '500ml'
   },
   {
     id: 10,
@@ -36,16 +42,20 @@ export const products: Product[] = [
     price: 2.50,
     category: 'drinks',
     description: 'Valser still water',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Natürliches Mineralwasser ohne Kohlensäure.',
+    weight: '500ml'
   },
-    {
+  {
     id: 11,
     name: 'Lauretana mit Kohlensäure',
     image: 'https://brings-delivery.ch/cdn/shop/products/lauretana-mineralwasser-mit-kohlensaure-1000ml-787_600x.jpg',
     price: 3.50,
     category: 'drinks',
     description: 'Lauretana sparkling water',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Natürliches Mineralwasser mit Kohlensäure versetzt.',
+    weight: '1000ml'
   },
   {
     id: 12,
@@ -54,7 +64,9 @@ export const products: Product[] = [
     price: 3.50,
     category: 'drinks',
     description: 'Lauretana still water',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Natürliches Mineralwasser ohne Kohlensäure.',
+    weight: '1000ml'
   },
   {
     id: 13,
@@ -63,7 +75,9 @@ export const products: Product[] = [
     price: 3.50,
     category: 'drinks',
     description: 'AriZona Honey Ice Tea',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Wasser, Zucker, Säuerungsmittel: Citronensäure, Schwarztee-Extrakt, Honig, natürliche Aromen, Antioxidationsmittel: Ascorbinsäure.',
+    weight: '500ml'
   },
   {
     id: 14,
@@ -72,7 +86,9 @@ export const products: Product[] = [
     price: 6.50,
     category: 'drinks',
     description: 'AriZona Honey Ice Tea in a 1.5L bottle',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Wasser, Zucker, Säuerungsmittel: Citronensäure, Schwarztee-Extrakt, Honig, natürliche Aromen, Antioxidationsmittel: Ascorbinsäure.',
+    weight: '1500ml'
   },
   {
     id: 15,
@@ -81,7 +97,9 @@ export const products: Product[] = [
     price: 6.50,
     category: 'drinks',
     description: 'AriZona Peach Ice Tea in a 1.5L bottle',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Wasser, Zucker, Säuerungsmittel: Citronensäure, Schwarztee-Extrakt, Pfirsichsaft aus Konzentrat, natürliche Aromen, Antioxidationsmittel: Ascorbinsäure.',
+    weight: '1500ml'
   },
   {
     id: 16,
@@ -90,7 +108,9 @@ export const products: Product[] = [
     price: 2.00,
     category: 'drinks',
     description: 'Capri-Sun Multivitamin juice drink',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Wasser, Fruchtsäfte aus Konzentrat (Apfel, Orange, Zitrone, Maracuja), Zucker, Vitamin C, Aromen.',
+    weight: '330ml'
   },
   {
     id: 17,
@@ -99,7 +119,9 @@ export const products: Product[] = [
     price: 5.90,
     category: 'drinks',
     description: 'Coca Cola in a 1.5L bottle',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Wasser, Zucker, Kohlensäure, Farbstoff E 150d, Säurungsmittel Phosphorsäure, natürliche Aromen einschließlich Koffein.',
+    weight: '1500ml'
   },
   {
     id: 18,
@@ -108,17 +130,21 @@ export const products: Product[] = [
     price: 2.50,
     category: 'drinks',
     description: 'Coca Cola Zero',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Wasser, Kohlensäure, Farbstoff E 150d, Süßstoffe (Aspartam, Acesulfam-K), Säuerungsmittel Phosphorsäure, natürliche Aromen einschließlich Koffein.',
+    weight: '500ml'
   },
   {
-        id: 2,
-        name: 'Coca-Cola Classic',
-        image: 'https://brings-delivery.ch/cdn/shop/products/coca-cola-classic-500ml-787_600x.jpg',
-        price: 2.50,
-        category: 'drinks',
-        description: 'Coca-Cola Classic',
-        ageRestricted: false
-    },
+    id: 2,
+    name: 'Coca-Cola Classic',
+    image: 'https://brings-delivery.ch/cdn/shop/products/coca-cola-classic-500ml-787_600x.jpg',
+    price: 2.50,
+    category: 'drinks',
+    description: 'Coca-Cola Classic',
+    ageRestricted: false,
+    ingredients: 'Wasser, Zucker, Kohlensäure, Farbstoff E 150d, Säurungsmittel Phosphorsäure, natürliche Aromen einschließlich Koffein.',
+    weight: '500ml'
+  },
   {
     id: 19,
     name: 'Fanta 1.5L',
@@ -126,7 +152,9 @@ export const products: Product[] = [
     price: 5.90,
     category: 'drinks',
     description: 'Fanta in a 1.5L bottle',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Wasser, Zucker, Orangensaft aus Konzentrat (5%), Kohlensäure, Säuerungsmittel Citronensäure, Aroma, Stabilisator: Guarkernmehl, Antioxidationsmittel Ascorbinsäure, Farbstoff Beta-Carotin.',
+    weight: '1500ml'
   },
   {
     id: 21,
@@ -135,7 +163,9 @@ export const products: Product[] = [
     price: 2.50,
     category: 'drinks',
     description: 'San Benedetto Lemon Ice Tea',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Wasser, Zucker, Zitronensaft, Säuerungsmittel: Citronensäure, Schwarztee-Extrakt, natürliche Aromen.',
+    weight: '500ml'
   },
   {
     id: 22,
@@ -144,7 +174,9 @@ export const products: Product[] = [
     price: 2.50,
     category: 'drinks',
     description: 'San Benedetto Peach Ice Tea',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Wasser, Zucker, Pfirsichsaft, Säuerungsmittel: Citronensäure, Schwarztee-Extrakt, natürliche Aromen.',
+    weight: '500ml'
   },
   {
     id: 23,
@@ -153,7 +185,9 @@ export const products: Product[] = [
     price: 2.50,
     category: 'drinks',
     description: 'Sinalco Original soft drink',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Wasser, Zucker, Kohlensäure, Zitronensäure, natürliche Aromen, Farbstoffe.',
+    weight: '330ml'
   },
   {
     id: 24,
@@ -162,7 +196,9 @@ export const products: Product[] = [
     price: 2.50,
     category: 'drinks',
     description: 'Uludag Original soft drink',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Wasser, Zucker, Kohlensäure, natürliche Aromen, Zitronensäure.',
+    weight: '500ml'
   },
   // Energy Drinks
   {
@@ -172,7 +208,9 @@ export const products: Product[] = [
     price: 3.50,
     category: 'energy',
     description: 'Red Bull Original energy drink',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Wasser, Saccharose, Glucose, Säureregulator (Natriumcitrate, Magnesiumcarbonat), Kohlensäure, Zitronensäure, Taurin (0.4%), Koffein (0.03%), Vitamine, Aromen, Farbstoffe.',
+    weight: '250ml'
   },
   {
     id: 20,
@@ -181,7 +219,9 @@ export const products: Product[] = [
     price: 3.50,
     category: 'energy',
     description: 'Red Bull Sugarfree energy drink',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Wasser, Säureregulator (Natriumcitrate, Magnesiumcarbonat), Kohlensäure, Zitronensäure, Taurin (0.4%), Süßungsmittel (Acesulfam K, Aspartam), Koffein (0.03%), Vitamine, Aromen, Farbstoffe.',
+    weight: '250ml'
   },
   // Snacks and Chips
   {
@@ -197,14 +237,16 @@ export const products: Product[] = [
     ingredients: 'Kartoffeln, Sonnenblumenöl, Paprika-Gewürz, Salz.',
     weight: '155g'
   },
-    {
+  {
     id: 25,
     name: 'Zweifel Nature Chips',
     image: 'https://brings-delivery.ch/cdn/shop/products/zweifel-nature-155g-550_600x.jpg',
     price: 4.90,
     category: 'chips',
     description: 'Zweifel Nature flavored chips',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Kartoffeln, Sonnenblumenöl, Salz.',
+    weight: '155g'
   },
   {
     id: 26,
@@ -213,7 +255,9 @@ export const products: Product[] = [
     price: 4.90,
     category: 'chips',
     description: 'Zweifel Paprika flavored chips',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Kartoffeln, Sonnenblumenöl, Paprika-Gewürz, Salz.',
+    weight: '155g'
   },
   {
     id: 27,
@@ -222,7 +266,9 @@ export const products: Product[] = [
     price: 4.90,
     category: 'chips',
     description: 'Fonzies Original Cheese flavored chips',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Maisgrieß, Pflanzenöl, Käsepulver, Salz, Käsegeschmack.',
+    weight: '100g'
   },
   {
     id: 28,
@@ -231,7 +277,9 @@ export const products: Product[] = [
     price: 5.90,
     category: 'snacks',
     description: 'Granforno Traditional Grissini breadsticks',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Weizenmehl, Pflanzenöl, Salz, Hefe, Malzextrakt.',
+    weight: '275g'
   },
   {
     id: 29,
@@ -240,7 +288,9 @@ export const products: Product[] = [
     price: 0.70,
     category: 'sweets',
     description: 'Kinder Chocolate, price per piece',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Zucker, Magermilchpulver, Kakaobutter, Kakaomasse, Milchpulver, Butterreinfett, Emulgator Lecithine, Vanillin.',
+    weight: 'ca. 12.5g pro Riegel'
   },
   {
     id: 30,
@@ -249,7 +299,9 @@ export const products: Product[] = [
     price: 1.60,
     category: 'sweets',
     description: 'Kinder Bueno chocolate bar',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Milchschokolade, Haselnusscreme, Waffel, Zucker, pflanzliches Fett, Haselnüsse, Vollmilchpulver, Kakaobutter, Kakaomasse, Emulgator Lecithine.',
+    weight: '44g'
   },
   {
     id: 31,
@@ -258,7 +310,9 @@ export const products: Product[] = [
     price: 1.20,
     category: 'sweets',
     description: 'Kinder Milk Slice',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Frischmilch, pflanzliche Fette, Zucker, Weizenmehl, Magermilchpulver, Honig, Butterreinfett, Emulgator Mono- und Diglyceride von Speisefettsäuren, Aromen, Backtriebmittel Natriumhydrogencarbonat, Ammoniumcarbonat, Salz.',
+    weight: '28g'
   },
   {
     id: 32,
@@ -267,7 +321,9 @@ export const products: Product[] = [
     price: 4.90,
     category: 'snacks',
     description: 'Nippon Hosta snack',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Zucker, Weizenmehl, pflanzliche Fette, Kakaomasse, Kakaobutter, Magermilchpulver, Süßmolkenpulver, Butterreinfett, Emulgator Sojalecithine, Salz, Aroma.',
+    weight: '90g'
   },
   {
     id: 33,
@@ -276,7 +332,9 @@ export const products: Product[] = [
     price: 4.90,
     category: 'sweets',
     description: 'Oreo Original cookies',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Weizenmehl, Zucker, pflanzliches Öl, fettarmes Kakaopulver, Glukose-Fruktose-Sirup, Backtriebmittel Natriumhydrogencarbonat, Ammoniumhydrogencarbonat, Salz, Emulgator Sojalecithine, Aroma.',
+    weight: '154g'
   },
   {
     id: 34,
@@ -285,7 +343,9 @@ export const products: Product[] = [
     price: 3.90,
     category: 'snacks',
     description: 'Smoki Peanut Flips',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Maisgrieß, Erdnüsse, Pflanzenöl, Salz.',
+    weight: '50g'
   },
   {
     id: 35,
@@ -294,7 +354,9 @@ export const products: Product[] = [
     price: 2.90,
     category: 'snacks',
     description: 'TUC Original LU salted crackers',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Weizenmehl, Pflanzenöl, Glukosesirup, Malzextrakt, Backtriebmittel Natriumhydrogencarbonat, Ammoniumhydrogencarbonat, Salz.',
+    weight: '100g'
   },
   // Non-Food Items
   {
@@ -304,7 +366,9 @@ export const products: Product[] = [
     price: 5.50,
     category: 'non-food',
     description: 'Baby diapers, size 4, pack of 8',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Zellstoff, Superabsorber, Polypropylen, Polyethylen.',
+    weight: '8 Stück'
   },
   {
     id: 37,
@@ -313,7 +377,9 @@ export const products: Product[] = [
     price: 4.90,
     category: 'non-food',
     description: 'Box of facial tissues',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: '100% Zellstoff.',
+    weight: 'Variiert'
   },
   {
     id: 38,
@@ -322,7 +388,9 @@ export const products: Product[] = [
     price: 3.90,
     category: 'non-food',
     description: 'o.b. ProComfort mini tampons',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Viskose, Polyesterfaser, Polyethylen.',
+    weight: '8 Stück'
   },
   {
     id: 39,
@@ -331,7 +399,9 @@ export const products: Product[] = [
     price: 0.30,
     category: 'non-food',
     description: 'Plastic shot glasses',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Polystyrol.',
+    weight: '1 Stück'
   },
   {
     id: 40,
@@ -340,7 +410,9 @@ export const products: Product[] = [
     price: 0.30,
     category: 'non-food',
     description: 'Plastic cups',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: 'Polystyrol.',
+    weight: '1 Stück'
   },
   {
     id: 41,
@@ -349,7 +421,9 @@ export const products: Product[] = [
     price: 2.20,
     category: 'non-food',
     description: 'Pack of tissues, 2 pieces',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: '100% Zellstoff.',
+    weight: '2 Stück'
   },
   {
     id: 42,
@@ -358,7 +432,9 @@ export const products: Product[] = [
     price: 2.40,
     category: 'non-food',
     description: 'Toilet paper, 1 roll',
-    ageRestricted: false
+    ageRestricted: false,
+    ingredients: '100% Zellstoff.',
+    weight: '1 Rolle'
   },
   // Tobacco Products (all age restricted)
   {
@@ -368,7 +444,9 @@ export const products: Product[] = [
     price: 11.90,
     category: 'tobacco',
     description: 'American Spirit Blue tobacco',
-    ageRestricted: true
+    ageRestricted: true,
+    ingredients: '100% Tabak.',
+    weight: '30g'
   },
   {
     id: 44,
@@ -377,7 +455,9 @@ export const products: Product[] = [
     price: 12.90,
     category: 'tobacco',
     description: 'Vogue Slim Blue cigarettes',
-    ageRestricted: true
+    ageRestricted: true,
+    ingredients: 'Tabak, Filter.',
+    weight: '20 Stück'
   },
   {
     id: 45,
@@ -386,7 +466,9 @@ export const products: Product[] = [
     price: 11.90,
     category: 'tobacco',
     description: 'Sullana rolling tobacco',
-    ageRestricted: true
+    ageRestricted: true,
+    ingredients: '100% Tabak.',
+    weight: '30g'
   },
   {
     id: 46,
@@ -395,7 +477,9 @@ export const products: Product[] = [
     price: 12.90,
     category: 'tobacco',
     description: 'Parisienne Jaune cigarettes',
-    ageRestricted: true
+    ageRestricted: true,
+    ingredients: 'Tabak, Filter.',
+    weight: '20 Stück'
   },
   {
     id: 47,
@@ -404,7 +488,9 @@ export const products: Product[] = [
     price: 13.90,
     category: 'tobacco',
     description: 'Philip Morris Quantum Blue cigarettes',
-    ageRestricted: true
+    ageRestricted: true,
+    ingredients: 'Tabak, Filter.',
+    weight: '20 Stück'
   },
   {
     id: 48,
@@ -413,7 +499,9 @@ export const products: Product[] = [
     price: 12.90,
     category: 'tobacco',
     description: 'Marlboro Gold cigarettes',
-    ageRestricted: true
+    ageRestricted: true,
+    ingredients: 'Tabak, Filter.',
+    weight: '20 Stück'
   },
   {
     id: 49,
@@ -422,7 +510,9 @@ export const products: Product[] = [
     price: 12.90,
     category: 'tobacco',
     description: 'Marlboro Red cigarettes',
-    ageRestricted: true
+    ageRestricted: true,
+    ingredients: 'Tabak, Filter.',
+    weight: '20 Stück'
   },
   {
     id: 50,
@@ -431,7 +521,9 @@ export const products: Product[] = [
     price: 2.50,
     category: 'tobacco',
     description: 'Smoking Blue King Size rolling papers',
-    ageRestricted: true
+    ageRestricted: true,
+    ingredients: 'Papier, Gummierung.',
+    weight: '33 Blatt'
   },
   // Alcoholic Beverages (all age restricted)
   {
@@ -441,16 +533,20 @@ export const products: Product[] = [
     price: 2.50,
     category: 'alcohol',
     description: 'Original Feldschlösschen beer in a 0.33l bottle',
-    ageRestricted: true
+    ageRestricted: true,
+    ingredients: 'Wasser, Gerstenmalz, Hopfen, Hefe.',
+    weight: '330ml'
   },
-    {
+  {
     id: 7,
     name: 'Feldschlösschen Bier',
     image: 'https://brings-delivery.ch/cdn/shop/products/feldschlosschen-original-500ml-787_600x.jpg',
     price: 3.50,
     category: 'alcohol',
     description: 'Original Feldschlösschen beer',
-    ageRestricted: true
+    ageRestricted: true,
+    ingredients: 'Wasser, Gerstenmalz, Hopfen, Hefe.',
+    weight: '500ml'
   },
   {
     id: 52,
@@ -459,16 +555,20 @@ export const products: Product[] = [
     price: 2.50,
     category: 'alcohol',
     description: 'Quöllfrisch beer',
-    ageRestricted: true
+    ageRestricted: true,
+    ingredients: 'Wasser, Gerstenmalz, Hopfen, Hefe.',
+    weight: '330ml'
   },
-    {
+  {
     id: 53,
     name: 'Quöllfrisch 0.5L',
     image: 'https://brings-delivery.ch/cdn/shop/products/appenzeller-quollfrisch-500ml-787_600x.jpg',
     price: 3.50,
     category: 'alcohol',
     description: 'Quöllfrisch beer',
-    ageRestricted: true
+    ageRestricted: true,
+    ingredients: 'Wasser, Gerstenmalz, Hopfen, Hefe.',
+    weight: '500ml'
   },
   {
     id: 54,
@@ -477,7 +577,9 @@ export const products: Product[] = [
     price: 3.90,
     category: 'alcohol',
     description: 'Unfiltered Birra Ichnusa beer',
-    ageRestricted: true
+    ageRestricted: true,
+    ingredients: 'Wasser, Gerstenmalz, Hopfen, Hefe.',
+    weight: '500ml'
   },
   {
     id: 55,
@@ -486,7 +588,9 @@ export const products: Product[] = [
     price: 2.80,
     category: 'alcohol',
     description: 'Birra Morreti beer',
-    ageRestricted: true
+    ageRestricted: true,
+    ingredients: 'Wasser, Gerstenmalz, Hopfen, Hefe.',
+    weight: '330ml'
   },
   {
     id: 56,
@@ -495,7 +599,9 @@ export const products: Product[] = [
     price: 3.60,
     category: 'alcohol',
     description: 'Original Desperados beer',
-    ageRestricted: true
+    ageRestricted: true,
+    ingredients: 'Wasser, Gerstenmalz, Glukose-Sirup, Hopfen, Hefe, Aroma.',
+    weight: '330ml'
   },
   {
     id: 57,
@@ -504,7 +610,9 @@ export const products: Product[] = [
     price: 3.50,
     category: 'alcohol',
     description: 'Früh Kölsch beer in a 0.33l bottle',
-    ageRestricted: true
+    ageRestricted: true,
+    ingredients: 'Wasser, Gerstenmalz, Hopfen, Hefe.',
+    weight: '330ml'
   },
   {
     id: 58,
@@ -513,105 +621,12 @@ export const products: Product[] = [
     price: 2.50,
     category: 'alcohol',
     description: 'Heineken Premium beer',
-    ageRestricted: true
+    ageRestricted: true,
+    ingredients: 'Wasser, Gerstenmalz, Hopfen, Hefe.',
+    weight: '330ml'
   },
-    {
+  {
     id: 59,
     name: 'Heineken Premium 0.5L',
     image: 'https://brings-delivery.ch/cdn/shop/products/heineken-500ml-787_600x.jpg',
-    price: 3.60,
-    category: 'alcohol',
-    description: 'Heineken Premium beer',
-    ageRestricted: true
-  },
-  {
-    id: 60,
-    name: 'Mönchshof Kellerbier 0.5L',
-    image: 'https://brings-delivery.ch/cdn/shop/products/monchshof-kellerbier-500ml-787_600x.jpg',
-    price: 3.90,
-    category: 'alcohol',
-    description: 'Mönchshof Kellerbier in a 0.5l bottle',
-    ageRestricted: true
-  },
-  {
-    id: 61,
-    name: 'Rothaus Tannenzäpfle 0.33L',
-    image: 'https://brings-delivery.ch/cdn/shop/products/rothaus-tannenzapfle-330ml-787_600x.jpg',
-    price: 3.20,
-    category: 'alcohol',
-    description: 'Rothaus Tannenzäpfle beer in a 0.33l bottle',
-    ageRestricted: true
-  },
-  {
-    id: 62,
-    name: 'Bluesecco Blu Rosé Rubicone IGT',
-    image: 'https://brings-delivery.ch/cdn/shop/products/bluesecco-blu-rose-200ml-787_600x.jpg',
-    price: 4.20,
-    category: 'alcohol',
-    description: 'Bluesecco Blu Rosé sparkling wine from the Rubicone region, Italy',
-    ageRestricted: true
-  },
-  {
-    id: 63,
-    name: 'Bluesecco Blu Trevenezie IGT',
-    image: 'https://brings-delivery.ch/cdn/shop/products/bluesecco-blu-200ml-787_600x.jpg',
-    price: 4.20,
-    category: 'alcohol',
-    description: 'Bluesecco Blu sparkling wine from the Trevenezie region, Italy',
-    ageRestricted: true
-  },
-  {
-    id: 64,
-    name: 'Ballantine\'s Finest Scotch',
-    image: 'https://brings-delivery.ch/cdn/shop/products/ballantines-07l-550_600x.jpg',
-    price: 34.00,
-    category: 'spirits',
-    description: 'Ballantine\'s Finest Scotch Whisky',
-    ageRestricted: true
-  },
-  {
-    id: 65,
-    name: 'Jack Daniel\'s Tennessee Whiskey',
-    image: 'https://brings-delivery.ch/cdn/shop/products/jack-daniels-07l-550_600x.jpg',
-    price: 49.00,
-    category: 'spirits',
-    description: 'Jack Daniel\'s Tennessee Whiskey',
-    ageRestricted: true
-  },
-  {
-    id: 66,
-    name: 'Jägermeister 70cl',
-    image: 'https://brings-delivery.ch/cdn/shop/products/jagermeister-07l-550_600x.jpg',
-    price: 39.00,
-    category: 'spirits',
-    description: 'Jägermeister herbal liqueur, 70cl bottle',
-    ageRestricted: true
-  },
-  {
-    id: 67,
-    name: 'Johnnie Walker Red Label 70cl',
-    image: 'https://brings-delivery.ch/cdn/shop/products/johnnie-walker-red-label-07l-550_600x.jpg',
-    price: 39.00,
-    category: 'spirits',
-    description: 'Johnnie Walker Red Label Scotch Whisky, 70cl bottle',
-    ageRestricted: true
-  },
-  {
-    id: 68,
-    name: 'Vodka Absolut 70cl',
-    image: 'https://brings-delivery.ch/cdn/shop/products/absolut-vodka-07l-550_600x.jpg',
-    price: 46.00,
-    category: 'spirits',
-    description: 'Absolut Vodka, 70cl bottle',
-    ageRestricted: true
-  },
-  {
-    id: 69,
-    name: 'Wodka Gorbatschow 70cl',
-    image: 'https://brings-delivery.ch/cdn/shop/products/wodka-gorbatschow-07l-550_600x.jpg',
-    price: 26.00,
-    category: 'spirits',
-    description: 'Wodka Gorbatschow, 70cl bottle',
-    ageRestricted: true
-  },
-];
+    price

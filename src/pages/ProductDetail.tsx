@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -34,8 +35,8 @@ const getAllProducts = (): ExtendedProduct[] => {
     const convertedDataProducts = dataProducts.map(product => ({
       ...product,
       id: product.id.toString(),
-      ingredients: product.ingredients || 'Kartoffeln, Sonnenblumenöl, Gewürze, Salz.',
-      weight: product.weight || '100g'
+      ingredients: product.ingredients || getCategoryDefaultIngredients(product.category),
+      weight: product.weight || getCategoryDefaultWeight(product.category)
     }));
     
     return [...convertedDataProducts, ...formattedAdminProducts];
@@ -44,9 +45,61 @@ const getAllProducts = (): ExtendedProduct[] => {
     return dataProducts.map(product => ({
       ...product,
       id: product.id.toString(),
-      ingredients: product.ingredients || 'Keine Angaben zu Zutaten verfügbar.',
-      weight: product.weight || 'Keine Angaben zum Gewicht verfügbar.'
+      ingredients: product.ingredients || getCategoryDefaultIngredients(product.category),
+      weight: product.weight || getCategoryDefaultWeight(product.category)
     }));
+  }
+};
+
+// Helper function to get default ingredients based on product category
+const getCategoryDefaultIngredients = (category: string): string => {
+  switch (category) {
+    case 'drinks':
+      return 'Wasser, natürliche Aromen.';
+    case 'energy':
+      return 'Wasser, Taurin, Koffein, Zucker, Vitamine, Aromen.';
+    case 'chips':
+      return 'Kartoffeln, Sonnenblumenöl, Salz.';
+    case 'snacks':
+      return 'Weizen, Zucker, pflanzliche Öle, Salz.';
+    case 'sweets':
+      return 'Zucker, Kakaobutter, Kakaomasse, Milchpulver.';
+    case 'alcohol':
+      return 'Wasser, Gerstenmalz, Hopfen, Hefe.';
+    case 'spirits':
+      return 'Destillierter Alkohol, Wasser, natürliche Aromen.';
+    case 'tobacco':
+      return 'Tabak, Aromen.';
+    case 'non-food':
+      return 'Keine Zutatenliste verfügbar für Non-Food Artikel.';
+    default:
+      return 'Keine Angaben zu Zutaten verfügbar.';
+  }
+};
+
+// Helper function to get default weight based on product category
+const getCategoryDefaultWeight = (category: string): string => {
+  switch (category) {
+    case 'drinks':
+      return '500ml';
+    case 'energy':
+      return '250ml';
+    case 'chips':
+      return '150g';
+    case 'snacks':
+      return '100g';
+    case 'sweets':
+      return '50g';
+    case 'alcohol':
+      return '500ml';
+    case 'spirits':
+      return '700ml';
+    case 'tobacco':
+      return '20 Stk.';
+    case 'non-food':
+      return 'Variiert';
+    default:
+      return 'Keine Angaben zum Gewicht verfügbar.';
   }
 };
 
