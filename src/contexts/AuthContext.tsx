@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Session, User, Provider } from '@supabase/supabase-js';
@@ -55,28 +54,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // Check if this is a first-time user with no previous orders
   const checkFirstTimeUser = async (userId: string) => {
     try {
-      // Use a generic type to bypass TypeScript's table type checking
-      const { data: orders, error } = await supabase
+      const { data: orders } = await supabase
         .from('orders')
         .select('id')
         .eq('user_id', userId)
-        .limit(1) as { data: any[] | null, error: any };
+        .limit(1)
+        .returns<{ id: string }[]>();
         
-      if (error) throw error;
-      
       // If no orders, check if discount already applied
       if (!orders || orders.length === 0) {
-        const { data: discounts, error: discountError } = await supabase
+        const { data: discounts } = await supabase
           .from('user_discounts')
-          .select('*')
+          .select('id')
           .eq('user_id', userId)
           .eq('discount_code', 'FIRSTTIME')
-          .limit(1) as { data: any[] | null, error: any };
+          .limit(1)
+          .returns<{ id: string }[]>();
           
-        if (discountError) throw discountError;
-        
         setIsFirstTimeUser(true);
-        setHasAppliedDiscount(discounts && discounts.length > 0);
+        setHasAppliedDiscount(discounts !== null && discounts.length > 0);
       }
     } catch (error) {
       console.error('Error checking first time user status:', error);
@@ -96,7 +92,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           discount_percent: 10,
           is_used: false,
           valid_until: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days
-        }) as { data: any | null, error: any };
+        })
+        .returns<never>();
         
       if (error) throw error;
       

@@ -9,6 +9,86 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      order_items: {
+        Row: {
+          created_at: string | null
+          id: string
+          order_id: string
+          price: number
+          product_id: string
+          product_name: string
+          quantity: number
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          order_id: string
+          price: number
+          product_id: string
+          product_name: string
+          quantity: number
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          order_id?: string
+          price?: number
+          product_id?: string
+          product_name?: string
+          quantity?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          created_at: string | null
+          delivery_address: Json
+          delivery_fee: number | null
+          discount_amount: number | null
+          estimated_delivery_time: string | null
+          id: string
+          payment_method: string
+          status: string
+          total_amount: number
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          delivery_address: Json
+          delivery_fee?: number | null
+          discount_amount?: number | null
+          estimated_delivery_time?: string | null
+          id?: string
+          payment_method: string
+          status?: string
+          total_amount: number
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          delivery_address?: Json
+          delivery_fee?: number | null
+          discount_amount?: number | null
+          estimated_delivery_time?: string | null
+          id?: string
+          payment_method?: string
+          status?: string
+          total_amount?: number
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -33,6 +113,36 @@ export type Database = {
           id?: string
           updated_at?: string
           username?: string | null
+        }
+        Relationships: []
+      }
+      user_discounts: {
+        Row: {
+          created_at: string | null
+          discount_code: string
+          discount_percent: number
+          id: string
+          is_used: boolean | null
+          user_id: string
+          valid_until: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          discount_code: string
+          discount_percent: number
+          id?: string
+          is_used?: boolean | null
+          user_id: string
+          valid_until?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          discount_code?: string
+          discount_percent?: number
+          id?: string
+          is_used?: boolean | null
+          user_id?: string
+          valid_until?: string | null
         }
         Relationships: []
       }
