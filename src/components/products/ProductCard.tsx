@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ShoppingBag } from 'lucide-react';
+import { ShoppingBag, Shield } from 'lucide-react';
 import { useCart } from '../../contexts/CartContext';
 
 interface Product {
@@ -11,6 +11,7 @@ interface Product {
   price: number;
   image: string;
   category: string;
+  ageRestricted?: boolean;
 }
 
 interface ProductCardProps {
@@ -44,6 +45,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
             }}
           />
         </Link>
+        {product.ageRestricted && (
+          <div className="absolute top-2 right-2 bg-brings-primary text-white text-xs px-2 py-1 rounded-full flex items-center">
+            <Shield size={12} className="mr-1" />
+            18+
+          </div>
+        )}
         <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
           <Button 
             variant="default" 
@@ -56,8 +63,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </div>
       </div>
       <div className="p-4">
+        <span className="text-xs text-gray-500 mb-1 block">{product.category}</span>
         <Link to={`/product/${product.id}`}>
-          <h3 className="font-medium text-gray-800 hover:text-brings-primary transition-colors">{product.name}</h3>
+          <h3 className="font-medium text-gray-800 hover:text-brings-primary transition-colors line-clamp-2">{product.name}</h3>
         </Link>
         <div className="flex items-center justify-between mt-2">
           <span className="font-bold text-brings-dark">CHF {product.price.toFixed(2)}</span>

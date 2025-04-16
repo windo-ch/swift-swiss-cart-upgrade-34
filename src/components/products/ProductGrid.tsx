@@ -2,6 +2,7 @@
 import React from 'react';
 import ProductCard from './ProductCard';
 import NoProducts from './NoProducts';
+import { useAgeVerification } from '../../contexts/AgeVerificationContext';
 
 interface Product {
   id: number;
@@ -9,6 +10,7 @@ interface Product {
   price: number;
   image: string;
   category: string;
+  ageRestricted?: boolean;
 }
 
 interface ProductGridProps {
@@ -16,13 +18,20 @@ interface ProductGridProps {
 }
 
 const ProductGrid = ({ products }: ProductGridProps) => {
-  if (products.length === 0) {
+  const { isAdult } = useAgeVerification();
+  
+  // Filter out age-restricted products if the user is not verified as an adult
+  const filteredProducts = isAdult 
+    ? products 
+    : products.filter(product => !product.ageRestricted);
+
+  if (filteredProducts.length === 0) {
     return <NoProducts />;
   }
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {products.map((product) => (
+      {filteredProducts.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}
     </div>
