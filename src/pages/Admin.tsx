@@ -4,9 +4,12 @@ import AdminLayout from '../components/admin/AdminLayout';
 import AdminProductForm from '../components/admin/AdminProductForm';
 import AdminProductList from '../components/admin/AdminProductList';
 import { Product } from '../types/product';
-import { initializeAdminProducts, logAdminProducts } from '../utils/admin-utils';
+import { forceReinitializeAdminProducts, logAdminProducts } from '../utils/admin-utils';
 import { useToast } from '@/components/ui/use-toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { RefreshCw } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const Admin = () => {
   const [editingProduct, setEditingProduct] = useState<Product | undefined>();
@@ -23,8 +26,8 @@ const Admin = () => {
     setIsInitializing(true);
     
     try {
-      // Force reinitialize products from the store data
-      initializeAdminProducts();
+      // Force reinitialize products from the seed data
+      forceReinitializeAdminProducts();
       logAdminProducts(); // Debug: log admin products after initialization
       
       // Show notification that products are loaded
@@ -71,20 +74,29 @@ const Admin = () => {
       onRefresh={refreshProducts}
       isRefreshing={isInitializing}
     >
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-1 lg:sticky lg:top-24 self-start max-h-[calc(100vh-200px)]">
-          <ScrollArea className="h-full pr-4">
-            <AdminProductForm 
-              initialData={editingProduct} 
-              onCancel={handleCancel}
-            />
-          </ScrollArea>
+      {isInitializing ? (
+        <div className="flex justify-center items-center p-8">
+          <div className="text-center">
+            <RefreshCw className="h-8 w-8 animate-spin text-brings-primary mx-auto mb-4" />
+            <p>Produkte werden geladen...</p>
+          </div>
         </div>
-        
-        <div className="lg:col-span-2">
-          <AdminProductList onEdit={handleEdit} />
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-1 lg:sticky lg:top-24 self-start max-h-[calc(100vh-200px)]">
+            <ScrollArea className="h-full pr-4">
+              <AdminProductForm 
+                initialData={editingProduct} 
+                onCancel={handleCancel}
+              />
+            </ScrollArea>
+          </div>
+          
+          <div className="lg:col-span-2">
+            <AdminProductList onEdit={handleEdit} />
+          </div>
         </div>
-      </div>
+      )}
     </AdminLayout>
   );
 };

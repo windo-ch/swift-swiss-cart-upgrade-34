@@ -1,6 +1,7 @@
 
 import { Product } from '../types/product';
 import { products as storeProducts } from '../data/products/index';
+import { seedProductsData } from './seed-products';
 
 const SUPABASE_URL = "https://zbvdlkfnpufqfhrptfhz.supabase.co";
 const DEFAULT_BUCKET = 'product-images';
@@ -50,35 +51,23 @@ export const getStoredProducts = (): Product[] => {
       }
     }
     
-    // If no admin products, fall back to the store products
-    console.log("📦 Source data contains", storeProducts.length, "products");
-    console.log("⚠️ No admin products found, using store products");
+    // If no admin products found, seed the products
+    console.log("⚠️ No admin products found, seeding new products");
+    seedProductsData();
     
-    const formattedStoreProducts = storeProducts.map(product => ({
-      ...product,
-      id: String(product.id), // Ensure id is always a string
-      name: product.name,
-      price: typeof product.price === 'number' ? product.price : parseFloat(String(product.price)),
-      category: product.category,
-      description: product.description || '', // Ensure description has a default
-      weight: product.weight || '', // Ensure weight has a default
-      ingredients: product.ingredients || '', // Ensure ingredients has a default
-      image: getProductImageUrl(product.image), // Properly format image URLs
-      ageRestricted: product.ageRestricted || false, // Ensure ageRestricted has a default
-      stock: 50 // Default stock value
-    }));
-    
-    console.log("🔄 Formatted", formattedStoreProducts.length, "store products");
-    
-    // Save to localStorage so admin can edit them
-    if (formattedStoreProducts.length > 0) {
-      localStorage.setItem('adminProducts', JSON.stringify(formattedStoreProducts));
-      
-      // Dispatch storage event to notify other components of the update
-      window.dispatchEvent(new Event('storage'));
+    // Try to get the newly seeded products
+    const newStoredProducts = localStorage.getItem('adminProducts');
+    if (newStoredProducts) {
+      const newProducts = JSON.parse(newStoredProducts);
+      return newProducts.map((product: Product) => ({
+        ...product,
+        image: getProductImageUrl(product.image), // Properly format image URLs
+      }));
     }
     
-    return formattedStoreProducts;
+    // Fallback to an empty array if still no products
+    console.error("❌ Failed to load or seed products");
+    return [];
   } catch (error) {
     console.error('❌ Error loading products from localStorage:', error);
     // If there's an error, clear localStorage and return empty array

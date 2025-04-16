@@ -7,7 +7,8 @@ import PromoBanner from '../components/PromoBanner';
 import ProductSearch from '../components/products/ProductSearch';
 import CategoryFilter from '../components/products/CategoryFilter';
 import ProductGrid from '../components/products/ProductGrid';
-import { getStoredProducts } from '../data/products';
+import { getStoredProducts } from '../utils/product-utils';
+import { Loader2 } from 'lucide-react';
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -15,8 +16,36 @@ const Products = () => {
   
   const [activeCategory, setActiveCategory] = useState<string>(categoryParam);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [allProducts, setAllProducts] = useState(getStoredProducts());
-  const [filteredProducts, setFilteredProducts] = useState(allProducts);
+  const [allProducts, setAllProducts] = useState<any[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  // Load products on mount
+  useEffect(() => {
+    const loadProducts = () => {
+      setIsLoading(true);
+      try {
+        const products = getStoredProducts();
+        console.log(`Loaded ${products.length} products`);
+        setAllProducts(products);
+      } catch (error) {
+        console.error("Error loading products:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadProducts();
+    
+    // Listen for storage events to refresh products
+    const handleStorageChange = () => {
+      console.log("Storage event detected, refreshing products");
+      loadProducts();
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
   
   // Update category when URL parameter changes
   useEffect(() => {
@@ -30,16 +59,6 @@ const Products = () => {
     setActiveCategory(category);
     setSearchParams({ category });
   };
-  
-  // Update products when localStorage changes
-  useEffect(() => {
-    const handleStorageChange = () => {
-      setAllProducts(getStoredProducts());
-    };
-    
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
   
   // Filter products whenever search term, category, or all products changes
   useEffect(() => {
@@ -80,13 +99,22 @@ const Products = () => {
           </div>
           
           {/* Product grid */}
-          <ProductGrid products={filteredProducts} />
-          
-          {filteredProducts.length === 0 && (
-            <div className="text-center py-16">
-              <p className="text-gray-500 text-lg">Kei Produkt gfunde.</p>
-              <p className="text-gray-400">Probier en anderi Suechi oder Filter.</p>
+          {isLoading ? (
+            <div className="flex items-center justify-center py-16">
+              <Loader2 className="h-8 w-8 animate-spin text-brings-primary mr-2" />
+              <span>Produkte werden geladen...</span>
             </div>
+          ) : (
+            <>
+              <ProductGrid products={filteredProducts} />
+              
+              {filteredProducts.length === 0 && !isLoading && (
+                <div className="text-center py-16">
+                  <p className="text-gray-500 text-lg">Kei Produkt gfunde.</p>
+                  <p className="text-gray-400">Probier en anderi Suechi oder Filter.</p>
+                </div>
+              )}
+            </>
           )}
         </div>
       </main>

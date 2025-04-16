@@ -2,42 +2,51 @@
 import { Product } from '../types/product';
 import { products as storeProducts } from '../data/products';
 import { getProductImageUrl } from './product-utils';
+import { seedProductsData } from './seed-products';
 
 // Create a more reliable method to initialize admin products
 export const initializeAdminProducts = (): void => {
   console.log("🔧 Initializing admin products");
   
   try {
-    // Clear any existing products to ensure a fresh start
-    localStorage.removeItem('adminProducts');
+    // Check if there are any admin products already
+    const existingProducts = localStorage.getItem('adminProducts');
     
-    // Convert all store products to admin format with stock
-    const formattedStoreProducts = storeProducts.map(product => ({
-      ...product,
-      id: String(product.id), // Ensure id is always a string
-      name: product.name,
-      price: typeof product.price === 'number' ? product.price : parseFloat(String(product.price)),
-      category: product.category,
-      description: product.description || '',
-      weight: product.weight || '',
-      ingredients: product.ingredients || '',
-      image: getProductImageUrl(product.image),
-      ageRestricted: product.ageRestricted || false,
-      stock: 50 // Default stock value
-    }));
+    if (existingProducts) {
+      try {
+        const parsedProducts = JSON.parse(existingProducts);
+        if (Array.isArray(parsedProducts) && parsedProducts.length > 0) {
+          console.log(`📦 Found ${parsedProducts.length} existing admin products`);
+          return; // Use existing products
+        }
+      } catch (e) {
+        console.error("Failed to parse existing products, will reinitialize");
+      }
+    }
     
-    console.log(`📦 Source data contains ${storeProducts.length} products`);
-    console.log(`🔄 Converted ${formattedStoreProducts.length} products to admin format`);
-    
-    // Store all products as admin products
-    localStorage.setItem('adminProducts', JSON.stringify(formattedStoreProducts));
-    
-    // Dispatch storage event to notify other components of the update
-    window.dispatchEvent(new Event('storage'));
-    
-    console.log("✅ Successfully initialized admin products");
+    // If we get here, we need to seed products
+    console.log("📦 No valid admin products found, seeding with default products");
+    seedProductsData();
   } catch (error) {
     console.error("❌ Error initializing admin products:", error);
+    throw error;
+  }
+};
+
+// Function to force reinitialize all products
+export const forceReinitializeAdminProducts = (): void => {
+  console.log("🔄 Force reinitializing admin products");
+  
+  try {
+    // Clear existing products
+    localStorage.removeItem('adminProducts');
+    
+    // Seed with default products
+    seedProductsData();
+    
+    console.log("✅ Successfully reinitialized admin products");
+  } catch (error) {
+    console.error("❌ Error reinitializing admin products:", error);
     throw error;
   }
 };
