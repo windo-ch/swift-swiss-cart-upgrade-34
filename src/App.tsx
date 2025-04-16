@@ -17,6 +17,7 @@ import Impressum from "./pages/Impressum";
 import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import Admin from "./pages/Admin";
+import AdminOrderTracking from "./pages/AdminOrderTracking";
 import Auth from "./pages/Auth";
 import { AuthProvider } from "./contexts/AuthContext";
 import { AgeVerificationProvider } from "./contexts/AgeVerificationContext";
@@ -52,6 +53,7 @@ const App = () => (
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/order-confirmation" element={<OrderConfirmation />} />
                 <Route path="/admin" element={<Admin />} />
+                <Route path="/admin/orders" element={<AdminOrderTracking />} />
                 <Route path="/dateschutz" element={<Dateschutz />} />
                 <Route path="/agb" element={<AGB />} />
                 <Route path="/impressum" element={<Impressum />} />
