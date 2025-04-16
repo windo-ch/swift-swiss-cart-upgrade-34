@@ -34,7 +34,7 @@ const CategorySection = () => {
         </div>
         
         <div className="mt-8 text-center">
-          <Link to="/categories" className="inline-flex items-center text-brings-primary hover:underline font-medium">
+          <Link to="/products" className="inline-flex items-center text-brings-primary hover:underline font-medium">
             Alli Kategorie azeige
             <ChevronRight size={16} className="ml-1" />
           </Link>

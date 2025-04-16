@@ -9,6 +9,7 @@ import CategoryFilter from '../components/products/CategoryFilter';
 import ProductGrid from '../components/products/ProductGrid';
 import { getStoredProducts } from '../utils/product-utils';
 import { Loader2 } from 'lucide-react';
+import { Product } from '../types/product';
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -16,8 +17,8 @@ const Products = () => {
   
   const [activeCategory, setActiveCategory] = useState<string>(categoryParam);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [allProducts, setAllProducts] = useState<any[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
   // Load products on mount
@@ -68,9 +69,7 @@ const Products = () => {
       return matchesSearch && matchesCategory;
     });
     
-    console.log(`Filtering for category: ${activeCategory}`);
-    console.log(`Found ${filtered.length} products that match category and search`);
-    
+    console.log(`Filtering for category: ${activeCategory}, found ${filtered.length} products`);
     setFilteredProducts(filtered);
   }, [searchTerm, activeCategory, allProducts]);
 

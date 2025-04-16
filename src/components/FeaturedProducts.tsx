@@ -1,22 +1,48 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAgeVerification } from '../contexts/AgeVerificationContext';
 import { Button } from '@/components/ui/button';
-import { getStoredProducts } from '../data/products';
+import { getStoredProducts } from '../utils/product-utils';
 import ProductCard from './products/ProductCard';
+import { Product } from '../types/product';
+import { Loader2 } from 'lucide-react';
 
 const FeaturedProducts = () => {
   const { isAdult } = useAgeVerification();
-  const allProducts = getStoredProducts();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  useEffect(() => {
+    setIsLoading(true);
+    try {
+      const allProducts = getStoredProducts();
+      setProducts(allProducts);
+    } catch (error) {
+      console.error("Error loading products:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
   
   // Filter out age-restricted products if not adult
   const filteredProducts = isAdult 
-    ? allProducts 
-    : allProducts.filter(product => !product.ageRestricted);
+    ? products 
+    : products.filter(product => !product.ageRestricted);
   
   // Only show 8 products on the featured page
-  const featuredProducts = filteredProducts.slice(0, 8);
+  const featuredProducts = filteredProducts
+    .filter(p => p.isFeatured || Math.random() > 0.7) // Show featured products or random ones
+    .slice(0, 8);
+  
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-16">
+        <Loader2 className="h-8 w-8 animate-spin text-brings-primary mr-2" />
+        <span>Produkte werden geladen...</span>
+      </div>
+    );
+  }
   
   return (
     <section className="py-12">
@@ -30,7 +56,14 @@ const FeaturedProducts = () => {
           {featuredProducts.map((product) => (
             <ProductCard 
               key={product.id.toString()}
-              product={product}
+              id={product.id.toString()}
+              name={product.name}
+              price={product.price}
+              image={product.image}
+              category={product.category}
+              isNew={product.isNew}
+              isFeatured={product.isFeatured}
+              ageRestricted={product.ageRestricted}
             />
           ))}
         </div>

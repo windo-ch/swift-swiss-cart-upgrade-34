@@ -25,8 +25,15 @@ const ProductGrid = ({ products }: ProductGridProps) => {
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {filteredProducts.map((product) => (
         <ProductCard 
-          key={`product-${product.id.toString()}`} 
-          product={product} 
+          key={product.id.toString()}
+          id={product.id.toString()}
+          name={product.name}
+          price={product.price}
+          image={product.image}
+          category={product.category}
+          isNew={product.isNew}
+          isFeatured={product.isFeatured}
+          ageRestricted={product.ageRestricted}
         />
       ))}
     </div>
