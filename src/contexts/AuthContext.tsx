@@ -10,6 +10,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  signInWithSocial: (provider: 'google' | 'facebook' | 'twitter' | 'instagram') => Promise<void>;
   loading: boolean;
 }
 
@@ -51,6 +52,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (error) throw error;
   };
 
+  const signInWithSocial = async (provider: 'google' | 'facebook' | 'twitter' | 'instagram') => {
+    const { error } = await supabase.auth.signInWithOAuth({ 
+      provider,
+      options: {
+        redirectTo: window.location.origin
+      }
+    });
+    if (error) throw error;
+  };
+
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
@@ -58,7 +69,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ session, user, signIn, signUp, signOut, loading }}>
+    <AuthContext.Provider value={{ 
+      session, 
+      user, 
+      signIn, 
+      signUp, 
+      signOut,
+      signInWithSocial, 
+      loading 
+    }}>
       {children}
     </AuthContext.Provider>
   );

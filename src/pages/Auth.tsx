@@ -6,16 +6,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { Facebook, Twitter, Instagram, Mail } from 'lucide-react';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signIn, signUp, user } = useAuth();
+  const { signIn, signUp, signInWithSocial, user } = useAuth();
   const { toast } = useToast();
 
-  // Redirect if user is already authenticated
   if (user) {
     return <Navigate to="/" replace />;
   }
@@ -45,6 +45,18 @@ const Auth = () => {
     }
   };
 
+  const handleSocialLogin = async (provider: 'google' | 'facebook' | 'twitter' | 'instagram') => {
+    try {
+      await signInWithSocial(provider);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error instanceof Error ? error.message : "An error occurred",
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -58,6 +70,60 @@ const Auth = () => {
             {isLogin ? 'Sign in to your account' : 'Create a new account'}
           </h2>
         </div>
+
+        {/* Social Login Buttons */}
+        <div className="grid grid-cols-2 gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => handleSocialLogin('google')}
+            className="w-full"
+          >
+            <img 
+              src="/lovable-uploads/80c228b4-813c-499f-b601-34324112c42f.png" 
+              alt="Google"
+              className="h-5 w-5 mr-2"
+            />
+            Google
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => handleSocialLogin('facebook')}
+            className="w-full"
+          >
+            <Facebook className="mr-2 h-5 w-5" />
+            Facebook
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => handleSocialLogin('twitter')}
+            className="w-full"
+          >
+            <Twitter className="mr-2 h-5 w-5" />
+            Twitter
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => handleSocialLogin('instagram')}
+            className="w-full"
+          >
+            <Instagram className="mr-2 h-5 w-5" />
+            Instagram
+          </Button>
+        </div>
+
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300" />
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-gray-50 text-gray-500">Or continue with</span>
+          </div>
+        </div>
+
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
