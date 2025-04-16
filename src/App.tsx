@@ -15,6 +15,7 @@ import Dateschutz from "./pages/Dateschutz";
 import AGB from "./pages/AGB";
 import Impressum from "./pages/Impressum";
 import Checkout from "./pages/Checkout";
+import OrderConfirmation from "./pages/OrderConfirmation";
 import Admin from "./pages/Admin";
 import Auth from "./pages/Auth";
 import { AuthProvider } from "./contexts/AuthContext";

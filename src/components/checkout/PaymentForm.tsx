@@ -9,7 +9,7 @@ import { CheckoutFormValues } from './types';
 
 interface PaymentFormProps {
   form: UseFormReturn<CheckoutFormValues>;
-  onSubmit: () => void;
+  onSubmit: (data: CheckoutFormValues) => void;
   onBack: () => void;
   isSubmitting: boolean;
 }
