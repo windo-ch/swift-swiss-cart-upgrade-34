@@ -7,19 +7,32 @@ import { Product } from '@/types/product';
 
 interface ProductInfoProps {
   product: Product;
+  quantity?: number;
+  onQuantityChange?: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const ProductInfo = ({ product }: ProductInfoProps) => {
+const ProductInfo = ({ product, quantity = 1, onQuantityChange }: ProductInfoProps) => {
   const { addToCart } = useCart();
 
   const handleAddToCart = () => {
-    addToCart({
-      id: product.id.toString(),
-      name: product.name,
-      price: product.price,
-      image: product.image,
-      category: product.category
-    });
+    // If quantity prop is provided, add that many items, otherwise just add one
+    const quantityToAdd = quantity || 1;
+    
+    for (let i = 0; i < quantityToAdd; i++) {
+      addToCart({
+        id: product.id.toString(),
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        category: product.category
+      });
+    }
+  };
+
+  const handleQuantityChange = (newQuantity: number) => {
+    if (onQuantityChange && newQuantity >= 1) {
+      onQuantityChange(newQuantity);
+    }
   };
 
   const isOutOfStock = product.stock !== undefined && product.stock <= 0;
@@ -61,6 +74,35 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
           </div>
         ) : null}
       </div>
+
+      {onQuantityChange && (
+        <div className="flex items-center space-x-4">
+          <span className="text-gray-700">Menge:</span>
+          <div className="flex items-center">
+            <Button 
+              type="button" 
+              variant="outline" 
+              size="sm" 
+              className="h-8 w-8 rounded-full p-0"
+              onClick={() => handleQuantityChange(quantity - 1)}
+              disabled={quantity <= 1 || isOutOfStock}
+            >
+              -
+            </Button>
+            <span className="mx-3 w-8 text-center">{quantity}</span>
+            <Button 
+              type="button" 
+              variant="outline" 
+              size="sm" 
+              className="h-8 w-8 rounded-full p-0"
+              onClick={() => handleQuantityChange(quantity + 1)}
+              disabled={isOutOfStock || (product.stock !== undefined && quantity >= product.stock)}
+            >
+              +
+            </Button>
+          </div>
+        </div>
+      )}
 
       <div className="border-t border-b py-4 space-y-4">
         <div>
