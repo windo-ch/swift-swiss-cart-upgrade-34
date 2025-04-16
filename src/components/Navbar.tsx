@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, ShoppingBag, Search, LogOut } from 'lucide-react';
+import { Menu, X, ShoppingBag, Search, LogOut, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAgeVerification } from '../contexts/AgeVerificationContext';
 import { useCart } from '../contexts/CartContext';
@@ -57,16 +57,20 @@ const Navbar = () => {
               )}
             </button>
             {user ? (
-              <>
+              <div className="flex items-center space-x-4">
+                <Link to="/profile" className="flex items-center gap-1 text-brings-dark hover:text-brings-primary">
+                  <User size={20} />
+                  <span className="hidden lg:block">My Profile</span>
+                </Link>
                 <Button
                   variant="ghost"
                   className="flex items-center gap-2"
                   onClick={() => signOut()}
                 >
                   <LogOut size={20} />
-                  Logout
+                  <span className="hidden lg:block">Logout</span>
                 </Button>
-              </>
+              </div>
             ) : (
               <Link to="/auth">
                 <Button variant="ghost">Login</Button>
@@ -115,17 +119,27 @@ const Navbar = () => {
                 Über üs
               </Link>
               {user ? (
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start"
-                  onClick={() => {
-                    signOut();
-                    setIsMenuOpen(false);
-                  }}
-                >
-                  <LogOut className="mr-2" size={20} />
-                  Logout
-                </Button>
+                <>
+                  <Link 
+                    to="/profile" 
+                    className="nav-link-mobile flex items-center" 
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <User className="mr-2" size={20} />
+                    My Profile
+                  </Link>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start"
+                    onClick={() => {
+                      signOut();
+                      setIsMenuOpen(false);
+                    }}
+                  >
+                    <LogOut className="mr-2" size={20} />
+                    Logout
+                  </Button>
+                </>
               ) : (
                 <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
                   <Button variant="ghost" className="w-full justify-start">

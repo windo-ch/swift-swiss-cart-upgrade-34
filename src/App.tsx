@@ -19,6 +19,8 @@ import OrderConfirmation from "./pages/OrderConfirmation";
 import Admin from "./pages/Admin";
 import AdminOrderTracking from "./pages/AdminOrderTracking";
 import Auth from "./pages/Auth";
+import Profile from "./pages/Profile";
+import OrderTracking from "./pages/OrderTracking";
 import { AuthProvider } from "./contexts/AuthContext";
 import { AgeVerificationProvider } from "./contexts/AgeVerificationContext";
 import { CartProvider } from "./contexts/CartContext";
@@ -52,6 +54,8 @@ const App = () => (
                 <Route path="/about" element={<About />} />
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/order-confirmation" element={<OrderConfirmation />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/order-tracking/:id" element={<OrderTracking />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/admin/orders" element={<AdminOrderTracking />} />
                 <Route path="/dateschutz" element={<Dateschutz />} />
