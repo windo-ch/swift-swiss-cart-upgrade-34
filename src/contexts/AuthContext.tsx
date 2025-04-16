@@ -12,6 +12,9 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   signInWithSocial: (provider: Provider) => Promise<void>;
   loading: boolean;
+  isFirstTimeUser: boolean;
+  hasAppliedDiscount: boolean;
+  applyFirstTimeDiscount: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -20,6 +23,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isFirstTimeUser, setIsFirstTimeUser] = useState(false);
+  const [hasAppliedDiscount, setHasAppliedDiscount] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,10 +42,70 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+      
+      // Check if this is a first-time user
+      if (session?.user) {
+        checkFirstTimeUser(session.user.id);
+      }
     });
 
     return () => subscription.unsubscribe();
   }, [navigate]);
+
+  // Check if this is a first-time user with no previous orders
+  const checkFirstTimeUser = async (userId: string) => {
+    try {
+      // Check for previous orders
+      const { data: orders, error } = await supabase
+        .from('orders')
+        .select('id')
+        .eq('user_id', userId)
+        .limit(1);
+        
+      if (error) throw error;
+      
+      // If no orders, check if discount already applied
+      if (!orders || orders.length === 0) {
+        const { data: discounts, error: discountError } = await supabase
+          .from('user_discounts')
+          .select('*')
+          .eq('user_id', userId)
+          .eq('discount_code', 'FIRSTTIME')
+          .limit(1);
+          
+        if (discountError) throw discountError;
+        
+        setIsFirstTimeUser(true);
+        setHasAppliedDiscount(discounts && discounts.length > 0);
+      }
+    } catch (error) {
+      console.error('Error checking first time user status:', error);
+    }
+  };
+
+  // Apply the first-time discount
+  const applyFirstTimeDiscount = async () => {
+    if (!user || !isFirstTimeUser || hasAppliedDiscount) return;
+    
+    try {
+      const { error } = await supabase
+        .from('user_discounts')
+        .insert({
+          user_id: user.id,
+          discount_code: 'FIRSTTIME',
+          discount_percent: 10,
+          is_used: false,
+          valid_until: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days
+        });
+        
+      if (error) throw error;
+      
+      setHasAppliedDiscount(true);
+    } catch (error) {
+      console.error('Error applying discount:', error);
+      throw error;
+    }
+  };
 
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -76,7 +141,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       signUp, 
       signOut,
       signInWithSocial, 
-      loading 
+      loading,
+      isFirstTimeUser,
+      hasAppliedDiscount,
+      applyFirstTimeDiscount
     }}>
       {children}
     </AuthContext.Provider>

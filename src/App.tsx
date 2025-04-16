@@ -23,6 +23,7 @@ import { CartProvider } from "./contexts/CartContext";
 import InitialLoadingScreen from "./components/InitialLoadingScreen";
 import CartDrawer from "./components/CartDrawer";
 import ScrollToTop from "./components/ScrollToTop";
+import FirstTimeUserBanner from "./components/FirstTimeUserBanner";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
             <CartProvider>
               <InitialLoadingScreen />
               <CartDrawer />
+              <FirstTimeUserBanner />
               <Toaster />
               <Sonner />
               <Routes>
