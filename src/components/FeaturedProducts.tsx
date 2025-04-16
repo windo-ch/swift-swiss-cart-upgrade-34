@@ -1,10 +1,10 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import ProductCard from './ProductCard';
 import { useAgeVerification } from '../contexts/AgeVerificationContext';
 import { Button } from '@/components/ui/button';
 import { getStoredProducts } from '../data/products';
+import ProductCard from './products/ProductCard';
 
 const FeaturedProducts = () => {
   const { isAdult } = useAgeVerification();

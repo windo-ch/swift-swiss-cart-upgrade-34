@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ShoppingBag, Shield } from 'lucide-react';
+import { ShoppingBag, Shield, Heart, ShoppingCart } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { Product } from '../types/product';
 
