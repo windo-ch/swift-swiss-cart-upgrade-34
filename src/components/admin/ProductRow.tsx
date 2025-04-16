@@ -1,10 +1,22 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Edit, Trash2, Image } from 'lucide-react';
+import { Edit, Trash2, Image, AlertCircle } from 'lucide-react';
 import { useAdmin } from '@/contexts/AdminContext';
 import { Product } from '@/types/product';
 import { Input } from '@/components/ui/input';
+import { toast } from '@/hooks/use-toast';
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface ProductRowProps {
   product: Product;
@@ -27,6 +39,10 @@ const ProductRow = ({ product, onEdit, onDelete }: ProductRowProps) => {
     const newStock = parseInt(stockValue);
     if (!isNaN(newStock) && newStock >= 0) {
       updateStock(product.id.toString(), newStock);
+      toast({
+        title: "Lagerbestand aktualisiert",
+        description: `Lagerbestand für ${product.name} wurde auf ${newStock} aktualisiert.`,
+      });
     } else {
       setStockValue(product.stock?.toString() || "0");
     }
@@ -46,7 +62,7 @@ const ProductRow = ({ product, onEdit, onDelete }: ProductRowProps) => {
     <tr className="hover:bg-gray-50">
       <td className="px-6 py-4 whitespace-nowrap">
         <div className="flex items-center">
-          <div className="flex-shrink-0 h-10 w-10">
+          <div className="flex-shrink-0 h-10 w-10 relative">
             {product.image ? (
               <img 
                 className="h-10 w-10 rounded-md object-cover" 
@@ -58,6 +74,11 @@ const ProductRow = ({ product, onEdit, onDelete }: ProductRowProps) => {
             ) : (
               <div className="h-10 w-10 rounded-md bg-gray-200 flex items-center justify-center">
                 <Image size={16} className="text-gray-500" />
+              </div>
+            )}
+            {product.ageRestricted && (
+              <div className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center" title="Altersbeschränkt">
+                18+
               </div>
             )}
           </div>
@@ -73,7 +94,7 @@ const ProductRow = ({ product, onEdit, onDelete }: ProductRowProps) => {
         </span>
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-        CHF {product.price.toFixed(2)}
+        CHF {typeof product.price === 'number' ? product.price.toFixed(2) : parseFloat(product.price.toString()).toFixed(2)}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm">
         {isEditingStock ? (
@@ -90,7 +111,9 @@ const ProductRow = ({ product, onEdit, onDelete }: ProductRowProps) => {
         ) : (
           <div
             onClick={() => setIsEditingStock(true)}
-            className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded w-16 text-center"
+            className={`cursor-pointer hover:bg-gray-100 px-2 py-1 rounded w-16 text-center 
+              ${Number(product.stock) <= 5 ? 'text-red-600 font-semibold' : 
+                Number(product.stock) <= 15 ? 'text-orange-600' : ''}`}
           >
             {product.stock || 0}
           </div>
@@ -105,14 +128,32 @@ const ProductRow = ({ product, onEdit, onDelete }: ProductRowProps) => {
         >
           <Edit size={16} />
         </Button>
-        <Button 
-          variant="ghost" 
-          size="sm"
-          onClick={() => onDelete(product.id.toString())}
-          className="text-red-600 hover:text-red-800"
-        >
-          <Trash2 size={16} />
-        </Button>
+        
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              className="text-red-600 hover:text-red-800"
+            >
+              <Trash2 size={16} />
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Produkt löschen?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Sind Sie sicher, dass Sie {product.name} löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+              <AlertDialogAction onClick={() => onDelete(product.id.toString())} className="bg-red-600 hover:bg-red-700">
+                Löschen
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </td>
     </tr>
   );

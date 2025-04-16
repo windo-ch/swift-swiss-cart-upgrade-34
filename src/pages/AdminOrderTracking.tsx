@@ -2,13 +2,11 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import AdminLayout from '@/components/admin/AdminLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import OrderTrackingList from '@/components/admin/OrderTrackingList';
 import { Loader2 } from 'lucide-react';
 import { Order, OrderAddress } from '@/types/order';
-import { AdminProvider } from '@/contexts/AdminContext';
 
 const AdminOrderTracking = () => {
   const { data: orders, isLoading, error } = useQuery({
@@ -68,77 +66,63 @@ const AdminOrderTracking = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-grow container mx-auto px-4 py-8 flex items-center justify-center">
+      <AdminLayout>
+        <div className="flex items-center justify-center h-64">
           <div className="flex flex-col items-center">
             <Loader2 className="h-8 w-8 animate-spin text-brings-primary mb-4" />
             <p className="text-gray-600">Bstellige lade...</p>
           </div>
-        </main>
-        <Footer />
-      </div>
+        </div>
+      </AdminLayout>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <div className="bg-red-50 p-4 rounded-md border border-red-200 text-red-700">
-            <p>Fehler bim Lade vo de Bstellige. Bitte versucheds spöter nomal.</p>
-          </div>
-        </main>
-        <Footer />
-      </div>
+      <AdminLayout>
+        <div className="bg-red-50 p-4 rounded-md border border-red-200 text-red-700">
+          <p>Fehler bim Lade vo de Bstellige. Bitte versucheds spöter nomal.</p>
+        </div>
+      </AdminLayout>
     );
   }
 
   return (
-    <AdminProvider>
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <h1 className="text-2xl font-bold mb-6">Bstellig Tracking</h1>
-          
-          <Tabs defaultValue="pending">
-            <TabsList className="mb-6">
-              <TabsTrigger value="pending">Offe</TabsTrigger>
-              <TabsTrigger value="in_delivery">In Lieferig</TabsTrigger>
-              <TabsTrigger value="delivered">Abgschlossen</TabsTrigger>
-              <TabsTrigger value="all">Alli</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="pending">
-              <OrderTrackingList 
-                orders={orders?.filter(order => order.status === 'pending') || []} 
-                status="pending"
-              />
-            </TabsContent>
-            
-            <TabsContent value="in_delivery">
-              <OrderTrackingList 
-                orders={orders?.filter(order => order.status === 'in_delivery') || []} 
-                status="in_delivery"
-              />
-            </TabsContent>
-            
-            <TabsContent value="delivered">
-              <OrderTrackingList 
-                orders={orders?.filter(order => order.status === 'delivered') || []} 
-                status="delivered"
-              />
-            </TabsContent>
-            
-            <TabsContent value="all">
-              <OrderTrackingList orders={orders || []} status="all" />
-            </TabsContent>
-          </Tabs>
-        </main>
-        <Footer />
-      </div>
-    </AdminProvider>
+    <AdminLayout>
+      <Tabs defaultValue="pending">
+        <TabsList className="mb-6">
+          <TabsTrigger value="pending">Offe</TabsTrigger>
+          <TabsTrigger value="in_delivery">In Lieferig</TabsTrigger>
+          <TabsTrigger value="delivered">Abgschlossen</TabsTrigger>
+          <TabsTrigger value="all">Alli</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="pending">
+          <OrderTrackingList 
+            orders={orders?.filter(order => order.status === 'pending') || []} 
+            status="pending"
+          />
+        </TabsContent>
+        
+        <TabsContent value="in_delivery">
+          <OrderTrackingList 
+            orders={orders?.filter(order => order.status === 'in_delivery') || []} 
+            status="in_delivery"
+          />
+        </TabsContent>
+        
+        <TabsContent value="delivered">
+          <OrderTrackingList 
+            orders={orders?.filter(order => order.status === 'delivered') || []} 
+            status="delivered"
+          />
+        </TabsContent>
+        
+        <TabsContent value="all">
+          <OrderTrackingList orders={orders || []} status="all" />
+        </TabsContent>
+      </Tabs>
+    </AdminLayout>
   );
 };
 

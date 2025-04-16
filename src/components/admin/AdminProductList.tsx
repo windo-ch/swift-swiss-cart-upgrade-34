@@ -2,72 +2,30 @@
 import React, { useState, useEffect } from 'react';
 import { useAdmin } from '@/contexts/AdminContext';
 import { useToast } from '@/components/ui/use-toast';
-import { getStoredProducts } from '@/utils/product-utils';
 import SearchBar from './SearchBar';
 import ProductTable from './ProductTable';
 import { Product } from '@/types/product';
+import { Loader2 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 interface AdminProductListProps {
   onEdit: (product: Product) => void;
 }
 
 const AdminProductList = ({ onEdit }: AdminProductListProps) => {
-  const { products, deleteProduct, setProducts, refreshProducts } = useAdmin();
+  const { products, deleteProduct, refreshProducts, isLoading } = useAdmin();
   const [searchTerm, setSearchTerm] = useState('');
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(true);
+  const [showRestricted, setShowRestricted] = useState(false);
 
   // Load products on mount to ensure we have the latest data
   useEffect(() => {
-    console.log("AdminProductList: Initial products count:", products.length);
-    
-    const loadProducts = () => {
-      setIsLoading(true);
-      console.log("AdminProductList: Loading products");
-      
-      try {
-        // Attempt to refresh products from context
-        refreshProducts();
-        
-        // Double check if we have products
-        if (products.length === 0) {
-          console.log("Still no products after refresh, fetching directly");
-          const allStoredProducts = getStoredProducts();
-          console.log("AdminProductList: All stored products:", allStoredProducts.length);
-          
-          if (allStoredProducts.length > 0) {
-            setProducts(allStoredProducts);
-          } else {
-            console.log("No products found, may need to create some through the form");
-          }
-        }
-      } catch (error) {
-        console.error("Error loading products:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadProducts();
-    
-    // Also listen for storage events to reload when admin products change
-    window.addEventListener('storage', loadProducts);
-    return () => window.removeEventListener('storage', loadProducts);
-  }, [setProducts, refreshProducts]);
-
-  // Debug: log products when they change
-  useEffect(() => {
-    console.log("AdminProductList: Current products:", products.length);
-  }, [products]);
+    refreshProducts();
+  }, [refreshProducts]);
 
   // Handle delete product
   const handleDelete = (id: string) => {
     deleteProduct(id);
-    toast({
-      title: "Produkt glöscht",
-      description: "S'Produkt isch erfolgrich glöscht worde.",
-      duration: 3000,
-    });
   };
 
   // Export all products
@@ -92,21 +50,45 @@ const AdminProductList = ({ onEdit }: AdminProductListProps) => {
     });
   };
 
+  // Filter products based on search term and age restriction
+  const filteredProducts = products.filter(product => 
+    (product.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+     product.category.toLowerCase().includes(searchTerm.toLowerCase())) &&
+    (showRestricted || !product.ageRestricted)
+  );
+
+  const totalProducts = products.length;
+  const restrictedProducts = products.filter(p => p.ageRestricted).length;
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex gap-2">
+          <Badge variant="outline" className="bg-blue-50 text-blue-700">
+            {totalProducts} Produkte Total
+          </Badge>
+          <Badge variant="outline" className="bg-amber-50 text-amber-700" onClick={() => setShowRestricted(!showRestricted)}>
+            {restrictedProducts} 18+ Produkte {showRestricted ? '(angezeigt)' : '(ausgeblendet)'}
+          </Badge>
+        </div>
+      </div>
+
       <SearchBar 
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         onExport={handleExportProducts}
+        onToggleRestricted={() => setShowRestricted(!showRestricted)}
+        showRestricted={showRestricted}
       />
 
       {isLoading ? (
         <div className="text-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-brings-primary mx-auto mb-4" />
           <p className="text-gray-500 text-lg">Produkte werden geladen...</p>
         </div>
       ) : (
         <ProductTable
-          products={products}
+          products={filteredProducts}
           searchTerm={searchTerm}
           onEdit={onEdit}
           onDelete={handleDelete}

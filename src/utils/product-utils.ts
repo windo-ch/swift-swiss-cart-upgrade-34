@@ -20,34 +20,46 @@ export const getProductImageUrl = (imageName: string): string => {
 };
 
 export const getStoredProducts = (): Product[] => {
-  console.log("Getting stored products...");
+  console.log("🔍 Getting stored products...");
   try {
     // First try to get products from localStorage that might have been modified in admin panel
     const storedProducts = localStorage.getItem('adminProducts');
     
     if (storedProducts) {
       const adminProducts = JSON.parse(storedProducts);
-      console.log("Admin products from localStorage:", adminProducts.length);
+      console.log(`🛒 Found ${adminProducts.length} admin products in localStorage`);
       
       // If we have admin products, use those
       if (adminProducts && adminProducts.length > 0) {
-        console.log("Using admin products as the source of truth");
+        console.log("✅ Using admin products as the source of truth");
+        
+        // Ensure all products have required fields and proper formatting
         return adminProducts.map((product: Product) => ({
           ...product,
           id: product.id.toString(), // Ensure id is always a string
+          name: product.name,
+          price: typeof product.price === 'number' ? product.price : parseFloat(product.price.toString()),
+          category: product.category,
           image: getProductImageUrl(product.image), // Properly format image URLs
+          description: product.description || '',
+          weight: product.weight || '',
+          ingredients: product.ingredients || '',
+          ageRestricted: product.ageRestricted || false,
+          stock: product.stock !== undefined ? product.stock : 50
         }));
       }
     }
     
     // If no admin products, fall back to the store products
-    console.log("No admin products found, using store products");
-    const storeProductsCount = storeProducts.length;
-    console.log(`Found ${storeProductsCount} store products`);
+    console.log("📦 Source data contains", storeProducts.length, "products");
+    console.log("⚠️ No admin products found, using store products");
     
     const formattedStoreProducts = storeProducts.map(product => ({
       ...product,
       id: product.id.toString(), // Ensure id is always a string
+      name: product.name,
+      price: typeof product.price === 'number' ? product.price : parseFloat(product.price.toString()),
+      category: product.category,
       description: product.description || '', // Ensure description has a default
       weight: product.weight || '', // Ensure weight has a default
       ingredients: product.ingredients || '', // Ensure ingredients has a default
@@ -56,16 +68,19 @@ export const getStoredProducts = (): Product[] => {
       stock: 50 // Default stock value
     }));
     
-    console.log("Formatted store products:", formattedStoreProducts.length);
-    // Save to localStorage so admin can edit them
-    localStorage.setItem('adminProducts', JSON.stringify(formattedStoreProducts));
+    console.log("🔄 Formatted", formattedStoreProducts.length, "store products");
     
-    // Dispatch storage event to notify other components of the update
-    window.dispatchEvent(new Event('storage'));
+    // Save to localStorage so admin can edit them
+    if (formattedStoreProducts.length > 0) {
+      localStorage.setItem('adminProducts', JSON.stringify(formattedStoreProducts));
+      
+      // Dispatch storage event to notify other components of the update
+      window.dispatchEvent(new Event('storage'));
+    }
     
     return formattedStoreProducts;
   } catch (error) {
-    console.error('Error loading products from localStorage:', error);
+    console.error('❌ Error loading products from localStorage:', error);
     // If there's an error, clear localStorage and return empty array
     localStorage.removeItem('adminProducts');
     return [];
