@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -20,6 +19,7 @@ import { AgeVerificationProvider } from "./contexts/AgeVerificationContext";
 import { CartProvider } from "./contexts/CartContext";
 import InitialLoadingScreen from "./components/InitialLoadingScreen";
 import CartDrawer from "./components/CartDrawer";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +28,7 @@ const App = () => (
     <TooltipProvider>
       <AgeVerificationProvider>
         <BrowserRouter>
+          <ScrollToTop />
           <CartProvider>
             <InitialLoadingScreen />
             <CartDrawer />
@@ -45,7 +46,6 @@ const App = () => (
               <Route path="/dateschutz" element={<Dateschutz />} />
               <Route path="/agb" element={<AGB />} />
               <Route path="/impressum" element={<Impressum />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </CartProvider>

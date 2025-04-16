@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ChevronLeft, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -9,7 +8,6 @@ interface DistrictSelectionProps {
   onBack: () => void;
 }
 
-// Zürich districts
 const zurichDistricts = [
   { id: 'kreis1', name: 'Kreis 1 (Altstadt)', number: 1, position: { x: 531, y: 610 }, active: true },
   { id: 'kreis2', name: 'Kreis 2 (Wollishofen)', number: 2, position: { x: 531, y: 750 }, active: true },
@@ -28,44 +26,21 @@ const zurichDistricts = [
 const DistrictSelection: React.FC<DistrictSelectionProps> = ({ city, onSelectDistrict, onBack }) => {
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="flex items-center mb-6">
-        <Button variant="ghost" size="sm" onClick={onBack} className="mr-2 text-brings-dark hover:text-brings-primary">
-          <ChevronLeft size={16} className="mr-1" /> Zrügg
-        </Button>
-        <h2 className="text-xl font-semibold">
-          Wähl din Kreis in {city.charAt(0).toUpperCase() + city.slice(1)}
-        </h2>
+      <div className="bg-gradient-to-r from-brings-primary/20 to-brings-accent/20 p-6 rounded-lg border border-brings-primary/20 mb-8">
+        <div className="flex items-start">
+          <div className="flex-shrink-0 bg-brings-primary/10 p-3 rounded-full">
+            <MapPin size={24} className="text-brings-primary" />
+          </div>
+          <div className="ml-4">
+            <h3 className="font-bold text-lg">Momentan liefered mir nur nach Züri</h3>
+            <p className="text-gray-600">Mir sind dra, üses Liefergebiet z'erwütere. Bitte wähl Züri zum witerfahre.</p>
+          </div>
+        </div>
       </div>
 
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold text-brings-dark mb-2">Wähl din Kreis</h1>
         <p className="text-gray-600">Wähl usä, in welle Kreis vo Züri mir dir söllid liefere</p>
-      </div>
-      
-      <div className="relative mb-8 border border-brings-primary/20 rounded-lg overflow-hidden shadow-md bg-white">
-        <img
-          src="/lovable-uploads/e250d193-99ad-47b8-abb9-faf026a403d8.png"
-          alt="Zürich Districts Map"
-          className="w-full"
-        />
-        
-        {zurichDistricts.map((district) => (
-          <div
-            key={district.id}
-            style={{
-              position: 'absolute',
-              left: `${district.position.x}px`,
-              top: `${district.position.y}px`,
-              transform: 'translate(-50%, -50%)'
-            }}
-            onClick={() => district.active && onSelectDistrict(district.id)}
-            className="cursor-pointer"
-          >
-            <div className="bg-brings-primary/90 text-white hover:bg-brings-primary rounded-full w-10 h-10 flex items-center justify-center font-bold transition-colors duration-300 transform hover:scale-110">
-              {district.number}
-            </div>
-          </div>
-        ))}
       </div>
       
       <div className="bg-brings-light p-6 rounded-lg mb-8">
