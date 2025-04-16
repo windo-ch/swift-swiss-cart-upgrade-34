@@ -3,10 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product as ProductType } from '@/types/product';
 
 // Define our context product type based on the global Product type
-export type Product = Omit<ProductType, 'isNew' | 'isFeatured'> & {
-  id: string;
-  ageRestricted?: boolean;
-};
+export type Product = ProductType;
 
 interface AdminContextType {
   products: Product[];

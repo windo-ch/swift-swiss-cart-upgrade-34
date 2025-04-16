@@ -8,7 +8,7 @@ import ProductTable from './ProductTable';
 import { Product } from '@/types/product';
 
 interface AdminProductListProps {
-  onEdit: (product: any) => void;
+  onEdit: (product: Product) => void;
 }
 
 const AdminProductList = ({ onEdit }: AdminProductListProps) => {
@@ -27,15 +27,8 @@ const AdminProductList = ({ onEdit }: AdminProductListProps) => {
       const adminOnlyProducts = allStoredProducts
         .filter(p => typeof p.id === 'string' && p.id.toString().startsWith('admin-'))
         .map(p => ({
-          id: p.id.toString(),
-          name: p.name,
-          image: p.image,
-          price: p.price,
-          category: p.category,
-          description: p.description || '', 
-          weight: p.weight || '', 
-          ingredients: p.ingredients || '',
-          ageRestricted: p.ageRestricted || false // Set default to false if undefined
+          ...p,
+          id: p.id.toString()
         }));
       
       console.log("AdminProductList: Found admin products:", adminOnlyProducts.length);
@@ -96,7 +89,7 @@ const AdminProductList = ({ onEdit }: AdminProductListProps) => {
       />
 
       <ProductTable
-        products={products as Product[]}
+        products={products}
         searchTerm={searchTerm}
         onEdit={onEdit}
         onDelete={handleDelete}

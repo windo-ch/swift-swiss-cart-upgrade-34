@@ -34,12 +34,13 @@ export const getStoredProducts = (): Product[] => {
       description: product.description || '', // Ensure description has a default
       weight: product.weight || '', // Ensure weight has a default
       ingredients: product.ingredients || '', // Ensure ingredients has a default
-      image: getProductImageUrl(product.image) // Properly format image URLs
+      image: getProductImageUrl(product.image), // Properly format image URLs
+      ageRestricted: product.ageRestricted || false // Ensure ageRestricted has a default
     }));
     
     console.log("Formatted store products:", formattedStoreProducts.length);
     
-    // Combine all products
+    // Combine all products - use a unique ID prefix to prevent collisions
     const allProducts = [...formattedStoreProducts, ...adminProducts];
     
     console.log(`Loaded ${allProducts.length} total products (${formattedStoreProducts.length} from store, ${adminProducts.length} from admin)`);

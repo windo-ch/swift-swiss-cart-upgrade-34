@@ -6,7 +6,7 @@ import Footer from '../components/Footer';
 import { AdminProvider } from '../contexts/AdminContext';
 import AdminProductForm from '../components/admin/AdminProductForm';
 import AdminProductList from '../components/admin/AdminProductList';
-import { Product } from '../contexts/AdminContext';
+import { Product } from '../types/product';
 import { Button } from '@/components/ui/button';
 import { Truck, Package } from 'lucide-react';
 import { initializeAdminProducts } from '../utils/admin-utils';
@@ -16,6 +16,7 @@ const Admin = () => {
 
   // Initialize sample products when the Admin page loads
   useEffect(() => {
+    console.log("Initializing admin products");
     initializeAdminProducts();
   }, []);
 

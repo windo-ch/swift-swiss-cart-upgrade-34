@@ -1,5 +1,7 @@
 
 import { Product } from '../types/product';
+import { products as storeProducts } from '../data/products';
+import { getProductImageUrl } from './product-utils';
 
 export const initializeAdminProducts = (): void => {
   // Check if we already have admin products
@@ -9,33 +11,21 @@ export const initializeAdminProducts = (): void => {
     return;
   }
 
-  // Sample admin products for demonstration
-  const sampleAdminProducts: Product[] = [
-    {
-      id: 'admin-1681234567890',
-      name: 'Bio Mountain Water',
-      category: 'drinks',
-      price: 2.90,
-      description: 'Pure mountain spring water in a recyclable bottle',
-      weight: '500ml',
-      ingredients: 'Natural mountain spring water',
-      image: 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png',
-      ageRestricted: false
-    },
-    {
-      id: 'admin-1681234567891',
-      name: 'Organic Trail Mix',
-      category: 'snacks',
-      price: 5.90,
-      description: 'Premium mix of nuts, seeds and dried fruits',
-      weight: '200g',
-      ingredients: 'Almonds, cashews, walnuts, pumpkin seeds, cranberries, raisins',
-      image: 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png',
-      ageRestricted: false
-    }
-  ];
+  // Convert store products to admin format
+  const formattedStoreProducts = storeProducts.map(product => ({
+    ...product,
+    id: `admin-store-${product.id}`, // Prefix with admin-store to distinguish them
+    description: product.description || '',
+    weight: product.weight || '',
+    ingredients: product.ingredients || '',
+    image: getProductImageUrl(product.image),
+    ageRestricted: product.ageRestricted || false
+  }));
 
-  // Store the sample admin products
-  localStorage.setItem('adminProducts', JSON.stringify(sampleAdminProducts));
-  console.log("Initialized sample admin products:", sampleAdminProducts.length);
+  // Use the first 10 store products as admin products for a better starting point
+  const initialAdminProducts = formattedStoreProducts.slice(0, 10);
+
+  // Store the admin products
+  localStorage.setItem('adminProducts', JSON.stringify(initialAdminProducts));
+  console.log("Initialized admin products from store:", initialAdminProducts.length);
 };
