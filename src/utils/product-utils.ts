@@ -29,6 +29,10 @@ export const getStoredProducts = (): Product[] => {
     const formattedStoreProducts = storeProducts.map(product => ({
       ...product,
       id: product.id.toString(), // Ensure id is always a string
+      // Ensure all required fields have default values
+      description: product.description || '',
+      weight: product.weight || '',
+      ingredients: product.ingredients || '',
       // Ensure image paths are properly formatted
       image: getProductImageUrl(product.image)
     }));
@@ -42,12 +46,18 @@ export const getStoredProducts = (): Product[] => {
       if (existingIndex >= 0) {
         allProducts[existingIndex] = {
           ...adminProduct,
-          image: getProductImageUrl(adminProduct.image)
+          image: getProductImageUrl(adminProduct.image),
+          description: adminProduct.description || '',
+          weight: adminProduct.weight || '',
+          ingredients: adminProduct.ingredients || ''
         };
       } else {
         allProducts.push({
           ...adminProduct,
-          image: getProductImageUrl(adminProduct.image)
+          image: getProductImageUrl(adminProduct.image),
+          description: adminProduct.description || '',
+          weight: adminProduct.weight || '',
+          ingredients: adminProduct.ingredients || ''
         });
       }
     });

@@ -29,6 +29,7 @@ const AdminProductList = ({ onEdit }: AdminProductListProps) => {
         description: p.description || '', // Ensure description is not optional
         weight: p.weight || '', // Ensure weight is not optional
         ingredients: p.ingredients || '', // Provide a default for optional properties
+        ageRestricted: !!p.ageRestricted, // Ensure ageRestricted is boolean
       }));
       
     if (adminProducts.length > 0) {
