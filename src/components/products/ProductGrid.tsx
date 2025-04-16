@@ -26,14 +26,7 @@ const ProductGrid = ({ products }: ProductGridProps) => {
       {filteredProducts.map((product) => (
         <ProductCard 
           key={product.id.toString()}
-          id={product.id.toString()}
-          name={product.name}
-          price={product.price}
-          image={product.image}
-          category={product.category}
-          isNew={product.isNew}
-          isFeatured={product.isFeatured}
-          ageRestricted={product.ageRestricted}
+          product={product}
         />
       ))}
     </div>

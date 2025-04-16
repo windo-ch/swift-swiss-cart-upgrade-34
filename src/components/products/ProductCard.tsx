@@ -7,40 +7,75 @@ import { useCart } from '../../contexts/CartContext';
 import { Product } from '../../types/product';
 
 interface ProductCardProps {
-  product: Product;
+  product?: Product;
+  id?: string;
+  name?: string;
+  price?: number;
+  image?: string;
+  category?: string;
+  isNew?: boolean;
+  isFeatured?: boolean;
+  ageRestricted?: boolean;
+  stock?: number;
 }
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({ 
+  product,
+  id,
+  name,
+  price,
+  image,
+  category,
+  isNew = false,
+  isFeatured = false,
+  ageRestricted = false,
+  stock
+}: ProductCardProps) => {
   const { addToCart } = useCart();
   const [hasImageError, setHasImageError] = useState(false);
   const placeholderImage = 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png';
 
+  // Handle both ways of passing props (as a product object or as individual props)
+  const productId = product?.id?.toString() || id;
+  const productName = product?.name || name;
+  const productPrice = product?.price || price;
+  const productImage = product?.image || image;
+  const productCategory = product?.category || category;
+  const productIsNew = product?.isNew || isNew;
+  const productIsFeatured = product?.isFeatured || isFeatured;
+  const productAgeRestricted = product?.ageRestricted || ageRestricted;
+  const productStock = product?.stock || stock;
+
   const handleAddToCart = () => {
     addToCart({
-      id: product.id.toString(),
-      name: product.name,
-      price: product.price,
-      image: product.image,
-      category: product.category
+      id: productId,
+      name: productName,
+      price: productPrice,
+      image: productImage,
+      category: productCategory
     });
   };
 
-  const isOutOfStock = product.stock !== undefined && product.stock <= 0;
-  const isLowStock = product.stock !== undefined && product.stock > 0 && product.stock < 10;
+  const isOutOfStock = productStock !== undefined && productStock <= 0;
+  const isLowStock = productStock !== undefined && productStock > 0 && productStock < 10;
+
+  if (!productId || !productName || !productPrice || !productImage || !productCategory) {
+    return null;
+  }
 
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow group">
       <div className="relative overflow-hidden">
-        <Link to={`/product/${product.id}`}>
+        <Link to={`/product/${productId}`}>
           <img 
-            src={hasImageError ? placeholderImage : product.image} 
-            alt={product.name} 
+            src={hasImageError ? placeholderImage : productImage} 
+            alt={productName} 
             className={`w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105 ${isOutOfStock ? 'opacity-50' : ''}`}
             onError={() => setHasImageError(true)}
             loading="lazy"
           />
         </Link>
-        {product.ageRestricted && (
+        {productAgeRestricted && (
           <div className="absolute top-2 right-2 bg-brings-primary text-white text-xs px-2 py-1 rounded-full flex items-center">
             <Shield size={12} className="mr-1" />
             18+
@@ -68,13 +103,13 @@ const ProductCard = ({ product }: ProductCardProps) => {
         )}
       </div>
       <div className="p-4">
-        <span className="text-xs text-gray-500 mb-1 block capitalize">{product.category}</span>
-        <Link to={`/product/${product.id}`}>
-          <h3 className="font-medium text-gray-800 hover:text-brings-primary transition-colors line-clamp-2">{product.name}</h3>
+        <span className="text-xs text-gray-500 mb-1 block capitalize">{productCategory}</span>
+        <Link to={`/product/${productId}`}>
+          <h3 className="font-medium text-gray-800 hover:text-brings-primary transition-colors line-clamp-2">{productName}</h3>
         </Link>
         <div className="flex items-center justify-between mt-2">
           <div>
-            <span className="font-bold text-brings-dark">CHF {product.price.toFixed(2)}</span>
+            <span className="font-bold text-brings-dark">CHF {productPrice.toFixed(2)}</span>
             {isLowStock && (
               <div className="text-xs text-orange-600 flex items-center mt-1">
                 <AlertCircle size={12} className="mr-1" />
