@@ -28,13 +28,20 @@ const AdminRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     );
   }
   
-  // For development, we still require a user to be logged in
-  // but we don't check if they're an admin
-  if (!user) {
-    return <Navigate to="/" replace />;
-  }
-  
+  // DEVELOPMENT MODE: Bypass all authentication checks
+  // IMPORTANT: Remove this and restore proper auth checks before deploying to production
   return <>{children}</>;
+  
+  // PRODUCTION CODE (commented out for development)
+  // if (!user) {
+  //   return <Navigate to="/" replace />;
+  // }
+  
+  // if (!isAdmin(user.email)) {
+  //   return <Navigate to="/" replace />;
+  // }
+  
+  // return <>{children}</>;
 };
 
 export default AdminRoute;
