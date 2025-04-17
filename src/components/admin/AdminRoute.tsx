@@ -8,10 +8,13 @@ import { Loader2 } from 'lucide-react';
 // In a real-world app, you might have a more sophisticated check
 // such as checking user roles in a database
 const isAdmin = (email: string | undefined) => {
-  // For now, we'll consider specific email domains as admin emails
-  // This should be replaced with a proper role-based check in production
-  if (!email) return false;
-  return email.endsWith('@brings.ch') || email.endsWith('@admin.ch');
+  // For development purposes, allow all users to access admin pages
+  // TEMPORARY: Remove this line and uncomment the code below for production
+  return true;
+  
+  // Production code (commented out for development)
+  // if (!email) return false;
+  // return email.endsWith('@brings.ch') || email.endsWith('@admin.ch');
 };
 
 const AdminRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -25,7 +28,9 @@ const AdminRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     );
   }
   
-  if (!user || !isAdmin(user.email)) {
+  // For development, we still require a user to be logged in
+  // but we don't check if they're an admin
+  if (!user) {
     return <Navigate to="/" replace />;
   }
   
