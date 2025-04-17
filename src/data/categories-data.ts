@@ -12,4 +12,5 @@ export const categories: Category[] = [
   { id: 'tobacco', name: 'Tabak', icon: '🚬' },
   { id: 'alcohol', name: 'Alkohol', icon: '🍺' },
   { id: 'spirits', name: 'Spirituose', icon: '🍸' },
+  { id: 'party', name: 'Party Supplies', icon: '🎉' },
 ];
