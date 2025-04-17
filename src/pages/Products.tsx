@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -12,6 +11,7 @@ import { Loader2, Filter } from 'lucide-react';
 import { Product } from '../types/product';
 import { Badge } from '@/components/ui/badge';
 import { X } from 'lucide-react';
+import { categories } from '../data/categories-data';
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -23,7 +23,6 @@ const Products = () => {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
-  // Load products on mount
   useEffect(() => {
     const loadProducts = () => {
       setIsLoading(true);
@@ -40,7 +39,6 @@ const Products = () => {
     
     loadProducts();
     
-    // Listen for storage events to refresh products
     const handleStorageChange = () => {
       console.log("Storage event detected, refreshing products");
       loadProducts();
@@ -50,27 +48,23 @@ const Products = () => {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
   
-  // Update category when URL parameter changes
   useEffect(() => {
     if (categoryParam) {
       setActiveCategory(categoryParam);
     }
   }, [categoryParam]);
   
-  // Update URL when category changes
   const handleCategoryChange = (category: string) => {
     setActiveCategory(category);
     setSearchParams({ category });
   };
   
-  // Clear all filters
   const clearFilters = () => {
     setActiveCategory('all');
     setSearchTerm('');
     setSearchParams({});
   };
   
-  // Filter products whenever search term, category, or all products changes
   useEffect(() => {
     const filtered = allProducts.filter((product) => {
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -83,7 +77,6 @@ const Products = () => {
     setFilteredProducts(filtered);
   }, [searchTerm, activeCategory, allProducts]);
 
-  // Get the active category name for display
   const getActiveCategoryName = () => {
     if (activeCategory === 'all') return 'Alle Produkte';
     const category = categories.find(c => c.id === activeCategory);
@@ -96,7 +89,6 @@ const Products = () => {
       <Navbar />
       
       <main className="flex-grow">
-        {/* Hero section */}
         <div className="bg-brings-dark text-white py-12">
           <div className="container mx-auto px-4">
             <h1 className="text-3xl md:text-4xl font-bold">Üsi Produkt</h1>
@@ -104,12 +96,10 @@ const Products = () => {
           </div>
         </div>
         
-        {/* Filters and search */}
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-6">
             <ProductSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             
-            {/* Active filters display */}
             {(activeCategory !== 'all' || searchTerm) && (
               <div className="flex items-center space-x-2">
                 <span className="text-sm text-gray-500">Aktive Filter:</span>
@@ -150,7 +140,6 @@ const Products = () => {
             setActiveCategory={handleCategoryChange} 
           />
           
-          {/* Product count */}
           <div className="mb-6 flex justify-between items-center">
             <div>
               <h2 className="text-xl font-semibold">{getActiveCategoryName()}</h2>
@@ -158,7 +147,6 @@ const Products = () => {
             </div>
           </div>
           
-          {/* Product grid */}
           {isLoading ? (
             <div className="flex items-center justify-center py-16">
               <Loader2 className="h-8 w-8 animate-spin text-brings-primary mr-2" />
