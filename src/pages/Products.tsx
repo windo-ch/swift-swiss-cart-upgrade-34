@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -69,7 +70,10 @@ const Products = () => {
     const filtered = allProducts.filter((product) => {
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             (product.description || '').toLowerCase().includes(searchTerm.toLowerCase());
+      
+      // Handle filtering by category - ensure this matches our category structure
       const matchesCategory = activeCategory === 'all' || product.category === activeCategory;
+      
       return matchesSearch && matchesCategory;
     });
     

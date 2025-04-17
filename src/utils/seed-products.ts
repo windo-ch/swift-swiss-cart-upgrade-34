@@ -43,50 +43,58 @@ export const seedProductsData = (): void => {
     createProduct("Coca Cola Zero", 2.50, "soft-drinks", "Coca Cola Zero"),
     createProduct("Coca-Cola Classic", 2.50, "soft-drinks", "Coca-Cola Classic"),
     createProduct("Fanta 1.5l", 5.90, "soft-drinks", "Fanta in a 1.5L bottle"),
-    createProduct("Red Bull Original", 3.50, "energy-drinks", "Red Bull Original energy drink"),
-    createProduct("Red Bull Sugarfree", 3.50, "energy-drinks", "Red Bull Sugarfree energy drink"),
     createProduct("San Bedetto Ice Tea Lemon", 2.50, "soft-drinks", "San Benedetto Lemon Ice Tea"),
     createProduct("San Benedetto Ice Tea Pfirsich", 2.50, "soft-drinks", "San Benedetto Peach Ice Tea"),
     createProduct("Sinalco Original", 2.50, "soft-drinks", "Sinalco Original soft drink"),
     createProduct("Uludag Original", 2.50, "soft-drinks", "Uludag Original soft drink")
   ];
 
-  // Create the snacks products
+  // Create the energy drinks
+  const energyDrinks = [
+    createProduct("Red Bull Original", 3.50, "energy-drinks", "Red Bull Original energy drink"),
+    createProduct("Red Bull Sugarfree", 3.50, "energy-drinks", "Red Bull Sugarfree energy drink")
+  ];
+
+  // Create the snacks products - updating to use chips-snacks category
   const snacks = [
-    createProduct("Zweifel Nature Chips", 4.90, "chips", "Zweifel Nature flavored chips"),
-    createProduct("Zweifel Paprika Chips", 4.90, "chips", "Zweifel Paprika flavored chips"),
-    createProduct("Fonzies Original Käse Chips", 4.90, "chips", "Fonzies Original Cheese flavored chips"),
-    createProduct("Granforno Grissini Traditionell", 5.90, "snacks", "Granforno Traditional Grissini breadsticks"),
+    createProduct("Zweifel Nature Chips", 4.90, "chips-snacks", "Zweifel Nature flavored chips"),
+    createProduct("Zweifel Paprika Chips", 4.90, "chips-snacks", "Zweifel Paprika flavored chips"),
+    createProduct("Fonzies Original Käse Chips", 4.90, "chips-snacks", "Fonzies Original Cheese flavored chips"),
+    createProduct("Granforno Grissini Traditionell", 5.90, "chips-snacks", "Granforno Traditional Grissini breadsticks"),
+    createProduct("Nippon Hosta", 4.90, "chips-snacks", "Nippon Hosta snack"),
+    createProduct("Smoki Erdnuss Flips", 3.90, "chips-snacks", "Smoki Peanut Flips"),
+    createProduct("TUC Original LU gesalzen", 2.90, "chips-snacks", "TUC Original LU salted crackers")
+  ];
+
+  // Create the sweets products
+  const sweets = [
     createProduct("Kinder Schokolade Stk.Preis", 0.70, "sweets", "Kinder Chocolate, price per piece"),
     createProduct("Kinder-Bueno (Einzeler Riegel)", 1.60, "sweets", "Kinder Bueno chocolate bar"),
     createProduct("Kinder-Milchschnitte", 1.20, "sweets", "Kinder Milk Slice"),
-    createProduct("Nippon Hosta", 4.90, "snacks", "Nippon Hosta snack"),
-    createProduct("Oreo Original", 4.90, "sweets", "Oreo Original cookies"),
-    createProduct("Smoki Erdnuss Flips", 3.90, "snacks", "Smoki Peanut Flips"),
-    createProduct("TUC Original LU gesalzen", 2.90, "snacks", "TUC Original LU salted crackers")
+    createProduct("Oreo Original", 4.90, "sweets", "Oreo Original cookies")
   ];
 
   // Create the non-food products
   const nonFood = [
-    createProduct("Babywindel Gr.4 (8 Stk.)", 5.50, "hygiene", "Baby diapers, size 4, pack of 8"),
-    createProduct("Kosmetiktücher-Box", 4.90, "hygiene", "Box of facial tissues"),
-    createProduct("o.b. Procompfort mini", 3.90, "hygiene", "o.b. ProComfort mini tampons"),
-    createProduct("Plastik Shotsbecher", 0.30, "disposables", "Plastic shot glasses"),
-    createProduct("Plastikbecher", 0.30, "disposables", "Plastic cups"),
-    createProduct("Taschentuch-Packung (2 Stk.)", 2.20, "hygiene", "Pack of tissues, 2 pieces"),
-    createProduct("WC Papier (1 Rolle)", 2.40, "hygiene", "Toilet paper, 1 roll")
+    createProduct("Babywindel Gr.4 (8 Stk.)", 5.50, "non-food", "Baby diapers, size 4, pack of 8"),
+    createProduct("Kosmetiktücher-Box", 4.90, "non-food", "Box of facial tissues"),
+    createProduct("o.b. Procompfort mini", 3.90, "non-food", "o.b. ProComfort mini tampons"),
+    createProduct("Plastik Shotsbecher", 0.30, "non-food", "Plastic shot glasses"),
+    createProduct("Plastikbecher", 0.30, "non-food", "Plastic cups"),
+    createProduct("Taschentuch-Packung (2 Stk.)", 2.20, "non-food", "Pack of tissues, 2 pieces"),
+    createProduct("WC Papier (1 Rolle)", 2.40, "non-food", "Toilet paper, 1 roll")
   ];
 
   // Create the smoking products (age-restricted)
   const tobacco = [
     createProduct("American Spirit Blue Tabak", 11.90, "tobacco", "American Spirit Blue tobacco", true),
-    createProduct("Vogue Slim Blue", 12.90, "cigarettes", "Vogue Slim Blue cigarettes", true),
+    createProduct("Vogue Slim Blue", 12.90, "tobacco", "Vogue Slim Blue cigarettes", true),
     createProduct("Sullana Drehtabak", 11.90, "tobacco", "Sullana rolling tobacco", true),
-    createProduct("Parisienne Jaune", 12.90, "cigarettes", "Parisienne Jaune cigarettes", true),
-    createProduct("Philip Morris Quantum Blue", 13.90, "cigarettes", "Philip Morris Quantum Blue cigarettes", true),
-    createProduct("Marlboro Gold", 12.90, "cigarettes", "Marlboro Gold cigarettes", true),
-    createProduct("Marlboro Rot", 12.90, "cigarettes", "Marlboro Red cigarettes", true),
-    createProduct("Smoking Blue King Size", 2.50, "rolling-papers", "Smoking Blue King Size rolling papers", true)
+    createProduct("Parisienne Jaune", 12.90, "tobacco", "Parisienne Jaune cigarettes", true),
+    createProduct("Philip Morris Quantum Blue", 13.90, "tobacco", "Philip Morris Quantum Blue cigarettes", true),
+    createProduct("Marlboro Gold", 12.90, "tobacco", "Marlboro Gold cigarettes", true),
+    createProduct("Marlboro Rot", 12.90, "tobacco", "Marlboro Red cigarettes", true),
+    createProduct("Smoking Blue King Size", 2.50, "tobacco", "Smoking Blue King Size rolling papers", true)
   ];
 
   // Create the beer products (age-restricted)
@@ -105,26 +113,28 @@ export const seedProductsData = (): void => {
     createProduct("Rothaus Tannenzäpfle 0.33l", 3.20, "beer", "Rothaus Tannenzäpfle beer in a 0.33l bottle", true)
   ];
 
-  // Create the wine/sparkling wine products (age-restricted)
+  // Create the wine/sparkling wine products (age-restricted) - map to drinks category since there's no specific wine category
   const wines = [
-    createProduct("Bluesecco Blu Rosé Rubicone IGT", 4.20, "wine", "Bluesecco Blu Rosé sparkling wine from the Rubicone region, Italy", true),
-    createProduct("Bluesecco Blu Trevenezie IGT", 4.20, "wine", "Bluesecco Blu sparkling wine from the Trevenezie region, Italy", true)
+    createProduct("Bluesecco Blu Rosé Rubicone IGT", 4.20, "drinks", "Bluesecco Blu Rosé sparkling wine from the Rubicone region, Italy", true),
+    createProduct("Bluesecco Blu Trevenezie IGT", 4.20, "drinks", "Bluesecco Blu sparkling wine from the Trevenezie region, Italy", true)
   ];
 
   // Create the spirits products (age-restricted)
   const spirits = [
-    createProduct("Ballantine's Finest Scotch", 34.00, "whiskey", "Ballantine's Finest Scotch Whisky", true),
-    createProduct("Jack Daniel's Tennessee Whiskey", 49.00, "whiskey", "Jack Daniel's Tennessee Whiskey", true),
-    createProduct("Jägermeister 70cl", 39.00, "liqueur", "Jägermeister herbal liqueur, 70cl bottle", true),
-    createProduct("Johnnie Walker Red Label 70cl", 39.00, "whiskey", "Johnnie Walker Red Label Scotch Whisky, 70cl bottle", true),
-    createProduct("Vodka Absolut 70cl", 46.00, "vodka", "Absolut Vodka, 70cl bottle", true),
-    createProduct("Wodka Gorbatschow 70cl", 26.00, "vodka", "Wodka Gorbatschow, 70cl bottle", true)
+    createProduct("Ballantine's Finest Scotch", 34.00, "spirits", "Ballantine's Finest Scotch Whisky", true),
+    createProduct("Jack Daniel's Tennessee Whiskey", 49.00, "spirits", "Jack Daniel's Tennessee Whiskey", true),
+    createProduct("Jägermeister 70cl", 39.00, "spirits", "Jägermeister herbal liqueur, 70cl bottle", true),
+    createProduct("Johnnie Walker Red Label 70cl", 39.00, "spirits", "Johnnie Walker Red Label Scotch Whisky, 70cl bottle", true),
+    createProduct("Vodka Absolut 70cl", 46.00, "spirits", "Absolut Vodka, 70cl bottle", true),
+    createProduct("Wodka Gorbatschow 70cl", 26.00, "spirits", "Wodka Gorbatschow, 70cl bottle", true)
   ];
 
   // Combine all products
   const allProducts = [
     ...softDrinks,
+    ...energyDrinks,
     ...snacks,
+    ...sweets,
     ...nonFood,
     ...tobacco,
     ...beers,

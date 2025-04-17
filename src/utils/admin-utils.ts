@@ -51,6 +51,12 @@ export const forceReinitializeAdminProducts = (): void => {
   }
 };
 
+// Call forceReinitializeAdminProducts to update categories
+setTimeout(() => {
+  forceReinitializeAdminProducts();
+  console.log("🔄 Products reinitialized with updated categories");
+}, 1000);
+
 // Utility function to debug the admin products
 export const logAdminProducts = (): void => {
   try {
