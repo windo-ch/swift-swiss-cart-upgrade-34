@@ -13,4 +13,7 @@ export const categories: Category[] = [
   { id: 'alcohol', name: 'Alkohol', icon: '🍺' },
   { id: 'spirits', name: 'Spirituose', icon: '🍸' },
   { id: 'party', name: 'Party Supplies', icon: '🎉' },
+  { id: 'beer', name: 'Bier', icon: '🍻' },
+  { id: 'wine', name: 'Wein', icon: '🍷' },
+  { id: 'soft-drinks', name: 'Softdrinks', icon: '🥤' },
 ];

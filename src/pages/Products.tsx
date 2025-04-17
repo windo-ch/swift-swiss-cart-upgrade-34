@@ -8,8 +8,10 @@ import ProductSearch from '../components/products/ProductSearch';
 import CategoryFilter from '../components/products/CategoryFilter';
 import ProductGrid from '../components/products/ProductGrid';
 import { getStoredProducts } from '../utils/product-utils';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Filter } from 'lucide-react';
 import { Product } from '../types/product';
+import { Badge } from '@/components/ui/badge';
+import { X } from 'lucide-react';
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -61,10 +63,18 @@ const Products = () => {
     setSearchParams({ category });
   };
   
+  // Clear all filters
+  const clearFilters = () => {
+    setActiveCategory('all');
+    setSearchTerm('');
+    setSearchParams({});
+  };
+  
   // Filter products whenever search term, category, or all products changes
   useEffect(() => {
     const filtered = allProducts.filter((product) => {
-      const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            (product.description || '').toLowerCase().includes(searchTerm.toLowerCase());
       const matchesCategory = activeCategory === 'all' || product.category === activeCategory;
       return matchesSearch && matchesCategory;
     });
@@ -72,6 +82,13 @@ const Products = () => {
     console.log(`Filtering for category: ${activeCategory}, found ${filtered.length} products`);
     setFilteredProducts(filtered);
   }, [searchTerm, activeCategory, allProducts]);
+
+  // Get the active category name for display
+  const getActiveCategoryName = () => {
+    if (activeCategory === 'all') return 'Alle Produkte';
+    const category = categories.find(c => c.id === activeCategory);
+    return category ? category.name : 'Alle Produkte';
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -89,12 +106,56 @@ const Products = () => {
         
         {/* Filters and search */}
         <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+          <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-6">
             <ProductSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-            <CategoryFilter 
-              activeCategory={activeCategory} 
-              setActiveCategory={handleCategoryChange} 
-            />
+            
+            {/* Active filters display */}
+            {(activeCategory !== 'all' || searchTerm) && (
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-gray-500">Aktive Filter:</span>
+                {activeCategory !== 'all' && (
+                  <Badge variant="outline" className="bg-brings-primary/10 text-brings-primary">
+                    {getActiveCategoryName()}
+                    <button 
+                      onClick={() => handleCategoryChange('all')} 
+                      className="ml-1 hover:text-brings-primary/70"
+                    >
+                      <X size={14} />
+                    </button>
+                  </Badge>
+                )}
+                {searchTerm && (
+                  <Badge variant="outline" className="bg-brings-primary/10 text-brings-primary">
+                    Suche: {searchTerm}
+                    <button 
+                      onClick={() => setSearchTerm('')} 
+                      className="ml-1 hover:text-brings-primary/70"
+                    >
+                      <X size={14} />
+                    </button>
+                  </Badge>
+                )}
+                <button 
+                  onClick={clearFilters}
+                  className="text-sm text-brings-primary hover:underline"
+                >
+                  Alle zurücksetzen
+                </button>
+              </div>
+            )}
+          </div>
+          
+          <CategoryFilter 
+            activeCategory={activeCategory} 
+            setActiveCategory={handleCategoryChange} 
+          />
+          
+          {/* Product count */}
+          <div className="mb-6 flex justify-between items-center">
+            <div>
+              <h2 className="text-xl font-semibold">{getActiveCategoryName()}</h2>
+              <p className="text-gray-500">{filteredProducts.length} Produkte gefunden</p>
+            </div>
           </div>
           
           {/* Product grid */}
