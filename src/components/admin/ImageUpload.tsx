@@ -50,10 +50,32 @@ const ImageUpload = ({ onImageUploaded, existingImageUrl }: ImageUploadProps) =>
 
       console.log("Uploading file to Supabase:", fileName);
       
+      // Check if storage bucket exists, create if necessary
+      try {
+        const { data: bucketData, error: bucketError } = await supabase.storage.getBucket('product-images');
+        if (bucketError && bucketError.message.includes('not found')) {
+          // Create the bucket if it doesn't exist
+          const { error: createBucketError } = await supabase.storage.createBucket('product-images', {
+            public: true
+          });
+          if (createBucketError) {
+            console.error("Error creating bucket:", createBucketError);
+            throw createBucketError;
+          }
+          console.log("Created new bucket: product-images");
+        }
+      } catch (bucketCheckError) {
+        console.error("Error checking/creating bucket:", bucketCheckError);
+        // Continue anyway, as the bucket might still work
+      }
+      
       // Upload the file to Supabase storage
       const { data, error } = await supabase.storage
         .from('product-images')
-        .upload(filePath, file);
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: true
+        });
 
       if (error) {
         console.error("Supabase upload error:", error);

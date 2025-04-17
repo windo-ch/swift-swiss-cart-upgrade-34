@@ -82,9 +82,9 @@ const Admin = () => {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-1 lg:sticky lg:top-24 self-start max-h-[calc(100vh-200px)]">
-            <ScrollArea className="h-full pr-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-10">
+          <div className="lg:col-span-1 lg:sticky lg:top-24 self-start max-h-[calc(100vh-200px)] overflow-auto">
+            <ScrollArea className="pr-4">
               <AdminProductForm 
                 initialData={editingProduct} 
                 onCancel={handleCancel}
