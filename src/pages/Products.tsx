@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -159,13 +158,6 @@ const Products = () => {
           ) : (
             <>
               <ProductGrid products={filteredProducts} />
-              
-              {filteredProducts.length === 0 && !isLoading && (
-                <div className="text-center py-16">
-                  <p className="text-gray-500 text-lg">Kei Produkt gfunde.</p>
-                  <p className="text-gray-400">Probier en anderi Suechi oder Filter.</p>
-                </div>
-              )}
             </>
           )}
         </div>
