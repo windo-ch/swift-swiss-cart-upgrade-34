@@ -6,17 +6,16 @@ import AdminProductList from '../components/admin/AdminProductList';
 import { Product } from '../types/product';
 import { useToast } from '@/components/ui/use-toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { RefreshCw, Loader2, Database } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useAdmin } from '@/contexts/AdminContext';
+import { useAdmin } from '@/hooks/use-admin';
 
 const Admin = () => {
   const [editingProduct, setEditingProduct] = useState<Product | undefined>();
   const [isInitializing, setIsInitializing] = useState(false);
   const [isSeeding, setIsSeeding] = useState(false);
   const { toast } = useToast();
-  const { refreshProducts, seedProducts } = useAdmin();
+  const { refreshProducts, seedProducts, isLoading } = useAdmin();
 
   // Initialize products when the Admin page loads
   useEffect(() => {
@@ -82,9 +81,9 @@ const Admin = () => {
   return (
     <AdminLayout 
       onRefresh={loadProducts}
-      isRefreshing={isInitializing}
+      isRefreshing={isInitializing || isLoading}
     >
-      {isInitializing ? (
+      {isInitializing || isLoading ? (
         <div className="flex justify-center items-center p-8">
           <div className="text-center">
             <RefreshCw className="h-8 w-8 animate-spin text-brings-primary mx-auto mb-4" />

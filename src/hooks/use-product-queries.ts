@@ -5,7 +5,7 @@ import { Product } from '@/types/product';
 import { useToast } from '@/components/ui/use-toast';
 
 export const useProductQueries = (
-  setProducts: (value: React.SetStateAction<Product[]>) => void, 
+  setProducts: React.Dispatch<React.SetStateAction<Product[]>>, 
   setIsLoading: (loading: boolean) => void
 ) => {
   const { toast } = useToast();
@@ -22,7 +22,7 @@ export const useProductQueries = (
 
       if (error) throw error;
       
-      if (productsData) {
+      if (productsData && productsData.length > 0) {
         console.log(`Fetched ${productsData.length} products`);
         const mappedProducts: Product[] = productsData.map(product => ({
           id: String(product.id),
@@ -38,9 +38,9 @@ export const useProductQueries = (
         }));
         setProducts(mappedProducts);
       } else {
-        // If no products returned from Supabase, use seed data
+        // If no products returned from Supabase, try to seed
         console.log("No products found in Supabase, seeding products...");
-        seedProductsToSupabase();
+        await seedProductsToSupabase();
       }
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -84,28 +84,17 @@ export const useProductQueries = (
       // Import the seed data
       const { seedProductsData } = await import('@/utils/seed-products');
       
-      // Get seed products
-      let seedProducts = [];
-      try {
-        // Use localStorage as a temporary source for products
-        const storedProducts = localStorage.getItem('adminProducts');
-        if (storedProducts) {
-          seedProducts = JSON.parse(storedProducts);
-        } else {
-          // If no products in localStorage, call seedProductsData to generate them
-          seedProductsData();
-          const newStoredProducts = localStorage.getItem('adminProducts');
-          seedProducts = newStoredProducts ? JSON.parse(newStoredProducts) : [];
-        }
-      } catch (error) {
-        console.error("Error getting seed products:", error);
-      }
+      // Use seedProductsData to generate seed products
+      seedProductsData();
       
-      if (seedProducts.length === 0) {
-        console.error("No seed products available");
+      // Get seed products from localStorage
+      const storedProducts = localStorage.getItem('adminProducts');
+      if (!storedProducts) {
+        console.error("No seed products available in localStorage");
         return;
       }
       
+      const seedProducts = JSON.parse(storedProducts);
       console.log(`Preparing to insert ${seedProducts.length} products to Supabase`);
       
       // Prepare products for Supabase (format correctly)
@@ -142,7 +131,7 @@ export const useProductQueries = (
       });
       
       // Fetch the newly inserted products
-      fetchProducts();
+      await fetchProducts();
       
     } catch (error) {
       console.error("Error seeding products to Supabase:", error);
