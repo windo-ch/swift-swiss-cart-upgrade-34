@@ -14,7 +14,7 @@ const createProduct = (
   image: string = ''
 ): Product => {
   return {
-    id: idCounter++,
+    id: String(idCounter++),
     name,
     price,
     category,

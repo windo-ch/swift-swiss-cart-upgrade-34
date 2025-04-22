@@ -124,28 +124,49 @@ export const useProductQueries = (
       
       console.log(`Preparing to insert ${supabaseProducts.length} products to Supabase`);
       
-      const batchSize = 20;
+      // Insert in smaller batches to prevent timeouts and size limitations
+      const batchSize = 10;
+      let successCount = 0;
+      
       for (let i = 0; i < supabaseProducts.length; i += batchSize) {
         const batch = supabaseProducts.slice(i, i + batchSize);
         console.log(`Inserting batch ${i / batchSize + 1} with ${batch.length} products`);
         
-        const { error } = await supabase
-          .from('products')
-          .insert(batch);
-        
-        if (error) {
-          console.error(`Error inserting batch ${i / batchSize + 1}:`, error);
-          throw error;
+        try {
+          const { error } = await supabase
+            .from('products')
+            .insert(batch);
+          
+          if (error) {
+            console.error(`Error inserting batch ${i / batchSize + 1}:`, error);
+            // Continue with other batches instead of failing completely
+            console.log("Continuing with next batch...");
+          } else {
+            successCount += batch.length;
+            console.log(`Inserted batch ${i / batchSize + 1} successfully`);
+          }
+        } catch (batchError) {
+          console.error(`Exception in batch ${i / batchSize + 1}:`, batchError);
+          // Continue with other batches
         }
-        console.log(`Inserted batch ${i / batchSize + 1} successfully`);
       }
       
-      toast({
-        title: "Produkte geladen",
-        description: `${supabaseProducts.length} Produkte erfolgreich in die Datenbank geladen.`,
-      });
-      
-      return await fetchProducts();
+      if (successCount > 0) {
+        toast({
+          title: "Produkte geladen",
+          description: `${successCount} Produkte erfolgreich in die Datenbank geladen.`,
+        });
+        
+        // Fetch the products that were successfully inserted
+        return await fetchProducts();
+      } else {
+        toast({
+          title: "Fehler",
+          description: "Keine Produkte konnten in die Datenbank geladen werden.",
+          variant: "destructive"
+        });
+        throw new Error("No products were inserted successfully");
+      }
       
     } catch (error) {
       console.error("Error seeding products to Supabase:", error);
