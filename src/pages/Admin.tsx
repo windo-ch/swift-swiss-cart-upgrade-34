@@ -4,45 +4,33 @@ import AdminLayout from '../components/admin/AdminLayout';
 import AdminProductForm from '../components/admin/AdminProductForm';
 import AdminProductList from '../components/admin/AdminProductList';
 import { Product } from '../types/product';
-import { forceReinitializeAdminProducts, logAdminProducts } from '../utils/admin-utils';
 import { useToast } from '@/components/ui/use-toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, Loader2, Database } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAdmin } from '@/contexts/AdminContext';
 
 const Admin = () => {
   const [editingProduct, setEditingProduct] = useState<Product | undefined>();
   const [isInitializing, setIsInitializing] = useState(false);
+  const [isSeeding, setIsSeeding] = useState(false);
   const { toast } = useToast();
+  const { refreshProducts, seedProducts } = useAdmin();
 
   // Initialize products when the Admin page loads
   useEffect(() => {
-    refreshProducts();
+    loadProducts();
   }, []);
 
-  const refreshProducts = () => {
-    console.log("Initializing admin products");
+  const loadProducts = async () => {
+    console.log("Loading products");
     setIsInitializing(true);
     
     try {
-      // Force reinitialize products from the seed data
-      forceReinitializeAdminProducts();
-      logAdminProducts(); // Debug: log admin products after initialization
-      
-      // Show notification that products are loaded
-      const storedProducts = localStorage.getItem('adminProducts');
-      const productCount = storedProducts ? JSON.parse(storedProducts).length : 0;
-      
-      if (productCount > 0) {
-        toast({
-          title: "Produkte geladen",
-          description: `${productCount} Produkte sind verfügbar für d'Bearbeitung.`,
-          duration: 3000,
-        });
-      }
+      await refreshProducts();
     } catch (error) {
-      console.error("Error initializing admin products:", error);
+      console.error("Error initializing products:", error);
       toast({
         title: "Fehler",
         description: "Fehler beim Laden der Produkte.",
@@ -51,6 +39,28 @@ const Admin = () => {
       });
     } finally {
       setIsInitializing(false);
+    }
+  };
+
+  const handleSeedProducts = async () => {
+    setIsSeeding(true);
+    try {
+      await seedProducts();
+      toast({
+        title: "Produkte geladen",
+        description: "Produkte wurden erfolgreich in die Datenbank geladen.",
+        duration: 3000,
+      });
+    } catch (error) {
+      console.error("Error seeding products:", error);
+      toast({
+        title: "Fehler",
+        description: "Fehler beim Laden der Produkte.",
+        duration: 3000,
+        variant: "destructive"
+      });
+    } finally {
+      setIsSeeding(false);
     }
   };
 
@@ -71,7 +81,7 @@ const Admin = () => {
 
   return (
     <AdminLayout 
-      onRefresh={refreshProducts}
+      onRefresh={loadProducts}
       isRefreshing={isInitializing}
     >
       {isInitializing ? (
@@ -89,6 +99,30 @@ const Admin = () => {
                 initialData={editingProduct} 
                 onCancel={handleCancel}
               />
+              
+              <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+                <h3 className="text-lg font-medium mb-2">Administration</h3>
+                <p className="text-sm text-gray-600 mb-3">
+                  Wenn keine Produkt vorhanden sind, kannst du diese hier neu einlesen.
+                </p>
+                <Button 
+                  onClick={handleSeedProducts} 
+                  disabled={isSeeding}
+                  className="w-full"
+                >
+                  {isSeeding ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Produkte werden geladen...
+                    </>
+                  ) : (
+                    <>
+                      <Database className="mr-2 h-4 w-4" />
+                      Produktdaten neu einlesen
+                    </>
+                  )}
+                </Button>
+              </div>
             </ScrollArea>
           </div>
           

@@ -37,6 +37,10 @@ export const useProductQueries = (
           ageRestricted: product.agerestricted || false,
         }));
         setProducts(mappedProducts);
+      } else {
+        // If no products returned from Supabase, use seed data
+        console.log("No products found in Supabase, seeding products...");
+        seedProductsToSupabase();
       }
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -72,8 +76,87 @@ export const useProductQueries = (
     }
   };
 
+  // Function to seed products to Supabase if none exist
+  const seedProductsToSupabase = async () => {
+    try {
+      console.log("Starting to seed products to Supabase...");
+      
+      // Import the seed data
+      const { seedProductsData } = await import('@/utils/seed-products');
+      
+      // Get seed products
+      let seedProducts = [];
+      try {
+        // Use localStorage as a temporary source for products
+        const storedProducts = localStorage.getItem('adminProducts');
+        if (storedProducts) {
+          seedProducts = JSON.parse(storedProducts);
+        } else {
+          // If no products in localStorage, call seedProductsData to generate them
+          seedProductsData();
+          const newStoredProducts = localStorage.getItem('adminProducts');
+          seedProducts = newStoredProducts ? JSON.parse(newStoredProducts) : [];
+        }
+      } catch (error) {
+        console.error("Error getting seed products:", error);
+      }
+      
+      if (seedProducts.length === 0) {
+        console.error("No seed products available");
+        return;
+      }
+      
+      console.log(`Preparing to insert ${seedProducts.length} products to Supabase`);
+      
+      // Prepare products for Supabase (format correctly)
+      const supabaseProducts = seedProducts.map(product => ({
+        name: product.name,
+        price: product.price,
+        category: product.category,
+        description: product.description || '',
+        image: product.image || '',
+        ingredients: product.ingredients || '',
+        weight: product.weight || '',
+        stock: product.stock || 50,
+        agerestricted: product.ageRestricted || false
+      }));
+      
+      // Insert products in batches of 20 to avoid hitting limits
+      const batchSize = 20;
+      for (let i = 0; i < supabaseProducts.length; i += batchSize) {
+        const batch = supabaseProducts.slice(i, i + batchSize);
+        const { error } = await supabase
+          .from('products')
+          .insert(batch);
+        
+        if (error) {
+          console.error(`Error inserting batch ${i / batchSize + 1}:`, error);
+          throw error;
+        }
+        console.log(`Inserted batch ${i / batchSize + 1} successfully`);
+      }
+      
+      toast({
+        title: "Produkte geladen",
+        description: `${supabaseProducts.length} Produkte erfolgreich in die Datenbank geladen.`,
+      });
+      
+      // Fetch the newly inserted products
+      fetchProducts();
+      
+    } catch (error) {
+      console.error("Error seeding products to Supabase:", error);
+      toast({
+        title: "Fehler",
+        description: "Fehler beim Hinzufügen der Produkte zur Datenbank.",
+        variant: "destructive"
+      });
+    }
+  };
+
   return {
     fetchProducts,
-    updateStock
+    updateStock,
+    seedProductsToSupabase
   };
 };

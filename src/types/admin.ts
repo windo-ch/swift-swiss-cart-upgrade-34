@@ -9,5 +9,6 @@ export interface AdminContextType {
   deleteProduct: (id: string) => void;
   updateStock: (id: string, newStock: number) => void;
   refreshProducts: () => void;
+  seedProducts: () => void;
   isLoading: boolean;
 }

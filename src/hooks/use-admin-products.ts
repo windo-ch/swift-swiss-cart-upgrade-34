@@ -9,7 +9,7 @@ export const useAdminProducts = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const { addProduct, updateProduct, deleteProduct } = useProductMutations(setProducts);
-  const { fetchProducts, updateStock } = useProductQueries(setProducts, setIsLoading);
+  const { fetchProducts, updateStock, seedProductsToSupabase } = useProductQueries(setProducts, setIsLoading);
 
   return {
     products,
@@ -19,6 +19,7 @@ export const useAdminProducts = () => {
     deleteProduct,
     updateStock,
     refreshProducts: fetchProducts,
+    seedProducts: seedProductsToSupabase,
     isLoading
   };
 };
