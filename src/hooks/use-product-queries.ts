@@ -1,3 +1,4 @@
+
 import { useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Product } from '@/types/product';
@@ -84,12 +85,13 @@ export const useProductQueries = (
     try {
       console.log("Starting to seed products to Supabase...");
       
-      const { seedProductsData } = await import('@/utils/seed-products');
+      // Import the seed products data module and explicitly type the return value
+      const seedProductsModule = await import('@/utils/seed-products');
+      const seedProducts = seedProductsModule.seedProductsData();
       
-      const seedProducts = seedProductsData();
-      
-      if (!seedProducts || !Array.isArray(seedProducts)) {
-        console.error("Seed products data is not an array or is undefined");
+      // Check if seedProducts is a valid array
+      if (!Array.isArray(seedProducts)) {
+        console.error("Seed products data is not an array:", seedProducts);
         throw new Error("Invalid seed products data format");
       }
       
