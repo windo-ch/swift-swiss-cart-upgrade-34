@@ -95,51 +95,6 @@ export type Database = {
         }
         Relationships: []
       }
-      products: {
-        Row: {
-          agerestricted: boolean | null
-          category: string
-          created_at: string | null
-          description: string | null
-          id: string
-          image: string | null
-          ingredients: string | null
-          name: string
-          price: number
-          stock: number | null
-          updated_at: string | null
-          weight: string | null
-        }
-        Insert: {
-          agerestricted?: boolean | null
-          category: string
-          created_at?: string | null
-          description?: string | null
-          id?: string
-          image?: string | null
-          ingredients?: string | null
-          name: string
-          price: number
-          stock?: number | null
-          updated_at?: string | null
-          weight?: string | null
-        }
-        Update: {
-          agerestricted?: boolean | null
-          category?: string
-          created_at?: string | null
-          description?: string | null
-          id?: string
-          image?: string | null
-          ingredients?: string | null
-          name?: string
-          price?: number
-          stock?: number | null
-          updated_at?: string | null
-          weight?: string | null
-        }
-        Relationships: []
-      }
       profiles: {
         Row: {
           avatar_url: string | null

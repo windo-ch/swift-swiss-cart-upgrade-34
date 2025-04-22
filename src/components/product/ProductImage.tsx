@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { getProductImageUrl } from '../../utils/product-utils';
 
 interface ProductImageProps {
   image: string;
@@ -13,9 +14,14 @@ const ProductImage = ({ image, name }: ProductImageProps) => {
   const [imageSrc, setImageSrc] = useState('');
 
   useEffect(() => {
+    // Reset error state when image prop changes
     setHasError(false);
-    setImageSrc(image || PLACEHOLDER_IMAGE);
-  }, [image]);
+    
+    // Process the image URL to ensure it's a full Supabase URL
+    const processedUrl = getProductImageUrl(image);
+    console.log(`Processing image URL for ${name}: ${image} → ${processedUrl}`);
+    setImageSrc(processedUrl);
+  }, [image, name]);
 
   const handleImageError = () => {
     console.error(`Error loading image: ${imageSrc} for product: ${name}`);

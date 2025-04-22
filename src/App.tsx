@@ -24,7 +24,6 @@ import OrderTracking from "./pages/OrderTracking";
 import { AuthProvider } from "./contexts/AuthContext";
 import { AgeVerificationProvider } from "./contexts/AgeVerificationContext";
 import { CartProvider } from "./contexts/CartContext";
-import { AdminProvider } from "./contexts/AdminContext";
 import InitialLoadingScreen from "./components/InitialLoadingScreen";
 import CartDrawer from "./components/CartDrawer";
 import ScrollToTop from "./components/ScrollToTop";
@@ -41,45 +40,43 @@ const App = () => (
           <AgeVerificationProvider>
             <ScrollToTop />
             <CartProvider>
-              <AdminProvider>
-                <InitialLoadingScreen />
-                <CartDrawer />
-                <FirstTimeUserBanner />
-                <Toaster />
-                <Sonner />
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/auth" element={<Auth />} />
-                  <Route path="/order" element={<Order />} />
-                  <Route path="/products" element={<Products />} />
-                  <Route path="/product/:id" element={<ProductDetail />} />
-                  <Route path="/categories" element={<Categories />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/checkout" element={<Checkout />} />
-                  <Route path="/order-confirmation" element={<OrderConfirmation />} />
-                  <Route path="/profile" element={<Profile />} />
-                  {/* Order tracking is now only for admin users */}
-                  <Route path="/order-tracking/:id" element={
-                    <AdminRoute>
-                      <OrderTracking />
-                    </AdminRoute>
-                  } />
-                  <Route path="/admin" element={
-                    <AdminRoute>
-                      <Admin />
-                    </AdminRoute>
-                  } />
-                  <Route path="/admin/orders" element={
-                    <AdminRoute>
-                      <AdminOrderTracking />
-                    </AdminRoute>
-                  } />
-                  <Route path="/dateschutz" element={<Dateschutz />} />
-                  <Route path="/agb" element={<AGB />} />
-                  <Route path="/impressum" element={<Impressum />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </AdminProvider>
+              <InitialLoadingScreen />
+              <CartDrawer />
+              <FirstTimeUserBanner />
+              <Toaster />
+              <Sonner />
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/order" element={<Order />} />
+                <Route path="/products" element={<Products />} />
+                <Route path="/product/:id" element={<ProductDetail />} />
+                <Route path="/categories" element={<Categories />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/order-confirmation" element={<OrderConfirmation />} />
+                <Route path="/profile" element={<Profile />} />
+                {/* Order tracking is now only for admin users */}
+                <Route path="/order-tracking/:id" element={
+                  <AdminRoute>
+                    <OrderTracking />
+                  </AdminRoute>
+                } />
+                <Route path="/admin" element={
+                  <AdminRoute>
+                    <Admin />
+                  </AdminRoute>
+                } />
+                <Route path="/admin/orders" element={
+                  <AdminRoute>
+                    <AdminOrderTracking />
+                  </AdminRoute>
+                } />
+                <Route path="/dateschutz" element={<Dateschutz />} />
+                <Route path="/agb" element={<AGB />} />
+                <Route path="/impressum" element={<Impressum />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
             </CartProvider>
           </AgeVerificationProvider>
         </AuthProvider>

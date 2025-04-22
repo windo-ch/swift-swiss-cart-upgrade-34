@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Product } from '@/types/product';
@@ -30,21 +29,17 @@ const RelatedProductItem = ({ product }: { product: Product }) => {
   const [imageSrc, setImageSrc] = useState('');
   
   useEffect(() => {
-    const loadImage = async () => {
-      setHasImageError(false);
-      if (product.image) {
-        if (product.image.startsWith('http')) {
-          setImageSrc(product.image);
-        } else {
-          const processedUrl = await getProductImageUrl(product.image);
-          setImageSrc(processedUrl);
-        }
+    setHasImageError(false);
+    if (product.image) {
+      if (product.image.startsWith('http')) {
+        setImageSrc(product.image);
       } else {
-        setImageSrc(PLACEHOLDER_IMAGE);
+        const processedUrl = getProductImageUrl(product.image);
+        setImageSrc(processedUrl);
       }
-    };
-    
-    loadImage();
+    } else {
+      setImageSrc(PLACEHOLDER_IMAGE);
+    }
   }, [product.image]);
 
   return (

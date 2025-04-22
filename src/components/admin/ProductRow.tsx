@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Edit, Trash2, Image, AlertCircle } from 'lucide-react';
-import { useAdmin } from '@/hooks/use-admin';
+import { useAdmin } from '@/contexts/AdminContext';
 import { Product } from '@/types/product';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/hooks/use-toast';

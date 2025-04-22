@@ -19,9 +19,9 @@ const Categories = () => {
   
   // Load products for displaying counts and popular items
   useEffect(() => {
-    const loadProducts = async () => {
+    const loadProducts = () => {
       try {
-        const allProducts = await getStoredProducts();
+        const allProducts = getStoredProducts();
         setProducts(allProducts);
       } catch (error) {
         console.error("Error loading products:", error);
