@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAdmin } from '@/hooks/use-admin';
 import { useToast } from '@/components/ui/use-toast';
 import SearchBar from './SearchBar';
@@ -14,17 +14,12 @@ interface AdminProductListProps {
 }
 
 const AdminProductList = ({ onEdit }: AdminProductListProps) => {
-  const { products, deleteProduct, refreshProducts, isLoading } = useAdmin();
+  const { products, deleteProduct, isLoading } = useAdmin();
   const [searchTerm, setSearchTerm] = useState('');
   const [showRestricted, setShowRestricted] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('name');
   const { toast } = useToast();
-
-  // Load products on mount to ensure we have the latest data
-  useEffect(() => {
-    refreshProducts();
-  }, [refreshProducts]);
 
   // Handle delete product
   const handleDelete = (id: string) => {

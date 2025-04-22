@@ -11,4 +11,5 @@ export interface AdminContextType {
   refreshProducts: () => void;
   seedProducts: () => void;
   isLoading: boolean;
+  isInitialized: boolean;
 }

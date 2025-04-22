@@ -12,29 +12,24 @@ import { useAdmin } from '@/hooks/use-admin';
 
 const Admin = () => {
   const [editingProduct, setEditingProduct] = useState<Product | undefined>();
-  const [isInitializing, setIsInitializing] = useState(true);
   const [isSeeding, setIsSeeding] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
-  const { refreshProducts, seedProducts, isLoading } = useAdmin();
+  const { products, refreshProducts, seedProducts, isLoading, isInitialized } = useAdmin();
 
-  // Initialize products when the Admin page loads
-  useEffect(() => {
-    console.log("Admin page mounted, loading products");
-    loadProducts();
-  }, []);
-
-  const loadProducts = async () => {
-    console.log("Loading products");
-    setIsInitializing(true);
+  const handleRefresh = async () => {
+    console.log("Manual refresh triggered");
     setError(null);
     
     try {
-      console.log("Calling refreshProducts");
       await refreshProducts();
-      console.log("Products refreshed successfully");
+      toast({
+        title: "Erfolgreich",
+        description: "Produkte wurden aktualisiert.",
+        duration: 3000,
+      });
     } catch (error) {
-      console.error("Error initializing products:", error);
+      console.error("Error refreshing products:", error);
       setError("Fehler beim Laden der Produkte. Bitte versuchen Sie es später erneut.");
       toast({
         title: "Fehler",
@@ -42,8 +37,6 @@ const Admin = () => {
         duration: 3000,
         variant: "destructive"
       });
-    } finally {
-      setIsInitializing(false);
     }
   };
 
@@ -97,7 +90,7 @@ const Admin = () => {
           </div>
           <p className="text-red-600 mb-4">{error}</p>
           <div className="flex gap-3">
-            <Button onClick={loadProducts} variant="outline">
+            <Button onClick={handleRefresh} variant="outline">
               Erneut versuchen
             </Button>
             <Button onClick={handleSeedProducts} disabled={isSeeding}>
@@ -121,10 +114,10 @@ const Admin = () => {
 
   return (
     <AdminLayout 
-      onRefresh={loadProducts}
-      isRefreshing={isInitializing || isLoading}
+      onRefresh={handleRefresh}
+      isRefreshing={isLoading}
     >
-      {isInitializing || isLoading ? (
+      {!isInitialized || isLoading ? (
         <div className="flex justify-center items-center p-8">
           <div className="text-center">
             <RefreshCw className="h-8 w-8 animate-spin text-brings-primary mx-auto mb-4" />
