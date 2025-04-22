@@ -46,11 +46,20 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
       
       if (productsData) {
         console.log(`AdminContext - Fetched ${productsData.length} products`);
-        setProducts(productsData.map(product => ({
-          ...product,
+        // Map database fields to our Product type
+        const mappedProducts: Product[] = productsData.map(product => ({
           id: String(product.id),
-          price: Number(product.price)
-        })));
+          name: product.name,
+          price: Number(product.price),
+          category: product.category,
+          description: product.description || '',
+          image: product.image || '',
+          ingredients: product.ingredients || '',
+          weight: product.weight || '',
+          stock: product.stock || 0,
+          ageRestricted: product.agerestricted || false, // Map from DB 'agerestricted' to our 'ageRestricted'
+        }));
+        setProducts(mappedProducts);
       }
     } catch (error) {
       console.error("AdminContext - Error fetching products:", error);
@@ -70,16 +79,44 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
 
   const addProduct = async (productData: Omit<Product, 'id'>) => {
     try {
+      // Convert from our ageRestricted field to DB agerestricted field
+      const dbProduct = {
+        name: productData.name,
+        price: productData.price,
+        category: productData.category,
+        description: productData.description,
+        image: productData.image,
+        ingredients: productData.ingredients,
+        weight: productData.weight,
+        stock: productData.stock,
+        agerestricted: productData.ageRestricted, // Map to DB field name
+      };
+
       const { data, error } = await supabase
         .from('products')
-        .insert([productData])
+        .insert([dbProduct])
         .select()
         .single();
 
       if (error) throw error;
 
       if (data) {
-        setProducts(prev => [...prev, { ...data, id: String(data.id) }]);
+        // Map back to our Product type
+        const newProduct: Product = {
+          id: String(data.id),
+          name: data.name,
+          price: Number(data.price),
+          category: data.category,
+          description: data.description || '',
+          image: data.image || '',
+          ingredients: data.ingredients || '',
+          weight: data.weight || '',
+          stock: data.stock || 0,
+          ageRestricted: data.agerestricted || false,
+        };
+        
+        setProducts(prev => [...prev, newProduct]);
+        
         toast({
           title: "Produkt hinzugefügt",
           description: `${productData.name} wurde erfolgreich hinzugefügt.`,
@@ -97,9 +134,23 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
 
   const updateProduct = async (updatedProduct: Product) => {
     try {
+      // Convert from our ageRestricted field to DB agerestricted field
+      const dbProduct = {
+        id: updatedProduct.id,
+        name: updatedProduct.name,
+        price: updatedProduct.price,
+        category: updatedProduct.category,
+        description: updatedProduct.description,
+        image: updatedProduct.image,
+        ingredients: updatedProduct.ingredients,
+        weight: updatedProduct.weight,
+        stock: updatedProduct.stock,
+        agerestricted: updatedProduct.ageRestricted, // Map to DB field name
+      };
+
       const { error } = await supabase
         .from('products')
-        .update(updatedProduct)
+        .update(dbProduct)
         .eq('id', updatedProduct.id);
 
       if (error) throw error;

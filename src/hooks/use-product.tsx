@@ -8,17 +8,22 @@ export const useProduct = (productId: string | undefined) => {
   const [isLoading, setIsLoading] = useState(true);
   
   useEffect(() => {
-    console.log("useProduct hook: Loading products for product ID:", productId);
-    try {
-      const allProducts = getStoredProducts();
-      console.log(`useProduct hook: Loaded ${allProducts.length} products`);
-      setProducts(allProducts);
-    } catch (error) {
-      console.error("Error in useProduct hook:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+    const loadProduct = async () => {
+      console.log("useProduct hook: Loading products for product ID:", productId);
+      setIsLoading(true);
+      try {
+        const allProducts = await getStoredProducts();
+        console.log(`useProduct hook: Loaded ${allProducts.length} products`);
+        setProducts(allProducts);
+      } catch (error) {
+        console.error("Error in useProduct hook:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadProduct();
+  }, [productId]);
   
   const product = products.find(p => p.id.toString() === productId);
   

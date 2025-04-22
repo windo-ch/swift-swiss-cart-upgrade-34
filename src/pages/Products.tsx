@@ -24,10 +24,10 @@ const Products = () => {
   const [isLoading, setIsLoading] = useState(true);
   
   useEffect(() => {
-    const loadProducts = () => {
+    const loadProducts = async () => {
       setIsLoading(true);
       try {
-        const products = getStoredProducts();
+        const products = await getStoredProducts();
         console.log(`Loaded ${products.length} products`);
         setAllProducts(products);
       } catch (error) {

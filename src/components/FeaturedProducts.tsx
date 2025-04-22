@@ -14,15 +14,19 @@ const FeaturedProducts = () => {
   const [isLoading, setIsLoading] = useState(true);
   
   useEffect(() => {
-    setIsLoading(true);
-    try {
-      const allProducts = getStoredProducts();
-      setProducts(allProducts);
-    } catch (error) {
-      console.error("Error loading products:", error);
-    } finally {
-      setIsLoading(false);
-    }
+    const loadProducts = async () => {
+      setIsLoading(true);
+      try {
+        const allProducts = await getStoredProducts();
+        setProducts(allProducts);
+      } catch (error) {
+        console.error("Error loading products:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadProducts();
   }, []);
   
   // Filter out age-restricted products if not adult
