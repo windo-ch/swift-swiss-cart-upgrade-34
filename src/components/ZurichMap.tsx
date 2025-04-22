@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useZurichMapData } from "@/hooks/useZurichMapData";
-import { deliveryData } from "@/utils/zurichMapData";
+import { deliveryData, districtNames } from "@/utils/zurichMapData";
 import ZurichSVGMap from "./ZurichSVGMap";
 
 interface ZurichMapProps {
