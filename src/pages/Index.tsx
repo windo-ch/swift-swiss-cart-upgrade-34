@@ -29,7 +29,6 @@ const Index = () => {
                   <Clock size={32} className="text-brings-primary" />
                 </div>
                 <h3 className="text-lg font-bold mb-2">30 Minute Lieferig</h3>
-                <p className="text-gray-600">Dini Lieblings-Snacks und Getränk chömmed schnell zu dir.</p>
               </div>
               
               <div className="bg-brings-light p-6 rounded-xl text-center hover:shadow-lg transition-shadow">
@@ -37,7 +36,6 @@ const Index = () => {
                   <MapPin size={32} className="text-brings-secondary" />
                 </div>
                 <h3 className="text-lg font-bold mb-2">Ganz Züri</h3>
-                <p className="text-gray-600">Mir liefered in alli Kreis vo de Stadt Züri.</p>
               </div>
               
               <div className="bg-brings-light p-6 rounded-xl text-center hover:shadow-lg transition-shadow">
@@ -45,7 +43,6 @@ const Index = () => {
                   <ShoppingBag size={32} className="text-brings-accent" />
                 </div>
                 <h3 className="text-lg font-bold mb-2">Eifach zum Bstelle</h3>
-                <p className="text-gray-600">Wenigi Klicks und dini Produkt sind unterwägs zu dir.</p>
               </div>
             </div>
           </div>
