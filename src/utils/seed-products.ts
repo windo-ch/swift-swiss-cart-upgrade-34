@@ -25,8 +25,8 @@ const createProduct = (
   };
 };
 
-// Function to initialize admin products in localStorage
-export const seedProductsData = (): void => {
+// Function to initialize products data from the brings-delivery.ch product list
+export const seedProductsData = (): Product[] => {
   console.log("🌱 Seeding products data...");
   
   // Create the soft drinks products
@@ -55,7 +55,7 @@ export const seedProductsData = (): void => {
     createProduct("Red Bull Sugarfree", 3.50, "energy-drinks", "Red Bull Sugarfree energy drink", false, "https://brings-delivery.ch/cdn/shop/products/20210825-20210825-IMG_3241.jpg")
   ];
 
-  // Create the snacks products - updating to use chips-snacks category
+  // Create the snacks products
   const snacks = [
     createProduct("Zweifel Nature Chips", 4.90, "chips-snacks", "Zweifel Nature flavored chips", false, "https://brings-delivery.ch/cdn/shop/products/zweifel-nature-chips.jpg"),
     createProduct("Zweifel Paprika Chips", 4.90, "chips-snacks", "Zweifel Paprika flavored chips", false, "https://brings-delivery.ch/cdn/shop/products/zweifel-paprika-chips.jpg"),
@@ -142,12 +142,7 @@ export const seedProductsData = (): void => {
     ...spirits
   ];
 
-  // Store in localStorage
-  localStorage.setItem('adminProducts', JSON.stringify(allProducts));
   console.log(`🔄 Successfully seeded ${allProducts.length} products`);
   
-  // Dispatch storage event to notify other components
-  window.dispatchEvent(new Event('storage'));
-  
-  return;
+  return allProducts;
 };

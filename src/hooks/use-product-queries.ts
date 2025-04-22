@@ -98,7 +98,7 @@ export const useProductQueries = (
     try {
       console.log("Starting to seed products to Supabase...");
       
-      // Import the seed products data module and explicitly type the return value
+      // Import the seed products data module
       const seedProductsModule = await import('@/utils/seed-products');
       const seedProducts = seedProductsModule.seedProductsData();
       
