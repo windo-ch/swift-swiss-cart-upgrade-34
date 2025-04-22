@@ -135,8 +135,9 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
   const updateProduct = async (updatedProduct: Product) => {
     try {
       // Convert from our ageRestricted field to DB agerestricted field
+      // and ensure id is a string
       const dbProduct = {
-        id: updatedProduct.id,
+        id: String(updatedProduct.id),
         name: updatedProduct.name,
         price: updatedProduct.price,
         category: updatedProduct.category,
@@ -151,7 +152,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
       const { error } = await supabase
         .from('products')
         .update(dbProduct)
-        .eq('id', updatedProduct.id);
+        .eq('id', String(updatedProduct.id));
 
       if (error) throw error;
 
