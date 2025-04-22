@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { useAdmin } from '@/contexts/AdminContext';
+import { useAdmin } from '@/hooks/use-admin';
 import { useToast } from '@/components/ui/use-toast';
 import SearchBar from './SearchBar';
 import ProductTable from './ProductTable';

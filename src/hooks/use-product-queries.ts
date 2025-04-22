@@ -1,4 +1,3 @@
-
 import { useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Product } from '@/types/product';
@@ -42,7 +41,6 @@ export const useProductQueries = (
         setProducts(mappedProducts);
         return mappedProducts;
       } else {
-        // If no products returned from Supabase, try to seed
         console.log("No products found in Supabase, will suggest seeding products");
         setProducts([]);
         return [];
@@ -82,19 +80,21 @@ export const useProductQueries = (
     }
   };
 
-  // Function to seed products to Supabase if none exist
   const seedProductsToSupabase = async () => {
     try {
       console.log("Starting to seed products to Supabase...");
       
-      // Import the seed data
       const { seedProductsData } = await import('@/utils/seed-products');
       
-      // Use seedProductsData to generate seed products
       const seedProducts = seedProductsData();
+      
+      if (!seedProducts || !Array.isArray(seedProducts)) {
+        console.error("Seed products data is not an array or is undefined");
+        throw new Error("Invalid seed products data format");
+      }
+      
       console.log(`Generated ${seedProducts.length} seed products`);
       
-      // Prepare products for Supabase (format correctly)
       const supabaseProducts = seedProducts.map(product => ({
         name: product.name,
         price: product.price,
@@ -109,7 +109,6 @@ export const useProductQueries = (
       
       console.log(`Preparing to insert ${supabaseProducts.length} products to Supabase`);
       
-      // Insert products in batches of 20 to avoid hitting limits
       const batchSize = 20;
       for (let i = 0; i < supabaseProducts.length; i += batchSize) {
         const batch = supabaseProducts.slice(i, i + batchSize);
@@ -131,7 +130,6 @@ export const useProductQueries = (
         description: `${supabaseProducts.length} Produkte erfolgreich in die Datenbank geladen.`,
       });
       
-      // Fetch the newly inserted products
       return await fetchProducts();
       
     } catch (error) {
