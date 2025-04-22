@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Upload, Image as ImageIcon } from 'lucide-react';
@@ -18,17 +17,10 @@ const ImageUpload = ({ onImageUploaded, existingImageUrl }: ImageUploadProps) =>
   const [previewUrl, setPreviewUrl] = useState<string>('');
   const { toast } = useToast();
   
-  // Process existing image URL to show correctly in preview
   useEffect(() => {
     if (existingImageUrl) {
-      try {
-        // For preview, we use the full URL
-        setPreviewUrl(existingImageUrl);
-        setHasImageError(false);
-      } catch (error) {
-        console.error("Error setting preview URL:", error);
-        setHasImageError(true);
-      }
+      setPreviewUrl(existingImageUrl);
+      setHasImageError(false);
     } else {
       setPreviewUrl('');
     }
@@ -42,36 +34,14 @@ const ImageUpload = ({ onImageUploaded, existingImageUrl }: ImageUploadProps) =>
       setIsUploading(true);
       setHasImageError(false);
 
-      // Create a unique file name
       const fileExt = file.name.split('.').pop();
       const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
-      const filePath = fileName;
-
-      console.log("Uploading file to Supabase:", fileName);
       
-      // Check if storage bucket exists, create if necessary
-      try {
-        const { data: bucketData, error: bucketError } = await supabase.storage.getBucket('product-images');
-        if (bucketError && bucketError.message.includes('not found')) {
-          // Create the bucket if it doesn't exist
-          const { error: createBucketError } = await supabase.storage.createBucket('product-images', {
-            public: true
-          });
-          if (createBucketError) {
-            console.error("Error creating bucket:", createBucketError);
-            throw createBucketError;
-          }
-          console.log("Created new bucket: product-images");
-        }
-      } catch (bucketCheckError) {
-        console.error("Error checking/creating bucket:", bucketCheckError);
-        // Continue anyway, as the bucket might still work
-      }
+      console.log("Uploading file to Supabase Storage:", fileName);
       
-      // Upload the file to Supabase storage
       const { data, error } = await supabase.storage
         .from('product-images')
-        .upload(filePath, file, {
+        .upload(fileName, file, {
           cacheControl: '3600',
           upsert: true
         });
@@ -83,14 +53,13 @@ const ImageUpload = ({ onImageUploaded, existingImageUrl }: ImageUploadProps) =>
 
       console.log("Upload successful, data:", data);
 
-      // Get the public URL - store the FULL URL to ensure it persists across sessions
-      const publicUrl = `https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/${filePath}`;
+      const { data: { publicUrl } } = supabase.storage
+        .from('product-images')
+        .getPublicUrl(fileName);
+
       console.log("Generated public URL:", publicUrl);
       
-      // Update the preview
       setPreviewUrl(publicUrl);
-      
-      // Pass the full URL to parent component to ensure persistence
       onImageUploaded(publicUrl);
       
       toast({

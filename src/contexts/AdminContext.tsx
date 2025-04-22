@@ -1,12 +1,9 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { Product as ProductType } from '@/types/product';
-import { getStoredProducts } from '@/utils/product-utils';
-import { products as storeProducts } from '@/data/products';
-import { logAdminProducts } from '@/utils/admin-utils';
 import { useToast } from '@/components/ui/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
-// Define our context product type based on the global Product type
 export type Product = ProductType;
 
 interface AdminContextType {
@@ -35,187 +32,141 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
   
-  // Function to load products from localStorage
-  const refreshProducts = useCallback(() => {
-    console.log("AdminContext - Refreshing products from localStorage");
+  const refreshProducts = useCallback(async () => {
+    console.log("AdminContext - Fetching products from Supabase");
     setIsLoading(true);
     
     try {
-      logAdminProducts(); // Debug: log current admin products
+      const { data: productsData, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
       
-      const allProducts = getStoredProducts();
-      
-      if (allProducts.length > 0) {
-        console.log(`AdminContext - Found ${allProducts.length} products in storage`);
-        
-        // Make sure all products have required fields and preserve image URLs
-        const productsWithRequiredFields = allProducts.map(product => ({
+      if (productsData) {
+        console.log(`AdminContext - Fetched ${productsData.length} products`);
+        setProducts(productsData.map(product => ({
           ...product,
           id: String(product.id),
-          name: product.name || 'Unnamed Product',
-          price: typeof product.price === 'number' ? product.price : parseFloat(String(product.price) || '0'),
-          category: product.category || 'other',
-          // Preserve the exact image URL from storage
-          image: product.image || '',
-          description: product.description || '',
-          weight: product.weight || '',
-          ingredients: product.ingredients || '',
-          ageRestricted: product.ageRestricted || false,
-          stock: product.stock !== undefined ? product.stock : 50
-        }));
-        
-        setProducts(productsWithRequiredFields);
-      } else {
-        console.log("AdminContext - No products in storage, initializing from store");
-        
-        // If no products are in storage, initialize with store products
-        const initialProducts = storeProducts.map(product => ({
-          ...product,
-          id: String(product.id),
-          name: product.name,
-          price: typeof product.price === 'number' ? product.price : parseFloat(String(product.price)),
-          category: product.category,
-          image: product.image || '',
-          description: product.description || '',
-          weight: product.weight || '',
-          ingredients: product.ingredients || '',
-          ageRestricted: product.ageRestricted || false,
-          stock: 50 // Default stock of 50
-        }));
-        
-        setProducts(initialProducts);
-        
-        // Save to localStorage immediately
-        localStorage.setItem('adminProducts', JSON.stringify(initialProducts));
-        console.log(`AdminContext - Saved ${initialProducts.length} products to localStorage`);
-        
-        // Dispatch storage event
-        window.dispatchEvent(new Event('storage'));
+          price: Number(product.price)
+        })));
       }
     } catch (error) {
-      console.error("AdminContext - Error refreshing products:", error);
+      console.error("AdminContext - Error fetching products:", error);
       toast({
         title: "Fehler",
         description: "Fehler beim Laden der Produkte.",
-        duration: 3000,
         variant: "destructive"
       });
     } finally {
       setIsLoading(false);
     }
   }, [toast]);
-  
-  // Load all products on mount
+
   useEffect(() => {
     refreshProducts();
-    
-    // Listen for storage events to refresh products
-    const handleStorageChange = () => {
-      console.log("Storage event detected, refreshing products");
-      refreshProducts();
-    };
-    
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
   }, [refreshProducts]);
 
-  // Save products to localStorage whenever they change
-  useEffect(() => {
-    if (products.length > 0 && !isLoading) {
-      console.log("AdminContext - Saving products to localStorage:", products.length);
-      try {
-        localStorage.setItem('adminProducts', JSON.stringify(products));
-        console.log(`AdminContext - Successfully saved ${products.length} products to localStorage`);
-      } catch (error) {
-        console.error("AdminContext - Error saving products to localStorage:", error);
+  const addProduct = async (productData: Omit<Product, 'id'>) => {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .insert([productData])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        setProducts(prev => [...prev, { ...data, id: String(data.id) }]);
         toast({
-          title: "Fehler beim Speichern",
-          description: "Die Produkte konnten nicht gespeichert werden.",
-          duration: 3000,
-          variant: "destructive"
+          title: "Produkt hinzugefügt",
+          description: `${productData.name} wurde erfolgreich hinzugefügt.`,
         });
       }
+    } catch (error) {
+      console.error("Error adding product:", error);
+      toast({
+        title: "Fehler",
+        description: "Produkt konnte nicht hinzugefügt werden.",
+        variant: "destructive"
+      });
     }
-  }, [products, isLoading, toast]);
-
-  const addProduct = (productData: Omit<Product, 'id'>) => {
-    console.log("AdminContext - Adding new product:", productData.name);
-    const newProduct: Product = {
-      ...productData,
-      id: `admin-${Date.now()}`,
-      ageRestricted: productData.ageRestricted || false,
-      stock: productData.stock !== undefined ? productData.stock : 50 // Default stock of 50
-    };
-    
-    // Add the new product to state
-    setProducts(prev => {
-      const updated = [...prev, newProduct];
-      // Immediately save to localStorage
-      localStorage.setItem('adminProducts', JSON.stringify(updated));
-      return updated;
-    });
-    
-    toast({
-      title: "Produkt hinzugefügt",
-      description: `${productData.name} wurde erfolgreich hinzugefügt.`,
-      duration: 3000,
-    });
   };
 
-  const updateProduct = (updatedProduct: Product) => {
-    console.log("AdminContext - Updating product:", updatedProduct.id, updatedProduct);
-    
-    // Update the product in state
-    setProducts(prev => {
-      const updated = prev.map(product => 
+  const updateProduct = async (updatedProduct: Product) => {
+    try {
+      const { error } = await supabase
+        .from('products')
+        .update(updatedProduct)
+        .eq('id', updatedProduct.id);
+
+      if (error) throw error;
+
+      setProducts(prev => prev.map(product => 
         String(product.id) === String(updatedProduct.id) ? updatedProduct : product
-      );
-      // Immediately save to localStorage
-      localStorage.setItem('adminProducts', JSON.stringify(updated));
-      return updated;
-    });
-    
-    toast({
-      title: "Produkt aktualisiert",
-      description: `${updatedProduct.name} wurde erfolgreich aktualisiert.`,
-      duration: 3000,
-    });
+      ));
+
+      toast({
+        title: "Produkt aktualisiert",
+        description: `${updatedProduct.name} wurde erfolgreich aktualisiert.`,
+      });
+    } catch (error) {
+      console.error("Error updating product:", error);
+      toast({
+        title: "Fehler",
+        description: "Produkt konnte nicht aktualisiert werden.",
+        variant: "destructive"
+      });
+    }
   };
 
-  const deleteProduct = (id: string) => {
-    console.log("AdminContext - Deleting product:", id);
-    // Find product name before deleting for toast message
-    const productToDelete = products.find(p => String(p.id) === id);
-    
-    // Remove the product from state
-    setProducts(prev => {
-      const updated = prev.filter(product => String(product.id) !== id);
-      // Immediately save to localStorage
-      localStorage.setItem('adminProducts', JSON.stringify(updated));
-      return updated;
-    });
-    
-    toast({
-      title: "Produkt gelöscht",
-      description: productToDelete 
-        ? `${productToDelete.name} wurde erfolgreich gelöscht.`
-        : "Produkt wurde erfolgreich gelöscht.",
-      duration: 3000,
-    });
+  const deleteProduct = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('products')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setProducts(prev => prev.filter(product => String(product.id) !== id));
+      
+      toast({
+        title: "Produkt gelöscht",
+        description: "Produkt wurde erfolgreich gelöscht.",
+      });
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      toast({
+        title: "Fehler",
+        description: "Produkt konnte nicht gelöscht werden.",
+        variant: "destructive"
+      });
+    }
   };
 
-  const updateStock = (id: string, newStock: number) => {
-    console.log("AdminContext - Updating stock for product:", id, newStock);
-    
-    // Update the stock in state
-    setProducts(prev => {
-      const updated = prev.map(product => 
+  const updateStock = async (id: string, newStock: number) => {
+    try {
+      const { error } = await supabase
+        .from('products')
+        .update({ stock: newStock })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setProducts(prev => prev.map(product =>
         String(product.id) === id ? { ...product, stock: newStock } : product
-      );
-      // Immediately save to localStorage
-      localStorage.setItem('adminProducts', JSON.stringify(updated));
-      return updated;
-    });
+      ));
+    } catch (error) {
+      console.error("Error updating stock:", error);
+      toast({
+        title: "Fehler",
+        description: "Lagerbestand konnte nicht aktualisiert werden.",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
