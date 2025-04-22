@@ -9,6 +9,7 @@ export const useProductMutations = (setProducts: React.Dispatch<React.SetStateAc
 
   const addProduct = async (productData: Omit<Product, 'id'>) => {
     try {
+      console.log("Adding product:", productData);
       const dbProduct = {
         name: productData.name,
         price: productData.price,
@@ -27,9 +28,13 @@ export const useProductMutations = (setProducts: React.Dispatch<React.SetStateAc
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Supabase error adding product:", error);
+        throw error;
+      }
 
       if (data) {
+        console.log("Product added successfully:", data);
         const newProduct: Product = {
           id: String(data.id),
           name: data.name,
@@ -49,6 +54,8 @@ export const useProductMutations = (setProducts: React.Dispatch<React.SetStateAc
           title: "Produkt hinzugefügt",
           description: `${productData.name} wurde erfolgreich hinzugefügt.`,
         });
+        
+        return newProduct;
       }
     } catch (error) {
       console.error("Error adding product:", error);
@@ -57,13 +64,14 @@ export const useProductMutations = (setProducts: React.Dispatch<React.SetStateAc
         description: "Produkt konnte nicht hinzugefügt werden.",
         variant: "destructive"
       });
+      throw error;
     }
   };
 
   const updateProduct = async (updatedProduct: Product) => {
     try {
+      console.log("Updating product:", updatedProduct);
       const dbProduct = {
-        id: String(updatedProduct.id),
         name: updatedProduct.name,
         price: updatedProduct.price,
         category: updatedProduct.category,
@@ -80,8 +88,12 @@ export const useProductMutations = (setProducts: React.Dispatch<React.SetStateAc
         .update(dbProduct)
         .eq('id', String(updatedProduct.id));
 
-      if (error) throw error;
+      if (error) {
+        console.error("Supabase error updating product:", error);
+        throw error;
+      }
 
+      console.log("Product updated successfully");
       setProducts(prev => prev.map(product => 
         String(product.id) === String(updatedProduct.id) ? updatedProduct : product
       ));
@@ -90,6 +102,8 @@ export const useProductMutations = (setProducts: React.Dispatch<React.SetStateAc
         title: "Produkt aktualisiert",
         description: `${updatedProduct.name} wurde erfolgreich aktualisiert.`,
       });
+      
+      return updatedProduct;
     } catch (error) {
       console.error("Error updating product:", error);
       toast({
@@ -97,18 +111,24 @@ export const useProductMutations = (setProducts: React.Dispatch<React.SetStateAc
         description: "Produkt konnte nicht aktualisiert werden.",
         variant: "destructive"
       });
+      throw error;
     }
   };
 
   const deleteProduct = async (id: string) => {
     try {
+      console.log("Deleting product with ID:", id);
       const { error } = await supabase
         .from('products')
         .delete()
         .eq('id', id);
 
-      if (error) throw error;
+      if (error) {
+        console.error("Supabase error deleting product:", error);
+        throw error;
+      }
 
+      console.log("Product deleted successfully");
       setProducts(prev => prev.filter(product => String(product.id) !== id));
       
       toast({
@@ -122,6 +142,7 @@ export const useProductMutations = (setProducts: React.Dispatch<React.SetStateAc
         description: "Produkt konnte nicht gelöscht werden.",
         variant: "destructive"
       });
+      throw error;
     }
   };
 

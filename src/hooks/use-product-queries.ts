@@ -20,10 +20,13 @@ export const useProductQueries = (
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Supabase error when fetching products:", error);
+        throw error;
+      }
       
       if (productsData && productsData.length > 0) {
-        console.log(`Fetched ${productsData.length} products`);
+        console.log(`Fetched ${productsData.length} products:`, productsData[0]);
         const mappedProducts: Product[] = productsData.map(product => ({
           id: String(product.id),
           name: product.name,
@@ -37,10 +40,12 @@ export const useProductQueries = (
           ageRestricted: product.agerestricted || false,
         }));
         setProducts(mappedProducts);
+        return mappedProducts;
       } else {
         // If no products returned from Supabase, try to seed
-        console.log("No products found in Supabase, seeding products...");
-        await seedProductsToSupabase();
+        console.log("No products found in Supabase, will suggest seeding products");
+        setProducts([]);
+        return [];
       }
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -49,6 +54,7 @@ export const useProductQueries = (
         description: "Fehler beim Laden der Produkte.",
         variant: "destructive"
       });
+      throw error;
     } finally {
       setIsLoading(false);
     }
@@ -85,17 +91,8 @@ export const useProductQueries = (
       const { seedProductsData } = await import('@/utils/seed-products');
       
       // Use seedProductsData to generate seed products
-      seedProductsData();
-      
-      // Get seed products from localStorage
-      const storedProducts = localStorage.getItem('adminProducts');
-      if (!storedProducts) {
-        console.error("No seed products available in localStorage");
-        return;
-      }
-      
-      const seedProducts = JSON.parse(storedProducts);
-      console.log(`Preparing to insert ${seedProducts.length} products to Supabase`);
+      const seedProducts = seedProductsData();
+      console.log(`Generated ${seedProducts.length} seed products`);
       
       // Prepare products for Supabase (format correctly)
       const supabaseProducts = seedProducts.map(product => ({
@@ -110,10 +107,14 @@ export const useProductQueries = (
         agerestricted: product.ageRestricted || false
       }));
       
+      console.log(`Preparing to insert ${supabaseProducts.length} products to Supabase`);
+      
       // Insert products in batches of 20 to avoid hitting limits
       const batchSize = 20;
       for (let i = 0; i < supabaseProducts.length; i += batchSize) {
         const batch = supabaseProducts.slice(i, i + batchSize);
+        console.log(`Inserting batch ${i / batchSize + 1} with ${batch.length} products`);
+        
         const { error } = await supabase
           .from('products')
           .insert(batch);
@@ -131,7 +132,7 @@ export const useProductQueries = (
       });
       
       // Fetch the newly inserted products
-      await fetchProducts();
+      return await fetchProducts();
       
     } catch (error) {
       console.error("Error seeding products to Supabase:", error);
@@ -140,6 +141,7 @@ export const useProductQueries = (
         description: "Fehler beim Hinzufügen der Produkte zur Datenbank.",
         variant: "destructive"
       });
+      throw error;
     }
   };
 

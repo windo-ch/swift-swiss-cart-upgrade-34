@@ -6,30 +6,36 @@ import AdminProductList from '../components/admin/AdminProductList';
 import { Product } from '../types/product';
 import { useToast } from '@/components/ui/use-toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { RefreshCw, Loader2, Database } from 'lucide-react';
+import { RefreshCw, Loader2, Database, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAdmin } from '@/hooks/use-admin';
 
 const Admin = () => {
   const [editingProduct, setEditingProduct] = useState<Product | undefined>();
-  const [isInitializing, setIsInitializing] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(true);
   const [isSeeding, setIsSeeding] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
   const { refreshProducts, seedProducts, isLoading } = useAdmin();
 
   // Initialize products when the Admin page loads
   useEffect(() => {
+    console.log("Admin page mounted, loading products");
     loadProducts();
   }, []);
 
   const loadProducts = async () => {
     console.log("Loading products");
     setIsInitializing(true);
+    setError(null);
     
     try {
+      console.log("Calling refreshProducts");
       await refreshProducts();
+      console.log("Products refreshed successfully");
     } catch (error) {
       console.error("Error initializing products:", error);
+      setError("Fehler beim Laden der Produkte. Bitte versuchen Sie es später erneut.");
       toast({
         title: "Fehler",
         description: "Fehler beim Laden der Produkte.",
@@ -43,6 +49,7 @@ const Admin = () => {
 
   const handleSeedProducts = async () => {
     setIsSeeding(true);
+    setError(null);
     try {
       await seedProducts();
       toast({
@@ -52,6 +59,7 @@ const Admin = () => {
       });
     } catch (error) {
       console.error("Error seeding products:", error);
+      setError("Fehler beim Laden der Produkte in die Datenbank.");
       toast({
         title: "Fehler",
         description: "Fehler beim Laden der Produkte.",
@@ -77,6 +85,39 @@ const Admin = () => {
   const handleCancel = () => {
     setEditingProduct(undefined);
   };
+
+  // If there's an error, show a helpful error message with retry option
+  if (error) {
+    return (
+      <AdminLayout>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6 my-6">
+          <div className="flex items-center gap-3 mb-4">
+            <AlertTriangle className="h-6 w-6 text-red-500" />
+            <h2 className="text-lg font-semibold text-red-700">Fehler beim Laden</h2>
+          </div>
+          <p className="text-red-600 mb-4">{error}</p>
+          <div className="flex gap-3">
+            <Button onClick={loadProducts} variant="outline">
+              Erneut versuchen
+            </Button>
+            <Button onClick={handleSeedProducts} disabled={isSeeding}>
+              {isSeeding ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Produkte werden geladen...
+                </>
+              ) : (
+                <>
+                  <Database className="mr-2 h-4 w-4" />
+                  Produktdaten neu einlesen
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+      </AdminLayout>
+    );
+  }
 
   return (
     <AdminLayout 
