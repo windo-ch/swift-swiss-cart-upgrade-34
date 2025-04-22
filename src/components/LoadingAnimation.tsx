@@ -8,7 +8,7 @@ const LoadingAnimation = () => {
         <img 
           src="/lovable-uploads/d49bb06e-42a9-4c26-80a9-2b588559e168.png" 
           alt="Brings Logo" 
-          className="h-20 animate-pulse"
+          className="h-40 animate-pulse"
         />
         <div className="mt-4 flex space-x-1">
           <div className="h-3 w-3 bg-brings-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
