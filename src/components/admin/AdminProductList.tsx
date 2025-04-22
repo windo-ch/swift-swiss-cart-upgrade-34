@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { useAdmin } from '@/hooks/use-admin';
 import { useToast } from '@/components/ui/use-toast';
 import SearchBar from './SearchBar';
@@ -13,7 +13,8 @@ interface AdminProductListProps {
   onEdit: (product: Product) => void;
 }
 
-const AdminProductList = ({ onEdit }: AdminProductListProps) => {
+// Use memo to prevent unnecessary re-renders
+const AdminProductList = memo(({ onEdit }: AdminProductListProps) => {
   const { products, deleteProduct, isLoading } = useAdmin();
   const [searchTerm, setSearchTerm] = useState('');
   const [showRestricted, setShowRestricted] = useState(false);
@@ -79,6 +80,10 @@ const AdminProductList = ({ onEdit }: AdminProductListProps) => {
       }
     });
 
+  if (isLoading) {
+    return <ProductLoadingState />;
+  }
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
       <SearchBar 
@@ -104,25 +109,23 @@ const AdminProductList = ({ onEdit }: AdminProductListProps) => {
         setSelectedCategory={setSelectedCategory}
       />
 
-      {isLoading ? (
-        <ProductLoadingState />
-      ) : (
-        <ProductTable
-          products={filteredProducts}
-          searchTerm={searchTerm}
-          onEdit={onEdit}
-          onDelete={handleDelete}
-          onResetSearch={() => setSearchTerm('')}
-        />
-      )}
+      <ProductTable
+        products={filteredProducts}
+        searchTerm={searchTerm}
+        onEdit={onEdit}
+        onDelete={handleDelete}
+        onResetSearch={() => setSearchTerm('')}
+      />
       
-      {!isLoading && products.length === 0 && (
+      {products.length === 0 && (
         <div className="text-center py-12">
           <p className="text-gray-500 text-lg">Keine Produkte gefunden. Fügen Sie ein Produkt hinzu.</p>
         </div>
       )}
     </div>
   );
-};
+});
+
+AdminProductList.displayName = 'AdminProductList';
 
 export default AdminProductList;

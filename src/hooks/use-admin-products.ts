@@ -14,35 +14,57 @@ export const useAdminProducts = () => {
 
   // Only fetch products once when the hook mounts
   useEffect(() => {
+    let isMounted = true;
+    
     if (!isInitialized) {
       console.log("Initial products fetch in useAdminProducts");
+      setIsLoading(true);
+      
       fetchProducts()
         .then(() => {
-          setIsInitialized(true);
+          if (isMounted) {
+            setIsInitialized(true);
+            setIsLoading(false);
+          }
         })
         .catch(error => {
           console.error("Error in initial products fetch:", error);
-          setIsInitialized(true); // Still mark as initialized to prevent infinite retries
+          if (isMounted) {
+            setIsInitialized(true); // Still mark as initialized to prevent infinite retries
+            setIsLoading(false);
+          }
         });
     }
+    
+    return () => {
+      isMounted = false;
+    };
   }, [fetchProducts, isInitialized]);
 
   const refreshProducts = useCallback(async () => {
     console.log("refreshProducts called in useAdminProducts");
+    setIsLoading(true);
     try {
-      return await fetchProducts();
+      const result = await fetchProducts();
+      setIsLoading(false);
+      return result;
     } catch (error) {
       console.error("Error in refreshProducts:", error);
+      setIsLoading(false);
       throw error;
     }
   }, [fetchProducts]);
 
   const seedProducts = useCallback(async () => {
     console.log("seedProducts called in useAdminProducts");
+    setIsLoading(true);
     try {
-      return await seedProductsToSupabase();
+      const result = await seedProductsToSupabase();
+      setIsLoading(false);
+      return result;
     } catch (error) {
       console.error("Error in seedProducts:", error);
+      setIsLoading(false);
       throw error;
     }
   }, [seedProductsToSupabase]);

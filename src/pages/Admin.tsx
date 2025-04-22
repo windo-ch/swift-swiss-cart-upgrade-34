@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import AdminLayout from '../components/admin/AdminLayout';
 import AdminProductForm from '../components/admin/AdminProductForm';
 import AdminProductList from '../components/admin/AdminProductList';
@@ -112,58 +112,64 @@ const Admin = () => {
     );
   }
 
+  // Show a full-page loading state
+  if (!isInitialized || isLoading) {
+    return (
+      <AdminLayout onRefresh={handleRefresh} isRefreshing={isLoading}>
+        <div className="flex justify-center items-center p-8 min-h-[60vh]">
+          <div className="text-center">
+            <RefreshCw className="h-12 w-12 animate-spin text-brings-primary mx-auto mb-6" />
+            <p className="text-lg font-medium">Produkte werden geladen...</p>
+            <p className="text-gray-500 mt-2">Bitte haben Sie einen Moment Geduld.</p>
+          </div>
+        </div>
+      </AdminLayout>
+    );
+  }
+
   return (
     <AdminLayout 
       onRefresh={handleRefresh}
       isRefreshing={isLoading}
     >
-      {!isInitialized || isLoading ? (
-        <div className="flex justify-center items-center p-8">
-          <div className="text-center">
-            <RefreshCw className="h-8 w-8 animate-spin text-brings-primary mx-auto mb-4" />
-            <p>Produkte werden geladen...</p>
-          </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-10">
+        <div className="lg:col-span-1 lg:sticky lg:top-24 self-start max-h-[calc(100vh-200px)] overflow-auto">
+          <ScrollArea className="pr-4">
+            <AdminProductForm 
+              initialData={editingProduct} 
+              onCancel={handleCancel}
+            />
+            
+            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+              <h3 className="text-lg font-medium mb-2">Administration</h3>
+              <p className="text-sm text-gray-600 mb-3">
+                Wenn keine Produkt vorhanden sind, kannst du diese hier neu einlesen.
+              </p>
+              <Button 
+                onClick={handleSeedProducts} 
+                disabled={isSeeding}
+                className="w-full"
+              >
+                {isSeeding ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Produkte werden geladen...
+                  </>
+                ) : (
+                  <>
+                    <Database className="mr-2 h-4 w-4" />
+                    Produktdaten neu einlesen
+                  </>
+                )}
+              </Button>
+            </div>
+          </ScrollArea>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-10">
-          <div className="lg:col-span-1 lg:sticky lg:top-24 self-start max-h-[calc(100vh-200px)] overflow-auto">
-            <ScrollArea className="pr-4">
-              <AdminProductForm 
-                initialData={editingProduct} 
-                onCancel={handleCancel}
-              />
-              
-              <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-                <h3 className="text-lg font-medium mb-2">Administration</h3>
-                <p className="text-sm text-gray-600 mb-3">
-                  Wenn keine Produkt vorhanden sind, kannst du diese hier neu einlesen.
-                </p>
-                <Button 
-                  onClick={handleSeedProducts} 
-                  disabled={isSeeding}
-                  className="w-full"
-                >
-                  {isSeeding ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Produkte werden geladen...
-                    </>
-                  ) : (
-                    <>
-                      <Database className="mr-2 h-4 w-4" />
-                      Produktdaten neu einlesen
-                    </>
-                  )}
-                </Button>
-              </div>
-            </ScrollArea>
-          </div>
-          
-          <div className="lg:col-span-2">
-            <AdminProductList onEdit={handleEdit} />
-          </div>
+        
+        <div className="lg:col-span-2">
+          <AdminProductList onEdit={handleEdit} />
         </div>
-      )}
+      </div>
     </AdminLayout>
   );
 };

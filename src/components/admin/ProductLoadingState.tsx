@@ -4,9 +4,12 @@ import { Loader2 } from 'lucide-react';
 
 const ProductLoadingState = () => {
   return (
-    <div className="text-center py-12">
-      <Loader2 className="h-8 w-8 animate-spin text-brings-primary mx-auto mb-4" />
-      <p className="text-gray-500 text-lg">Produkte werden geladen...</p>
+    <div className="bg-white p-6 rounded-lg shadow-md">
+      <div className="text-center py-12">
+        <Loader2 className="h-12 w-12 animate-spin text-brings-primary mx-auto mb-6" />
+        <p className="text-gray-500 text-lg font-medium">Produkte werden geladen...</p>
+        <p className="text-gray-400 mt-2">Bitte haben Sie einen Moment Geduld.</p>
+      </div>
     </div>
   );
 };

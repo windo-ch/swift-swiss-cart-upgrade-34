@@ -12,7 +12,6 @@ export const useProductQueries = (
 
   const fetchProducts = useCallback(async () => {
     console.log("Fetching products from Supabase");
-    setIsLoading(true);
     
     try {
       const { data: productsData, error } = await supabase
@@ -54,10 +53,8 @@ export const useProductQueries = (
         variant: "destructive"
       });
       throw error;
-    } finally {
-      setIsLoading(false);
     }
-  }, [setProducts, setIsLoading, toast]);
+  }, [setProducts, toast]);
 
   const updateStock = async (id: string, newStock: number) => {
     try {
