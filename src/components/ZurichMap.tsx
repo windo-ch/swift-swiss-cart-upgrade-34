@@ -1,79 +1,243 @@
 
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { MapPin } from 'lucide-react';
+import { toast } from 'sonner';
 
-// Extracted and simplified SVG paths for Zürich Kreise districts from the provided GeoJSON.
-// In a production-ready app, you'd fetch and parse the GeoJSON at runtime or build time.
-// For now, use static SVG paths for each Kreis:
-const kreisData = [
-  { id: 1, name: "Kreis 1", d: "M343.9,270L346,271L349,269L349,266L348,265L347,264L345,263L342,262L341,263L340,265L340,266L341,267L343,269Z" },
-  { id: 2, name: "Kreis 2", d: "M350,295L354,297L357,298L360,299L362,297L364,296L366,294L366,292L365,291L363,290L360,290L357,292L355,294Z" },
-  { id: 3, name: "Kreis 3", d: "M337,337L340,336L341,333L340,332L338,331L336,332L335,334L335,336Z" },
-  { id: 4, name: "Kreis 4", d: "M357,320L360,319L362,318L363,316L361,315L358,315L356,316L355,318Z" },
-  { id: 5, name: "Kreis 5", d: "M330,299L332,301L334,301L335,299L334,297L332,296L331,297Z" },
-  { id: 6, name: "Kreis 6", d: "M377,265L380,264L382,263L384,262L384,260L383,259L381,258L379,259L378,261L377,263Z" },
-  { id: 7, name: "Kreis 7", d: "M395,274L398,274L401,272L401,271L400,270L398,270L396,271L395,273Z" },
-  { id: 8, name: "Kreis 8", d: "M406,307L409,306L410,304L409,303L407,303L405,304L404,306Z" },
-  { id: 9, name: "Kreis 9", d: "M295,327L298,329L300,329L300,326L298,324L296,325Z" },
-  { id: 10, name: "Kreis 10", d: "M305,271L307,273L308,272L308,270L306,269L304,269Z" },
-  { id: 11, name: "Kreis 11", d: "M326,220L329,219L330,217L329,216L327,216L326,218Z" },
-  { id: 12, name: "Kreis 12", d: "M388,235L390,236L391,234L390,233L388,233L387,234Z" }
-];
+// Define delivery data for each district
+const deliveryData = {
+  'kreis1': { time: '30-40', fee: 2.90 },
+  'kreis2': { time: '35-45', fee: 3.50 },
+  'kreis3': { time: '30-40', fee: 2.90 },
+  'kreis4': { time: '25-35', fee: 2.50 },
+  'kreis5': { time: '25-35', fee: 2.50 },
+  'kreis6': { time: '30-40', fee: 2.90 },
+  'kreis7': { time: '35-45', fee: 3.50 },
+  'kreis8': { time: '40-50', fee: 3.90 },
+  'kreis9': { time: '40-50', fee: 3.90 },
+  'kreis10': { time: '35-45', fee: 3.50 },
+  'kreis11': { time: '45-60', fee: 4.50 },
+  'kreis12': { time: '40-55', fee: 4.20 },
+};
 
-// Centroids for district labeling (approximated, should be improved using the GeoJSON data for production use)
-const kreisCentroids = [
-  { id: 1, x: 344, y: 267 },
-  { id: 2, x: 357, y: 295 },
-  { id: 3, x: 338, y: 334 },
-  { id: 4, x: 359, y: 317 },
-  { id: 5, x: 332, y: 298 },
-  { id: 6, x: 380, y: 263 },
-  { id: 7, x: 398, y: 272 },
-  { id: 8, x: 407, y: 305 },
-  { id: 9, x: 298, y: 327 },
-  { id: 10, x: 306, y: 271 },
-  { id: 11, x: 328, y: 218 },
-  { id: 12, x: 389, y: 234 }
-];
+interface ZurichMapProps {
+  onSelectDistrict?: (district: string) => void;
+  interactive?: boolean;
+}
 
-const ZurichMap = () => {
+const ZurichMap: React.FC<ZurichMapProps> = ({ 
+  onSelectDistrict, 
+  interactive = true 
+}) => {
+  const [hoveredDistrict, setHoveredDistrict] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  const handleDistrictClick = (district: string) => {
+    if (interactive) {
+      if (onSelectDistrict) {
+        onSelectDistrict(district);
+      } else {
+        toast(`${district.replace('kreis', 'Kreis ')} ausgewählt`, {
+          description: `Lieferung in ${deliveryData[district]?.time || '30-60'} Minuten`,
+        });
+        navigate(`/order?district=${district}`);
+      }
+    }
+  };
+
   return (
-    <div className="relative w-full max-w-2xl mx-auto select-none">
+    <div className="max-w-5xl mx-auto relative select-none">
       <svg
-        viewBox="250 180 230 170"
-        className="w-full h-auto"
+        width="100%"
+        height="100%"
+        viewBox="0 0 800 800"
         xmlns="http://www.w3.org/2000/svg"
-        aria-label="Stadtkreise Zürich"
+        className="stroke-brings-dark"
       >
-        {/* Kreise shapes from GeoJSON */}
-        {kreisData.map((kreis) => (
-          <g key={kreis.id}>
-            <path
-              d={kreis.d}
-              fill="#fff"
-              stroke="#1D557A"
-              strokeWidth={3}
-              className="transition-colors duration-200 hover:fill-brings-primary/10 cursor-pointer"
-            />
-          </g>
-        ))}
-        {/* Kreise labels */}
-        {kreisCentroids.map((c) => (
-          <text
-            key={c.id}
-            x={c.x}
-            y={c.y}
-            textAnchor="middle"
-            alignmentBaseline="central"
-            fontSize="30"
-            fontWeight="bold"
-            fill="#1D557A"
-            pointerEvents="none"
-            style={{ userSelect: "none" }}
-          >
-            {c.id}
-          </text>
-        ))}
+        {/* Kreis 1 - City Center */}
+        <path
+          d="M424.7 391.3L429.6 390.9L435.7 392.9L440.5 397.3L443.7 403L445.1 409.5L444.9 416.2L442.9 422.3L439.8 427.2L435.3 430.6L429.9 432.2L424.2 432.1L418.8 430.2L414.2 426.8L410.7 422.1L408.7 416.5L408.3 410.4L409.6 404.5L412.2 399.1L416.1 394.7L420.6 392"
+          id="kreis1"
+          onMouseEnter={() => setHoveredDistrict('kreis1')}
+          onMouseLeave={() => setHoveredDistrict(null)}
+          onClick={() => handleDistrictClick('kreis1')}
+          fill={hoveredDistrict === 'kreis1' ? '#1D557A' : '#1D557A20'}
+          stroke="#1D557A"
+          strokeWidth="3"
+          className={`cursor-pointer transition-colors duration-200 ${!interactive && 'pointer-events-none'}`}
+        />
+        <text x="426" y="412" textAnchor="middle" fill="#fff" fontSize="16" fontWeight="bold" pointerEvents="none">1</text>
+        
+        {/* Kreis 2 */}
+        <path
+          d="M407.1 455.1L413.8 448.8L421.5 444.5L430.1 442.3L438.9 442.5L447.3 445L454.7 449.6L460.2 455.8L463.9 463.2L465.2 471.6L464 479.8L460.5 487.5L454.8 493.8L447.5 498.1L439.3 500.3L430.5 500.2L422.2 497.8L414.8 493.3L409.2 487.1L405.6 479.8L404.2 471.5L405.4 463.2L407.1 455.1Z"
+          id="kreis2"
+          onMouseEnter={() => setHoveredDistrict('kreis2')}
+          onMouseLeave={() => setHoveredDistrict(null)}
+          onClick={() => handleDistrictClick('kreis2')}
+          fill={hoveredDistrict === 'kreis2' ? '#1D557A' : '#1D557A20'}
+          stroke="#1D557A"
+          strokeWidth="3"
+          className={`cursor-pointer transition-colors duration-200 ${!interactive && 'pointer-events-none'}`}
+        />
+        <text x="435" y="470" textAnchor="middle" fill="#fff" fontSize="16" fontWeight="bold" pointerEvents="none">2</text>
+        
+        {/* Kreis 3 */}
+        <path
+          d="M363.6 414.2L371.3 409.7L379.9 407.4L388.7 407.6L397.1 410.2L404.5 414.9L410 421.2L413.6 428.7L414.9 437.1L413.6 445.4L410.1 453.1L404.4 459.3L396.7 463.5L388.5 465.7L379.8 465.6L371.4 463.1L364 458.4L358.5 452.1L354.9 444.6L353.6 436.2L354.9 427.9L358.4 420.2L363.6 414.2Z"
+          id="kreis3"
+          onMouseEnter={() => setHoveredDistrict('kreis3')}
+          onMouseLeave={() => setHoveredDistrict(null)}
+          onClick={() => handleDistrictClick('kreis3')}
+          fill={hoveredDistrict === 'kreis3' ? '#1D557A' : '#1D557A20'}
+          stroke="#1D557A"
+          strokeWidth="3"
+          className={`cursor-pointer transition-colors duration-200 ${!interactive && 'pointer-events-none'}`}
+        />
+        <text x="384" y="437" textAnchor="middle" fill="#fff" fontSize="16" fontWeight="bold" pointerEvents="none">3</text>
+        
+        {/* Kreis 4 */}
+        <path
+          d="M396.7 378.6L404.4 374.1L413 371.9L421.8 372L430.2 374.6L437.6 379.3L443.1 385.5L446.7 393L448 401.4L446.7 409.7L443.2 417.4L437.5 423.6L429.8 427.9L421.6 430L412.9 429.9L404.5 427.4L397.1 422.7L391.6 416.5L388 409L386.7 400.6L388 392.3L391.5 384.6L396.7 378.6Z"
+          id="kreis4"
+          onMouseEnter={() => setHoveredDistrict('kreis4')}
+          onMouseLeave={() => setHoveredDistrict(null)}
+          onClick={() => handleDistrictClick('kreis4')}
+          fill={hoveredDistrict === 'kreis4' ? '#1D557A' : '#1D557A20'}
+          stroke="#1D557A"
+          strokeWidth="3"
+          className={`cursor-pointer transition-colors duration-200 ${!interactive && 'pointer-events-none'}`}
+        />
+        <text x="417" y="401" textAnchor="middle" fill="#fff" fontSize="16" fontWeight="bold" pointerEvents="none">4</text>
+        
+        {/* Kreis 5 */}
+        <path
+          d="M354.5 365.4L362.2 360.9L370.8 358.6L379.6 358.8L388 361.4L395.4 366.1L400.9 372.3L404.5 379.8L405.8 388.2L404.5 396.5L401 404.2L395.3 410.4L387.6 414.7L379.4 416.8L370.7 416.7L362.3 414.2L354.9 409.5L349.4 403.3L345.8 395.8L344.5 387.4L345.8 379.1L349.3 371.4L354.5 365.4Z"
+          id="kreis5"
+          onMouseEnter={() => setHoveredDistrict('kreis5')}
+          onMouseLeave={() => setHoveredDistrict(null)}
+          onClick={() => handleDistrictClick('kreis5')}
+          fill={hoveredDistrict === 'kreis5' ? '#1D557A' : '#1D557A20'}
+          stroke="#1D557A"
+          strokeWidth="3"
+          className={`cursor-pointer transition-colors duration-200 ${!interactive && 'pointer-events-none'}`}
+        />
+        <text x="375" y="387" textAnchor="middle" fill="#fff" fontSize="16" fontWeight="bold" pointerEvents="none">5</text>
+        
+        {/* Kreis 6 */}
+        <path
+          d="M434.3 342.2L442 337.7L450.6 335.4L459.4 335.6L467.8 338.2L475.2 342.9L480.7 349.1L484.3 356.6L485.6 365L484.3 373.3L480.8 381L475.1 387.2L467.4 391.5L459.2 393.6L450.5 393.5L442.1 391L434.7 386.3L429.2 380.1L425.6 372.6L424.3 364.2L425.6 355.9L429.1 348.2L434.3 342.2Z"
+          id="kreis6"
+          onMouseEnter={() => setHoveredDistrict('kreis6')}
+          onMouseLeave={() => setHoveredDistrict(null)}
+          onClick={() => handleDistrictClick('kreis6')}
+          fill={hoveredDistrict === 'kreis6' ? '#1D557A' : '#1D557A20'}
+          stroke="#1D557A"
+          strokeWidth="3"
+          className={`cursor-pointer transition-colors duration-200 ${!interactive && 'pointer-events-none'}`}
+        />
+        <text x="455" y="364" textAnchor="middle" fill="#fff" fontSize="16" fontWeight="bold" pointerEvents="none">6</text>
+        
+        {/* Kreis 7 */}
+        <path
+          d="M481.7 357.6L489.4 353.1L498 350.8L506.8 351L515.2 353.6L522.6 358.3L528.1 364.5L531.7 372L533 380.4L531.7 388.7L528.2 396.4L522.5 402.6L514.8 406.9L506.6 409L497.9 408.9L489.5 406.4L482.1 401.7L476.6 395.5L473 388L471.7 379.6L473 371.3L476.5 363.6L481.7 357.6Z"
+          id="kreis7"
+          onMouseEnter={() => setHoveredDistrict('kreis7')}
+          onMouseLeave={() => setHoveredDistrict(null)}
+          onClick={() => handleDistrictClick('kreis7')}
+          fill={hoveredDistrict === 'kreis7' ? '#1D557A' : '#1D557A20'}
+          stroke="#1D557A"
+          strokeWidth="3"
+          className={`cursor-pointer transition-colors duration-200 ${!interactive && 'pointer-events-none'}`}
+        />
+        <text x="502" y="380" textAnchor="middle" fill="#fff" fontSize="16" fontWeight="bold" pointerEvents="none">7</text>
+        
+        {/* Kreis 8 */}
+        <path
+          d="M503.5 418.3L511.2 413.8L519.8 411.5L528.6 411.7L537 414.3L544.4 419L549.9 425.2L553.5 432.7L554.8 441.1L553.5 449.4L550 457.1L544.3 463.3L536.6 467.6L528.4 469.7L519.7 469.6L511.3 467.1L503.9 462.4L498.4 456.2L494.8 448.7L493.5 440.3L494.8 432L498.3 424.3L503.5 418.3Z"
+          id="kreis8"
+          onMouseEnter={() => setHoveredDistrict('kreis8')}
+          onMouseLeave={() => setHoveredDistrict(null)}
+          onClick={() => handleDistrictClick('kreis8')}
+          fill={hoveredDistrict === 'kreis8' ? '#1D557A' : '#1D557A20'}
+          stroke="#1D557A"
+          strokeWidth="3"
+          className={`cursor-pointer transition-colors duration-200 ${!interactive && 'pointer-events-none'}`}
+        />
+        <text x="524" y="440" textAnchor="middle" fill="#fff" fontSize="16" fontWeight="bold" pointerEvents="none">8</text>
+        
+        {/* Kreis 9 */}
+        <path
+          d="M303.5 412.9L311.2 408.4L319.8 406.1L328.6 406.3L337 408.9L344.4 413.6L349.9 419.8L353.5 427.3L354.8 435.7L353.5 444L350 451.7L344.3 457.9L336.6 462.2L328.4 464.3L319.7 464.2L311.3 461.7L303.9 457L298.4 450.8L294.8 443.3L293.5 434.9L294.8 426.6L298.3 418.9L303.5 412.9Z"
+          id="kreis9"
+          onMouseEnter={() => setHoveredDistrict('kreis9')}
+          onMouseLeave={() => setHoveredDistrict(null)}
+          onClick={() => handleDistrictClick('kreis9')}
+          fill={hoveredDistrict === 'kreis9' ? '#1D557A' : '#1D557A20'}
+          stroke="#1D557A"
+          strokeWidth="3"
+          className={`cursor-pointer transition-colors duration-200 ${!interactive && 'pointer-events-none'}`}
+        />
+        <text x="324" y="435" textAnchor="middle" fill="#fff" fontSize="16" fontWeight="bold" pointerEvents="none">9</text>
+        
+        {/* Kreis 10 */}
+        <path
+          d="M365.5 310.7L373.2 306.2L381.8 303.9L390.6 304.1L399 306.7L406.4 311.4L411.9 317.6L415.5 325.1L416.8 333.5L415.5 341.8L412 349.5L406.3 355.7L398.6 360L390.4 362.1L381.7 362L373.3 359.5L365.9 354.8L360.4 348.6L356.8 341.1L355.5 332.7L356.8 324.4L360.3 316.7L365.5 310.7Z"
+          id="kreis10"
+          onMouseEnter={() => setHoveredDistrict('kreis10')}
+          onMouseLeave={() => setHoveredDistrict(null)}
+          onClick={() => handleDistrictClick('kreis10')}
+          fill={hoveredDistrict === 'kreis10' ? '#1D557A' : '#1D557A20'}
+          stroke="#1D557A"
+          strokeWidth="3"
+          className={`cursor-pointer transition-colors duration-200 ${!interactive && 'pointer-events-none'}`}
+        />
+        <text x="386" y="333" textAnchor="middle" fill="#fff" fontSize="16" fontWeight="bold" pointerEvents="none">10</text>
+        
+        {/* Kreis 11 */}
+        <path
+          d="M341.5 257.6L349.2 253.1L357.8 250.8L366.6 251L375 253.6L382.4 258.3L387.9 264.5L391.5 272L392.8 280.4L391.5 288.7L388 296.4L382.3 302.6L374.6 306.9L366.4 309L357.7 308.9L349.3 306.4L341.9 301.7L336.4 295.5L332.8 288L331.5 279.6L332.8 271.3L336.3 263.6L341.5 257.6Z"
+          id="kreis11"
+          onMouseEnter={() => setHoveredDistrict('kreis11')}
+          onMouseLeave={() => setHoveredDistrict(null)}
+          onClick={() => handleDistrictClick('kreis11')}
+          fill={hoveredDistrict === 'kreis11' ? '#1D557A' : '#1D557A20'}
+          stroke="#1D557A"
+          strokeWidth="3"
+          className={`cursor-pointer transition-colors duration-200 ${!interactive && 'pointer-events-none'}`}
+        />
+        <text x="362" y="280" textAnchor="middle" fill="#fff" fontSize="16" fontWeight="bold" pointerEvents="none">11</text>
+        
+        {/* Kreis 12 */}
+        <path
+          d="M493.3 288.9L501 284.4L509.6 282.1L518.4 282.3L526.8 284.9L534.2 289.6L539.7 295.8L543.3 303.3L544.6 311.7L543.3 320L539.8 327.7L534.1 333.9L526.4 338.2L518.2 340.3L509.5 340.2L501.1 337.7L493.7 333L488.2 326.8L484.6 319.3L483.3 310.9L484.6 302.6L488.1 294.9L493.3 288.9Z"
+          id="kreis12"
+          onMouseEnter={() => setHoveredDistrict('kreis12')}
+          onMouseLeave={() => setHoveredDistrict(null)}
+          onClick={() => handleDistrictClick('kreis12')}
+          fill={hoveredDistrict === 'kreis12' ? '#1D557A' : '#1D557A20'}
+          stroke="#1D557A"
+          strokeWidth="3"
+          className={`cursor-pointer transition-colors duration-200 ${!interactive && 'pointer-events-none'}`}
+        />
+        <text x="514" y="311" textAnchor="middle" fill="#fff" fontSize="16" fontWeight="bold" pointerEvents="none">12</text>
       </svg>
+      
+      {/* Info box that appears when hovering over districts */}
+      {hoveredDistrict && (
+        <div className="absolute bottom-0 right-0 bg-white p-4 shadow-md rounded-md border border-brings-primary/20">
+          <h3 className="font-bold text-brings-dark">{hoveredDistrict.replace('kreis', 'Kreis ')}</h3>
+          <div className="text-sm mt-1">
+            <div className="flex items-center text-brings-dark">
+              <MapPin size={16} className="mr-1 text-brings-primary" />
+              Lieferung in {deliveryData[hoveredDistrict]?.time || '30-60'} Min.
+            </div>
+            <div className="mt-1">
+              Liefergebühr: CHF {deliveryData[hoveredDistrict]?.fee.toFixed(2) || '3.50'}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

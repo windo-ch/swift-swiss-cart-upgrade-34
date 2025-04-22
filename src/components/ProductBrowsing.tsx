@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Truck, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import CategorySection from './CategorySection';
 import FeaturedProducts from './FeaturedProducts';
@@ -33,11 +33,31 @@ const formatDistrict = (district: string): string => {
   return districtMap[district] || district;
 };
 
+// Delivery data per district
+const deliveryData = {
+  'kreis1': { time: '30-40', fee: 2.90 },
+  'kreis2': { time: '35-45', fee: 3.50 },
+  'kreis3': { time: '30-40', fee: 2.90 },
+  'kreis4': { time: '25-35', fee: 2.50 },
+  'kreis5': { time: '25-35', fee: 2.50 },
+  'kreis6': { time: '30-40', fee: 2.90 },
+  'kreis7': { time: '35-45', fee: 3.50 },
+  'kreis8': { time: '40-50', fee: 3.90 },
+  'kreis9': { time: '40-50', fee: 3.90 },
+  'kreis10': { time: '35-45', fee: 3.50 },
+  'kreis11': { time: '45-60', fee: 4.50 },
+  'kreis12': { time: '40-55', fee: 4.20 },
+};
+
 const ProductBrowsing: React.FC<ProductBrowsingProps> = ({ city, district, onBack }) => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const { totalItems } = useCart();
   const formattedDistrict = formatDistrict(district);
   const formattedCity = city.charAt(0).toUpperCase() + city.slice(1);
+  
+  // Get delivery info for the selected district
+  const deliveryTime = deliveryData[district]?.time || '30-60';
+  const deliveryFee = deliveryData[district]?.fee || 3.50;
   
   return (
     <div>
@@ -64,6 +84,17 @@ const ProductBrowsing: React.FC<ProductBrowsingProps> = ({ city, district, onBac
           <div>
             <h3 className="text-2xl font-bold mb-1">Lieferig nach {formattedDistrict}</h3>
             <p className="text-gray-300">Mir bringed dini Produkt nach {formattedCity}, {formattedDistrict}</p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 mt-4">
+              <div className="flex items-center text-brings-secondary">
+                <Clock size={20} className="mr-2" />
+                <span>{deliveryTime} Minute</span>
+              </div>
+              <div className="flex items-center text-brings-secondary">
+                <Truck size={20} className="mr-2" />
+                <span>Liefergebühr CHF {deliveryFee.toFixed(2)}</span>
+              </div>
+            </div>
           </div>
           <div className="mt-4 md:mt-0">
             <Button variant="outline" size="sm" onClick={onBack} className="border-brings-secondary text-brings-secondary hover:bg-brings-secondary/10">
