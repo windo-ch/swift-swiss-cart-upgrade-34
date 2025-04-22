@@ -126,12 +126,43 @@ const Admin = () => {
       </AdminLayout>
     );
   }
+  
+  // Empty state when there are no products
+  const showEmptyState = products.length === 0;
 
   return (
     <AdminLayout 
       onRefresh={handleRefresh}
       isRefreshing={isLoading}
     >
+      {showEmptyState && (
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 my-6 text-center">
+          <Database className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+          <h2 className="text-lg font-semibold mb-2">Keine Produkte gefunden</h2>
+          <p className="text-gray-600 mb-6">
+            Es wurden keine Produkte in der Datenbank gefunden. Klicken Sie auf den Button unten, um Beispielprodukte zu laden.
+          </p>
+          <Button 
+            onClick={handleSeedProducts} 
+            disabled={isSeeding} 
+            size="lg"
+            className="bg-brings-primary hover:bg-brings-primary/90"
+          >
+            {isSeeding ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Produkte werden geladen...
+              </>
+            ) : (
+              <>
+                <Database className="mr-2 h-4 w-4" />
+                Produktdaten neu einlesen
+              </>
+            )}
+          </Button>
+        </div>
+      )}
+      
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-10">
         <div className="lg:col-span-1 lg:sticky lg:top-24 self-start max-h-[calc(100vh-200px)] overflow-auto">
           <ScrollArea className="pr-4">
@@ -166,9 +197,11 @@ const Admin = () => {
           </ScrollArea>
         </div>
         
-        <div className="lg:col-span-2">
-          <AdminProductList onEdit={handleEdit} />
-        </div>
+        {!showEmptyState && (
+          <div className="lg:col-span-2">
+            <AdminProductList onEdit={handleEdit} />
+          </div>
+        )}
       </div>
     </AdminLayout>
   );

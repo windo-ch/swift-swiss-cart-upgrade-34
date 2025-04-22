@@ -24,8 +24,10 @@ export const useProductQueries = (
         throw error;
       }
       
+      console.log("Products data response:", productsData);
+      
       if (productsData && productsData.length > 0) {
-        console.log(`Fetched ${productsData.length} products:`, productsData[0]);
+        console.log(`Fetched ${productsData.length} products`);
         const mappedProducts: Product[] = productsData.map(product => ({
           id: String(product.id),
           name: product.name,
@@ -41,17 +43,25 @@ export const useProductQueries = (
         setProducts(mappedProducts);
         return mappedProducts;
       } else {
-        console.log("No products found in Supabase, will suggest seeding products");
+        console.log("No products found in Supabase, showing seed products option");
         setProducts([]);
+        
+        // Inform the user that no products were found
+        toast({
+          title: "Keine Produkte gefunden",
+          description: "Klicken Sie auf 'Produktdaten neu einlesen' um Beispielprodukte zu laden.",
+        });
+        
         return [];
       }
     } catch (error) {
       console.error("Error fetching products:", error);
       toast({
         title: "Fehler",
-        description: "Fehler beim Laden der Produkte.",
+        description: "Fehler beim Laden der Produkte. Bitte versuchen Sie es später erneut.",
         variant: "destructive"
       });
+      setProducts([]);
       throw error;
     }
   }, [setProducts, toast]);
@@ -63,11 +73,16 @@ export const useProductQueries = (
         .update({ stock: newStock })
         .eq('id', id);
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error updating stock:", error);
+        throw error;
+      }
 
       setProducts(prev => prev.map(product =>
         String(product.id) === id ? { ...product, stock: newStock } : product
       ));
+      
+      return true;
     } catch (error) {
       console.error("Error updating stock:", error);
       toast({
@@ -75,6 +90,7 @@ export const useProductQueries = (
         description: "Lagerbestand konnte nicht aktualisiert werden.",
         variant: "destructive"
       });
+      return false;
     }
   };
 
