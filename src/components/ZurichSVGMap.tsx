@@ -22,13 +22,13 @@ const ZurichSVGMap: React.FC<ZurichSVGMapProps> = ({
   interactive = true,
 }) => {
   return (
-    <div className="max-w-5xl mx-auto relative select-none">
+    <div className="max-w-6xl mx-auto relative select-none">
       <svg
         width="100%"
         height="100%"
         viewBox="0 0 800 800"
         xmlns="http://www.w3.org/2000/svg"
-        className="stroke-brings-dark"
+        className="stroke-white"
       >
         {/* Map boundaries */}
         {Object.entries(districtPaths).map(([district, path]) => (
@@ -39,9 +39,9 @@ const ZurichSVGMap: React.FC<ZurichSVGMapProps> = ({
             onMouseEnter={() => onDistrictHover(district)}
             onMouseLeave={() => onDistrictHover(null)}
             onClick={() => onDistrictClick(district)}
-            fill={hoveredDistrict === district ? "#1D557A" : "#1D557A20"}
-            stroke="#1D557A"
-            strokeWidth="2"
+            fill={hoveredDistrict === district ? "#526D82" : "#607D95"}
+            stroke="#FFFFFF"
+            strokeWidth="3"
             className={`cursor-pointer transition-colors duration-200 ${!interactive && "pointer-events-none"}`}
           />
         ))}
@@ -55,8 +55,9 @@ const ZurichSVGMap: React.FC<ZurichSVGMapProps> = ({
               x={center.x}
               y={center.y}
               textAnchor="middle"
-              fill="#fff"
-              fontSize="16"
+              dominantBaseline="middle"
+              fill="#FFFFFF"
+              fontSize="26"
               fontWeight="bold"
               pointerEvents="none"
             >
@@ -68,7 +69,7 @@ const ZurichSVGMap: React.FC<ZurichSVGMapProps> = ({
 
       {/* Info box that appears when hovering over districts */}
       {hoveredDistrict && (
-        <div className="absolute bottom-0 right-0 bg-white p-4 shadow-md rounded-md border border-brings-primary/20">
+        <div className="absolute bottom-4 right-4 bg-white p-4 shadow-md rounded-md border border-brings-primary/20">
           <h3 className="font-bold text-brings-dark">{districtNames[hoveredDistrict]}</h3>
           <div className="text-sm mt-1">
             <div className="flex items-center text-brings-dark">

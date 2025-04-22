@@ -40,14 +40,16 @@ const ZurichMap: React.FC<ZurichMapProps> = ({
   }
 
   return (
-    <ZurichSVGMap
-      districtPaths={districtPaths}
-      districtCenters={districtCenters}
-      hoveredDistrict={hoveredDistrict}
-      onDistrictHover={setHoveredDistrict}
-      onDistrictClick={handleDistrictClick}
-      interactive={interactive}
-    />
+    <div className="w-full h-full">
+      <ZurichSVGMap
+        districtPaths={districtPaths}
+        districtCenters={districtCenters}
+        hoveredDistrict={hoveredDistrict}
+        onDistrictHover={setHoveredDistrict}
+        onDistrictClick={handleDistrictClick}
+        interactive={interactive}
+      />
+    </div>
   );
 };
 
