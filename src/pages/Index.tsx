@@ -8,7 +8,7 @@ import FeaturedProducts from '../components/FeaturedProducts';
 import TestimonialSection from '../components/TestimonialSection';
 import NewsletterSection from '../components/NewsletterSection';
 import Footer from '../components/Footer';
-import PromoBanner from '../components/PromoBanner';
+// import PromoBanner from '../components/PromoBanner'; // REMOVED
 import ZurichMap from '../components/ZurichMap';
 import { Button } from '@/components/ui/button';
 import { ShoppingBag } from 'lucide-react';
@@ -16,7 +16,7 @@ import { ShoppingBag } from 'lucide-react';
 const Index = () => {
   return (
     <div className="min-h-screen flex flex-col">
-      <PromoBanner />
+      {/* <PromoBanner /> REMOVED */}
       <Navbar />
       <main>
         <HeroBanner />

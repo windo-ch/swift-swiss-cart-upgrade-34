@@ -67,7 +67,7 @@ export default {
 					primary: '#FF6B00',    // Orange from logo
 					secondary: '#FFD500',  // Yellow from logo
 					accent: '#7FD6EB',     // Light blue from logo
-					dark: '#1A2E45',       // Dark blue from logo
+					dark: '#1D557A',       // Updated dark blue
 					light: '#F8F9FA'
 				}
 			},

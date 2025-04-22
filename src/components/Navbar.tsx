@@ -24,7 +24,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <img 
-              src="/lovable-uploads/e526c616-4ec5-42f8-8ae8-476c840f320e.png" 
+              src="/lovable-uploads/d49bb06e-42a9-4c26-80a9-2b588559e168.png" 
               alt="Brings Logo" 
               className="h-12" 
             />
@@ -49,7 +49,7 @@ const Navbar = () => {
               className="relative" 
               onClick={() => setIsCartOpen(true)}
             >
-              <ShoppingBag size={20} className="text-brings-dark" />
+              <ShoppingBag size={20} className="text-[#1D557A]" />
               {totalItems > 0 && (
                 <span className="absolute -top-2 -right-2 bg-brings-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                   {totalItems}
@@ -58,7 +58,7 @@ const Navbar = () => {
             </button>
             {user ? (
               <div className="flex items-center space-x-4">
-                <Link to="/profile" className="flex items-center gap-1 text-brings-dark hover:text-brings-primary">
+                <Link to="/profile" className="flex items-center gap-1 text-[#1D557A] hover:text-brings-primary">
                   <User size={20} />
                   <span className="hidden lg:block">My Profile</span>
                 </Link>
@@ -89,7 +89,7 @@ const Navbar = () => {
               className="relative" 
               onClick={() => setIsCartOpen(true)}
             >
-              <ShoppingBag size={20} className="text-brings-dark" />
+              <ShoppingBag size={20} className="text-[#1D557A]" />
               {totalItems > 0 && (
                 <span className="absolute -top-2 -right-2 bg-brings-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                   {totalItems}
@@ -98,7 +98,7 @@ const Navbar = () => {
             </button>
             <button 
               onClick={toggleMenu}
-              className="text-brings-dark focus:outline-none"
+              className="text-[#1D557A] focus:outline-none"
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>

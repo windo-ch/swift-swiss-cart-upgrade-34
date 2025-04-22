@@ -1,10 +1,11 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Twitter, MapPin, Phone, Mail } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="bg-brings-dark text-white pt-12 pb-6">
+    <footer className="bg-[#1D557A] text-white pt-12 pb-6">
       <div className="container mx-auto px-4">
         {/* Footer Top */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
@@ -12,7 +13,7 @@ const Footer = () => {
           <div>
             <div className="mb-4">
               <img 
-                src="/lovable-uploads/e526c616-4ec5-42f8-8ae8-476c840f320e.png" 
+                src="/lovable-uploads/d49bb06e-42a9-4c26-80a9-2b588559e168.png" 
                 alt="Brings Logo" 
                 className="h-12"
               />
