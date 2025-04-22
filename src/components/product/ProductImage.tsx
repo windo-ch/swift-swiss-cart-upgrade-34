@@ -17,10 +17,21 @@ const ProductImage = ({ image, name }: ProductImageProps) => {
     // Reset error state when image prop changes
     setHasError(false);
     
+    if (!image) {
+      setImageSrc(PLACEHOLDER_IMAGE);
+      return;
+    }
+    
     // Process the image URL to ensure it's a full Supabase URL
-    const processedUrl = getProductImageUrl(image);
-    console.log(`Processing image URL for ${name}: ${image} → ${processedUrl}`);
-    setImageSrc(processedUrl);
+    try {
+      const processedUrl = image.includes('http') ? image : getProductImageUrl(image);
+      console.log(`Processing image URL for ${name}: ${image} → ${processedUrl}`);
+      setImageSrc(processedUrl);
+    } catch (error) {
+      console.error(`Error processing image URL for ${name}:`, error);
+      setImageSrc(PLACEHOLDER_IMAGE);
+      setHasError(true);
+    }
   }, [image, name]);
 
   const handleImageError = () => {

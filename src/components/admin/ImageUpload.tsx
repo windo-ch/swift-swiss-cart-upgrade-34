@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Upload, Image as ImageIcon } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { getProductImageUrl } from '../../utils/product-utils';
 
 interface ImageUploadProps {
   onImageUploaded: (url: string) => void;
@@ -84,14 +83,14 @@ const ImageUpload = ({ onImageUploaded, existingImageUrl }: ImageUploadProps) =>
 
       console.log("Upload successful, data:", data);
 
-      // Get the public URL
+      // Get the public URL - store the FULL URL to ensure it persists across sessions
       const publicUrl = `https://zbvdlkfnpufqfhrptfhz.supabase.co/storage/v1/object/public/product-images/${filePath}`;
       console.log("Generated public URL:", publicUrl);
       
       // Update the preview
       setPreviewUrl(publicUrl);
       
-      // Pass the file path to parent component
+      // Pass the full URL to parent component to ensure persistence
       onImageUploaded(publicUrl);
       
       toast({

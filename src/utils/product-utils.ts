@@ -12,15 +12,9 @@ export const getProductImageUrl = (imageName: string): string => {
     return PLACEHOLDER_IMAGE;
   }
   
-  // If it's already a full URL with the correct Supabase domain, return it as is
-  if (imageName.includes(SUPABASE_URL)) {
-    return imageName;
-  }
-  
-  // If it's a full URL but not from Supabase, return the placeholder
+  // If it's already a full URL, return it as is
   if (imageName.startsWith('http')) {
-    console.log(`Non-Supabase URL detected: ${imageName}, using placeholder`);
-    return PLACEHOLDER_IMAGE;
+    return imageName;
   }
   
   // Remove any leading slashes to avoid double slashes in URL
@@ -44,14 +38,14 @@ export const getStoredProducts = (): Product[] => {
       if (adminProducts && adminProducts.length > 0) {
         console.log("✅ Using admin products as the source of truth");
         
-        // Ensure all products have required fields and proper formatting but DO NOT modify image URLs
+        // Ensure all products have required fields and proper formatting
         return adminProducts.map((product: Product) => ({
           ...product,
           id: String(product.id), // Ensure id is always a string
-          name: product.name,
-          price: typeof product.price === 'number' ? product.price : parseFloat(String(product.price)),
-          category: product.category,
-          image: product.image, // Keep the image URL as is
+          name: product.name || '',
+          price: typeof product.price === 'number' ? product.price : parseFloat(String(product.price) || '0'),
+          category: product.category || '',
+          image: product.image || '', // Keep the image URL as is
           description: product.description || '',
           weight: product.weight || '',
           ingredients: product.ingredients || '',

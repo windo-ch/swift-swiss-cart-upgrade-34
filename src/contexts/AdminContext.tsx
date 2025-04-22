@@ -48,14 +48,15 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
       if (allProducts.length > 0) {
         console.log(`AdminContext - Found ${allProducts.length} products in storage`);
         
-        // Make sure all products have required fields
+        // Make sure all products have required fields and preserve image URLs
         const productsWithRequiredFields = allProducts.map(product => ({
           ...product,
           id: String(product.id),
           name: product.name || 'Unnamed Product',
           price: typeof product.price === 'number' ? product.price : parseFloat(String(product.price) || '0'),
           category: product.category || 'other',
-          image: product.image || 'https://brings-delivery.ch/cdn/shop/files/placeholder-product_600x.png',
+          // Preserve the exact image URL from storage
+          image: product.image || '',
           description: product.description || '',
           weight: product.weight || '',
           ingredients: product.ingredients || '',
@@ -74,7 +75,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
           name: product.name,
           price: typeof product.price === 'number' ? product.price : parseFloat(String(product.price)),
           category: product.category,
-          image: product.image,
+          image: product.image || '',
           description: product.description || '',
           weight: product.weight || '',
           ingredients: product.ingredients || '',
@@ -83,7 +84,10 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
         }));
         
         setProducts(initialProducts);
+        
+        // Save to localStorage immediately
         localStorage.setItem('adminProducts', JSON.stringify(initialProducts));
+        console.log(`AdminContext - Saved ${initialProducts.length} products to localStorage`);
         
         // Dispatch storage event
         window.dispatchEvent(new Event('storage'));
@@ -119,10 +123,20 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (products.length > 0 && !isLoading) {
       console.log("AdminContext - Saving products to localStorage:", products.length);
-      localStorage.setItem('adminProducts', JSON.stringify(products));
-      // Don't dispatch storage event here to avoid infinite loops
+      try {
+        localStorage.setItem('adminProducts', JSON.stringify(products));
+        console.log(`AdminContext - Successfully saved ${products.length} products to localStorage`);
+      } catch (error) {
+        console.error("AdminContext - Error saving products to localStorage:", error);
+        toast({
+          title: "Fehler beim Speichern",
+          description: "Die Produkte konnten nicht gespeichert werden.",
+          duration: 3000,
+          variant: "destructive"
+        });
+      }
     }
-  }, [products, isLoading]);
+  }, [products, isLoading, toast]);
 
   const addProduct = (productData: Omit<Product, 'id'>) => {
     console.log("AdminContext - Adding new product:", productData.name);
@@ -132,7 +146,14 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
       ageRestricted: productData.ageRestricted || false,
       stock: productData.stock !== undefined ? productData.stock : 50 // Default stock of 50
     };
-    setProducts(prev => [...prev, newProduct]);
+    
+    // Add the new product to state
+    setProducts(prev => {
+      const updated = [...prev, newProduct];
+      // Immediately save to localStorage
+      localStorage.setItem('adminProducts', JSON.stringify(updated));
+      return updated;
+    });
     
     toast({
       title: "Produkt hinzugefügt",
@@ -142,12 +163,17 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const updateProduct = (updatedProduct: Product) => {
-    console.log("AdminContext - Updating product:", updatedProduct.id);
-    setProducts(prev => 
-      prev.map(product => 
+    console.log("AdminContext - Updating product:", updatedProduct.id, updatedProduct);
+    
+    // Update the product in state
+    setProducts(prev => {
+      const updated = prev.map(product => 
         String(product.id) === String(updatedProduct.id) ? updatedProduct : product
-      )
-    );
+      );
+      // Immediately save to localStorage
+      localStorage.setItem('adminProducts', JSON.stringify(updated));
+      return updated;
+    });
     
     toast({
       title: "Produkt aktualisiert",
@@ -161,7 +187,13 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     // Find product name before deleting for toast message
     const productToDelete = products.find(p => String(p.id) === id);
     
-    setProducts(prev => prev.filter(product => String(product.id) !== id));
+    // Remove the product from state
+    setProducts(prev => {
+      const updated = prev.filter(product => String(product.id) !== id);
+      // Immediately save to localStorage
+      localStorage.setItem('adminProducts', JSON.stringify(updated));
+      return updated;
+    });
     
     toast({
       title: "Produkt gelöscht",
@@ -174,11 +206,16 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
 
   const updateStock = (id: string, newStock: number) => {
     console.log("AdminContext - Updating stock for product:", id, newStock);
-    setProducts(prev => 
-      prev.map(product => 
+    
+    // Update the stock in state
+    setProducts(prev => {
+      const updated = prev.map(product => 
         String(product.id) === id ? { ...product, stock: newStock } : product
-      )
-    );
+      );
+      // Immediately save to localStorage
+      localStorage.setItem('adminProducts', JSON.stringify(updated));
+      return updated;
+    });
   };
 
   return (
