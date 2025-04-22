@@ -6,9 +6,9 @@ const LoadingAnimation = () => {
     <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
       <div className="flex flex-col items-center">
         <img 
-          src="/lovable-uploads/4c6b9ae0-4ef4-4856-a9f0-cc27d8537d85.png"
+          src="/lovable-uploads/7dd740a9-78e5-46d0-be44-ac092b1e536d.png"
           alt="Brings Logo"
-          className="h-80 animate-pulse"
+          className="h-[120px] animate-pulse"
         />
         <div className="mt-4 flex space-x-1">
           <div className="h-3 w-3 bg-brings-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
