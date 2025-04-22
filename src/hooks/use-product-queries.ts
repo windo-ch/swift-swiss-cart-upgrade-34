@@ -4,7 +4,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { Product } from '@/types/product';
 import { useToast } from '@/components/ui/use-toast';
 
-export const useProductQueries = (setProducts: (products: Product[]) => void, setIsLoading: (loading: boolean) => void) => {
+export const useProductQueries = (
+  setProducts: (value: React.SetStateAction<Product[]>) => void, 
+  setIsLoading: (loading: boolean) => void
+) => {
   const { toast } = useToast();
 
   const fetchProducts = useCallback(async () => {

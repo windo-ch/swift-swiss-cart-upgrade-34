@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Product } from '@/types/product';
 import { useToast } from '@/components/ui/use-toast';
 
-export const useProductMutations = (setProducts: (products: Product[]) => void) => {
+export const useProductMutations = (setProducts: (value: React.SetStateAction<Product[]>) => void) => {
   const { toast } = useToast();
 
   const addProduct = async (productData: Omit<Product, 'id'>) => {
