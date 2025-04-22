@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin } from 'lucide-react';
@@ -22,8 +21,7 @@ const deliveryData = {
 
 // District names for reference
 const districtNames = {
-  'kreis1': 'Kreis
-   1 (Altstadt)',
+  'kreis1': 'Kreis 1 (Altstadt)',
   'kreis2': 'Kreis 2 (Wollishofen)',
   'kreis3': 'Kreis 3 (Wiedikon)',
   'kreis4': 'Kreis 4 (Aussersihl)',
