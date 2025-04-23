@@ -121,7 +121,7 @@ const ZurichMap: React.FC<ZurichMapProps> = ({
       />
       <DistrictPath
         district="kreis12"
-        path="M379.17,350.19v2.94s-5.74.17-5.74.17l-1.15,2.77c13.21-1.16,9.41,14.26-2.95,10.81v-3.92c2.76.46,4.92,1.13,6.86-1.48-2.01-2.46-4.08-2.46-6.85-1.48v-9.83s9.83,0,9.83,0Z"
+        path="M379.17,350.19v2.94s-5.74.17-5.74.17l-1.15,2.77c13.21-1.16,9.41,14.26-2.95,10.81v-3.92c2.76.46,4.92,1.13,6.85-1.48-2.01-2.46-4.08-2.46-6.85-1.48v-9.83s9.83,0,9.83,0Z"
         onMouseEnter={() => handleHoverDistrict('kreis12')}
         onMouseLeave={() => handleHoverDistrict(null)}
         onClick={() => handleDistrictClick('kreis12')}

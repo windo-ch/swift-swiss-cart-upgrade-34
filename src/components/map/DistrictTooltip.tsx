@@ -11,7 +11,7 @@ const DistrictTooltip = ({ district }: DistrictTooltipProps) => {
   if (!district) return null;
 
   return (
-    <div className="absolute bottom-4 right-4 bg-white p-4 shadow-lg rounded-lg border border-brings-primary/20 backdrop-blur-sm bg-white/90">
+    <div className="absolute bottom-4 right-4 bg-white p-4 shadow-lg rounded-lg border border-brings-primary/20 backdrop-blur-sm bg-white/90 z-10">
       <div className="flex items-center">
         <div className="flex-shrink-0 bg-brings-primary/10 p-2 rounded-full">
           <MapPin size={20} className="text-brings-primary" />
