@@ -7,13 +7,13 @@ interface MapContainerProps {
 
 const MapContainer = ({ children }: MapContainerProps) => {
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-brings-dark to-brings-dark/95 flex items-center justify-center p-4">
-      <div className="w-full max-w-6xl mx-auto relative select-none">
-        <div className="absolute inset-0 bg-brings-primary/5 rounded-3xl backdrop-blur-sm border border-brings-primary/10" />
+    <div className="absolute inset-0 bg-gradient-to-br from-brings-dark to-brings-dark/95 flex items-center justify-center">
+      <div className="w-full h-full mx-auto relative select-none">
+        <div className="absolute inset-0 bg-brings-primary/5 backdrop-blur-sm border border-brings-primary/10" />
         <svg 
           id="ZH-CITY-MAP" 
           viewBox="0 0 934.09 878.49" 
-          className="w-full h-auto relative z-10" 
+          className="w-full h-full relative z-10" 
           preserveAspectRatio="xMidYMid meet"
         >
           <defs>

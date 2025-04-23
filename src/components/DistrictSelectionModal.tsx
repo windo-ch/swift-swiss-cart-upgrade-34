@@ -26,7 +26,7 @@ const DistrictSelectionModal: React.FC<DistrictSelectionModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 overflow-auto bg-gradient-to-br from-brings-dark to-brings-primary/5">
+    <div className="fixed inset-0 overflow-auto bg-brings-dark/95 z-50">
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="bg-gradient-to-r from-brings-primary/20 to-brings-accent/20 p-6 rounded-lg border border-brings-primary/20 mb-8">
           <div className="flex items-start">
@@ -46,7 +46,7 @@ const DistrictSelectionModal: React.FC<DistrictSelectionModalProps> = ({
         </div>
         
         {/* Interactive Map */}
-        <div className="mb-8">
+        <div className="h-[400px] mb-8 relative overflow-hidden rounded-xl border border-brings-primary/20">
           <ZurichMap onSelectDistrict={onSelectDistrict} />
         </div>
 
