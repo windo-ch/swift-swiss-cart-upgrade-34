@@ -29,22 +29,6 @@ const ZurichMap: React.FC<ZurichMapProps> = ({
     }
   };
 
-  // Define the district center coordinates
-  const districtCenters = {
-    kreis1: { x: 50.2, y: 48.5 },
-    kreis2: { x: 50, y: 70 },
-    kreis3: { x: 40, y: 48 },
-    kreis4: { x: 45, y: 45 },
-    kreis5: { x: 45, y: 40 },
-    kreis6: { x: 55, y: 38 },
-    kreis7: { x: 65, y: 42 },
-    kreis8: { x: 65, y: 55 },
-    kreis9: { x: 30, y: 45 },
-    kreis10: { x: 40, y: 35 },
-    kreis11: { x: 45, y: 25 },
-    kreis12: { x: 70, y: 32 }
-  };
-
   // Define clickable area coordinates for the image map
   const districtAreas: Record<string, string> = {
     kreis1: "427,391,449,416,435,430,421,435,410,418,414,401",
@@ -71,25 +55,6 @@ const ZurichMap: React.FC<ZurichMapProps> = ({
           useMap="#zurich-map"
         />
 
-        {Object.entries(districtCenters).map(([district, center]) => {
-          const kreisNum = district.replace("kreis", "");
-          return (
-            <div
-              key={district}
-              className="absolute z-10 flex items-center justify-center text-white font-bold text-xl"
-              style={{
-                left: `${center.x}%`,
-                top: `${center.y}%`,
-                transform: "translate(-50%, -50%)",
-                textShadow: "1px 1px 2px rgba(0,0,0,0.5)",
-                pointerEvents: "none"
-              }}
-            >
-              {kreisNum}
-            </div>
-          );
-        })}
-
         <map name="zurich-map">
           {Object.entries(districtAreas).map(([district, coords]) => (
             <area
@@ -106,7 +71,7 @@ const ZurichMap: React.FC<ZurichMapProps> = ({
             />
           ))}
         </map>
-
+        
         {hoveredDistrict && (
           <div className="absolute bottom-4 right-4 bg-white p-4 shadow-md rounded-md border border-brings-primary/20 z-20">
             <h3 className="font-bold text-brings-dark">{districtNames[hoveredDistrict]}</h3>

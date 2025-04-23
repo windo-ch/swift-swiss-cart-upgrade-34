@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import HeroBanner from '../components/HeroBanner';
 import CategorySection from '../components/CategorySection';
@@ -9,7 +9,6 @@ import TestimonialSection from '../components/TestimonialSection';
 import NewsletterSection from '../components/NewsletterSection';
 import Footer from '../components/Footer';
 import ZurichMap from '../components/ZurichMap';
-import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
 const Index = () => {

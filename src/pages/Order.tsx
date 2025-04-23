@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import DistrictSelection from '../components/DistrictSelection';
@@ -10,8 +11,19 @@ import { MapPin } from 'lucide-react';
 type OrderStep = 'district' | 'products';
 
 const Order = () => {
-  const [currentStep, setCurrentStep] = useState<OrderStep>('district');
-  const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
+  const districtFromUrl = searchParams.get('district');
+  
+  const [currentStep, setCurrentStep] = useState<OrderStep>(districtFromUrl ? 'products' : 'district');
+  const [selectedDistrict, setSelectedDistrict] = useState<string | null>(districtFromUrl);
+
+  useEffect(() => {
+    // Update the step and selected district if the URL parameter changes
+    if (districtFromUrl) {
+      setSelectedDistrict(districtFromUrl);
+      setCurrentStep('products');
+    }
+  }, [districtFromUrl]);
 
   const handleDistrictSelect = (district: string) => {
     setSelectedDistrict(district);
