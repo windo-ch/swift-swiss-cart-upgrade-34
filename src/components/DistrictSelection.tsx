@@ -46,7 +46,7 @@ const DistrictSelection: React.FC<DistrictSelectionProps> = ({ city, onSelectDis
       </div>
       
       {/* Interactive Map */}
-      <div className="mb-12">
+      <div className="mb-12 border border-brings-primary/20 rounded-lg overflow-hidden shadow-lg">
         <ZurichMap onSelectDistrict={onSelectDistrict} />
       </div>
       

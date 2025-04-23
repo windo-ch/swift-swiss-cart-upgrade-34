@@ -32,7 +32,9 @@ const Index = () => {
             <div className="text-center max-w-2xl mx-auto mb-8">
               <h1 className="text-4xl font-bold mb-0">Wähl din Kreis</h1>
             </div>
-            <ZurichMap onSelectDistrict={handleDistrictSelect} />
+            <div className="border border-brings-primary/20 rounded-lg overflow-hidden shadow-lg max-w-4xl mx-auto">
+              <ZurichMap onSelectDistrict={handleDistrictSelect} />
+            </div>
           </div>
         </div>
         
