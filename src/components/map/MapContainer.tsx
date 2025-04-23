@@ -30,6 +30,12 @@ const MapContainer = ({ children }: MapContainerProps) => {
               fill: #ffffff;
               font-size: 12px;
               pointer-events: none;
+              font-family: Arial, sans-serif;
+            }
+            .district-number {
+              font-weight: bold;
+              text-anchor: middle;
+              dominant-baseline: middle;
             }
           `}</style>
         </defs>

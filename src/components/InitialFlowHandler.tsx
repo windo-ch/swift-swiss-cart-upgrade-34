@@ -19,17 +19,21 @@ const InitialFlowHandler = () => {
   
   const [showAgeModal, setShowAgeModal] = useState(false);
   
-  // Step 1: Show age verification ONLY if not verified
+  // Step 1: Show age verification ONLY if not verified yet
   useEffect(() => {
-    if (isVerified === false) {
+    if (isVerified === false && !showAgeModal) {
       setShowAgeModal(true);
     }
-  }, [isVerified]);
+  }, [isVerified, showAgeModal]);
   
   // Step 2: After age verification, show district selection ONLY if no district is selected
   useEffect(() => {
     if (isVerified === true && !selectedDistrict && !isDistrictModalOpen) {
-      openDistrictModal();
+      // Small delay to ensure age verification modal is fully closed
+      const timer = setTimeout(() => {
+        openDistrictModal();
+      }, 300);
+      return () => clearTimeout(timer);
     }
   }, [isVerified, selectedDistrict, isDistrictModalOpen, openDistrictModal]);
   
