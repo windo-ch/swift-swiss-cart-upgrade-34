@@ -26,6 +26,11 @@ const MapContainer = ({ children }: MapContainerProps) => {
               fill: #F97316;
               cursor: pointer;
             }
+            text {
+              fill: #ffffff;
+              font-size: 12px;
+              pointer-events: none;
+            }
           `}</style>
         </defs>
         <g>
