@@ -7,15 +7,24 @@ import { deliveryData, districtNames, fallbackDistrictPaths } from "@/utils/zuri
 
 interface ZurichMapProps {
   onSelectDistrict?: (district: string) => void;
+  onHoverDistrict?: (district: string | null) => void;
   interactive?: boolean;
 }
 
 const ZurichMap: React.FC<ZurichMapProps> = ({
   onSelectDistrict,
+  onHoverDistrict,
   interactive = true,
 }) => {
   const [hoveredDistrict, setHoveredDistrict] = useState<string | null>(null);
   const navigate = useNavigate();
+  
+  const handleHoverDistrict = (district: string | null) => {
+    setHoveredDistrict(district);
+    if (onHoverDistrict) {
+      onHoverDistrict(district);
+    }
+  };
 
   const handleDistrictClick = (district: string) => {
     if (!interactive) return;
@@ -64,8 +73,8 @@ const ZurichMap: React.FC<ZurichMapProps> = ({
               alt={districtNames[district]}
               title={districtNames[district]}
               onClick={() => handleDistrictClick(district)}
-              onMouseEnter={() => setHoveredDistrict(district)}
-              onMouseLeave={() => setHoveredDistrict(null)}
+              onMouseEnter={() => handleHoverDistrict(district)}
+              onMouseLeave={() => handleHoverDistrict(null)}
               style={{ cursor: interactive ? "pointer" : "default" }}
               className={!interactive ? "pointer-events-none" : ""}
             />

@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, ShoppingBag, Search, LogOut, User } from 'lucide-react';
+import { Menu, X, ShoppingBag, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAgeVerification } from '../contexts/AgeVerificationContext';
 import { useCart } from '../contexts/CartContext';
@@ -11,7 +11,7 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isAdult } = useAgeVerification();
   const { totalItems, setIsCartOpen } = useCart();
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -19,14 +19,14 @@ const Navbar = () => {
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-40">
-      <nav className="container mx-auto px-4 py-4">
+      <nav className="container mx-auto px-4 py-3">
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <img 
               src="/lovable-uploads/7dd740a9-78e5-46d0-be44-ac092b1e536d.png"
               alt="Brings Logo"
-              className="h-[120px]" 
+              className="h-[100px]" 
             />
             {isAdult && (
               <span className="ml-2 text-xs font-bold bg-red-500 text-white px-1.5 py-0.5 rounded">18+</span>
@@ -34,57 +34,30 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            <Link to="/products" className="nav-link">Produkt</Link>
-            <Link to="/categories" className="nav-link">Kategorie</Link>
-            <Link to="/about" className="nav-link">Über üs</Link>
-          </div>
-
-          {/* CTA Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
-            <button className="text-gray-500 hover:text-brings-primary">
+          <div className="hidden md:flex items-center space-x-8 text-[#1D557A]">
+            <Link to="/products" className="hover:text-brings-primary font-medium">Produkte</Link>
+            <Link to="/auth" className="hover:text-brings-primary font-medium">Login</Link>
+            <button className="hover:text-brings-primary">
               <Search size={20} />
             </button>
             <button 
               className="relative" 
               onClick={() => setIsCartOpen(true)}
             >
-              <ShoppingBag size={20} className="text-[#1D557A]" />
+              <ShoppingBag size={20} />
               {totalItems > 0 && (
                 <span className="absolute -top-2 -right-2 bg-brings-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                   {totalItems}
                 </span>
               )}
             </button>
-            {user ? (
-              <div className="flex items-center space-x-4">
-                <Link to="/profile" className="flex items-center gap-1 text-[#1D557A] hover:text-brings-primary">
-                  <User size={20} />
-                  <span className="hidden lg:block">My Profile</span>
-                </Link>
-                <Button
-                  variant="ghost"
-                  className="flex items-center gap-2"
-                  onClick={() => signOut()}
-                >
-                  <LogOut size={20} />
-                  <span className="hidden lg:block">Logout</span>
-                </Button>
-              </div>
-            ) : (
-              <Link to="/auth">
-                <Button variant="ghost">Login</Button>
-              </Link>
-            )}
-            <Link to="/order">
-              <Button className="bg-brings-primary hover:bg-brings-primary/90 text-white">
-                Bstelle
-              </Button>
-            </Link>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="flex items-center space-x-4 md:hidden">
+            <button className="hover:text-brings-primary">
+              <Search size={20} className="text-[#1D557A]" />
+            </button>
             <button 
               className="relative" 
               onClick={() => setIsCartOpen(true)}
@@ -109,48 +82,11 @@ const Navbar = () => {
         {isMenuOpen && (
           <div className="md:hidden mt-4 py-4 border-t border-gray-100">
             <div className="flex flex-col space-y-4">
-              <Link to="/products" className="nav-link-mobile" onClick={() => setIsMenuOpen(false)}>
-                Produkt
+              <Link to="/products" className="px-4 py-2 text-[#1D557A] hover:bg-gray-100 rounded-md" onClick={() => setIsMenuOpen(false)}>
+                Produkte
               </Link>
-              <Link to="/categories" className="nav-link-mobile" onClick={() => setIsMenuOpen(false)}>
-                Kategorie
-              </Link>
-              <Link to="/about" className="nav-link-mobile" onClick={() => setIsMenuOpen(false)}>
-                Über üs
-              </Link>
-              {user ? (
-                <>
-                  <Link 
-                    to="/profile" 
-                    className="nav-link-mobile flex items-center" 
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <User className="mr-2" size={20} />
-                    My Profile
-                  </Link>
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start"
-                    onClick={() => {
-                      signOut();
-                      setIsMenuOpen(false);
-                    }}
-                  >
-                    <LogOut className="mr-2" size={20} />
-                    Logout
-                  </Button>
-                </>
-              ) : (
-                <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
-                  <Button variant="ghost" className="w-full justify-start">
-                    Login
-                  </Button>
-                </Link>
-              )}
-              <Link to="/order" onClick={() => setIsMenuOpen(false)}>
-                <Button className="w-full bg-brings-primary hover:bg-brings-primary/90 text-white">
-                  Jetzt Bstelle
-                </Button>
+              <Link to="/auth" className="px-4 py-2 text-[#1D557A] hover:bg-gray-100 rounded-md" onClick={() => setIsMenuOpen(false)}>
+                Login
               </Link>
             </div>
           </div>
@@ -159,4 +95,5 @@ const Navbar = () => {
     </header>
   );
 };
+
 export default Navbar;

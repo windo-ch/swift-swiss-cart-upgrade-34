@@ -1,49 +1,18 @@
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import HeroBanner from '../components/HeroBanner';
-import CategorySection from '../components/CategorySection';
-import FeaturedProducts from '../components/FeaturedProducts';
-import TestimonialSection from '../components/TestimonialSection';
-import NewsletterSection from '../components/NewsletterSection';
-import Footer from '../components/Footer';
-import ZurichMap from '../components/ZurichMap';
-import { toast } from 'sonner';
+import Layout from '@/components/Layout';
 
 const Index = () => {
-  const navigate = useNavigate();
-  
-  const handleDistrictSelect = (district: string) => {
-    toast.success(`Kreis ${district.replace('kreis', '')} ausgewählt`);
-    navigate(`/order?district=${district}`);
-  };
-  
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main>
-        <HeroBanner />
-        
-        {/* Interactive Zurich Map Section */}
-        <div className="py-16 bg-white">
-          <div className="container mx-auto px-4">
-            <div className="text-center max-w-2xl mx-auto mb-8">
-              <h1 className="text-4xl font-bold mb-0">Wähl din Kreis</h1>
-            </div>
-            <div className="border border-brings-primary/20 rounded-lg overflow-hidden shadow-lg max-w-4xl mx-auto">
-              <ZurichMap onSelectDistrict={handleDistrictSelect} />
-            </div>
-          </div>
+    <Layout>
+      {/* Empty index page since we're handling the flow with InitialFlowHandler */}
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="text-center p-8">
+          <h1 className="text-3xl font-bold text-brings-primary mb-4">Willkommen bei Brings</h1>
+          <p className="text-gray-600 mb-6">Din Liefer-Service für Snacks und Getränk</p>
         </div>
-        
-        <CategorySection />
-        <FeaturedProducts />
-        <TestimonialSection />
-        <NewsletterSection />
-      </main>
-      <Footer />
-    </div>
+      </div>
+    </Layout>
   );
 };
 
