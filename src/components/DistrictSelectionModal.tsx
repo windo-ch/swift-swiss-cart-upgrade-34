@@ -4,7 +4,6 @@ import { MapPin } from 'lucide-react';
 import ZurichMap from './ZurichMap';
 import HotspotButtons from './map/HotspotButtons';
 import { toast } from 'sonner';
-import { districtNames } from '@/utils/zurichMapData';
 
 interface DistrictSelectionModalProps {
   isOpen: boolean;
@@ -42,7 +41,7 @@ const DistrictSelectionModal: React.FC<DistrictSelectionModalProps> = ({
         </div>
 
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Wähl din Chreis</h1>
+          <h1 className="text-3xl font-bold text-white mb-2">Wähl din Chreis oder en Hotspot</h1>
           <p className="text-gray-300">Wähl usä, in welle Chreis vo Züri mir dir söllid liefere</p>
         </div>
         
