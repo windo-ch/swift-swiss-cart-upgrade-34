@@ -1,35 +1,24 @@
 
 import React from 'react';
 import { MapPin } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import ZurichMap from './ZurichMap';
 import HotspotButtons from './map/HotspotButtons';
 import { toast } from 'sonner';
 import { districtNames } from '@/utils/zurichMapData';
 
-// Define the Zurich districts with their data
-const zurichDistricts = [
-  { id: 'kreis1', name: districtNames['kreis1'], number: 1, active: true },
-  { id: 'kreis2', name: districtNames['kreis2'], number: 2, active: true },
-  { id: 'kreis3', name: districtNames['kreis3'], number: 3, active: true },
-  { id: 'kreis4', name: districtNames['kreis4'], number: 4, active: true },
-  { id: 'kreis5', name: districtNames['kreis5'], number: 5, active: true },
-  { id: 'kreis6', name: districtNames['kreis6'], number: 6, active: true },
-  { id: 'kreis7', name: districtNames['kreis7'], number: 7, active: true },
-  { id: 'kreis8', name: districtNames['kreis8'], number: 8, active: true },
-  { id: 'kreis9', name: districtNames['kreis9'], number: 9, active: true },
-  { id: 'kreis10', name: districtNames['kreis10'], number: 10, active: true },
-  { id: 'kreis11', name: districtNames['kreis11'], number: 11, active: true },
-  { id: 'kreis12', name: districtNames['kreis12'], number: 12, active: true },
-];
-
-interface DistrictSelectionProps {
-  city: string;
+interface DistrictSelectionModalProps {
+  isOpen: boolean;
+  onClose: () => void;
   onSelectDistrict: (district: string) => void;
-  onBack: () => void;
 }
 
-const DistrictSelection: React.FC<DistrictSelectionProps> = ({ city, onSelectDistrict, onBack }) => {
+const DistrictSelectionModal: React.FC<DistrictSelectionModalProps> = ({ 
+  isOpen, 
+  onClose, 
+  onSelectDistrict 
+}) => {
+  if (!isOpen) return null;
+
   const handleHotspotSelect = (hotspot: string) => {
     toast.success("Perfekt! Du bist inere Hotspot-Zone!", {
       description: "Gratis Lieferig & schnellscht möglichi Lieferziit",
@@ -69,4 +58,4 @@ const DistrictSelection: React.FC<DistrictSelectionProps> = ({ city, onSelectDis
   );
 };
 
-export default DistrictSelection;
+export default DistrictSelectionModal;
