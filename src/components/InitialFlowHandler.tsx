@@ -6,12 +6,6 @@ import { useDistrict } from '@/contexts/DistrictContext';
 import AgeVerificationModal from './AgeVerificationModal';
 import DistrictSelectionModal from './DistrictSelectionModal';
 
-/**
- * This component handles the initial flow:
- * 1. First show age verification
- * 2. Then show district selection
- * 3. Finally redirect to products page
- */
 const InitialFlowHandler = () => {
   const navigate = useNavigate();
   const { isVerified, isAdult, verifyAge } = useAgeVerification();
@@ -25,14 +19,14 @@ const InitialFlowHandler = () => {
   
   const [showAgeModal, setShowAgeModal] = useState(false);
   
-  // Step 1: Show age verification if not verified
+  // Step 1: Show age verification ONLY if not verified
   useEffect(() => {
     if (isVerified === false) {
       setShowAgeModal(true);
     }
   }, [isVerified]);
   
-  // Step 2: After age verification, show district selection
+  // Step 2: After age verification, show district selection ONLY if no district is selected
   useEffect(() => {
     if (isVerified === true && !selectedDistrict && !isDistrictModalOpen) {
       openDistrictModal();
@@ -46,31 +40,33 @@ const InitialFlowHandler = () => {
     }
   }, [isVerified, selectedDistrict, navigate]);
   
-  // Handle age verification result
   const handleAgeVerify = (isAdult: boolean) => {
     verifyAge(isAdult);
     setShowAgeModal(false);
   };
   
-  // Handle district selection
   const handleDistrictSelect = (district: string) => {
     setSelectedDistrict(district);
   };
   
   return (
     <>
-      {/* Age Verification Modal */}
-      <AgeVerificationModal
-        isOpen={showAgeModal}
-        onVerify={handleAgeVerify}
-      />
+      {/* Only show age modal if needed */}
+      {showAgeModal && (
+        <AgeVerificationModal
+          isOpen={showAgeModal}
+          onVerify={handleAgeVerify}
+        />
+      )}
       
-      {/* District Selection Modal */}
-      <DistrictSelectionModal
-        isOpen={isDistrictModalOpen}
-        onClose={closeDistrictModal}
-        onSelectDistrict={handleDistrictSelect}
-      />
+      {/* Only show district modal if age is verified but no district selected */}
+      {!showAgeModal && isVerified && !selectedDistrict && (
+        <DistrictSelectionModal
+          isOpen={isDistrictModalOpen}
+          onClose={closeDistrictModal}
+          onSelectDistrict={handleDistrictSelect}
+        />
+      )}
     </>
   );
 };
