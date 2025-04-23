@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { CheckCircle, XCircle, ShieldAlert, Wine, Beer, Cigarette, Clock3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -104,17 +103,17 @@ const AgeVerificationModal = ({ isOpen, onVerify }: AgeVerificationModalProps) =
                   <Button 
                     variant="outline" 
                     onClick={() => handleVerify(false)}
-                    className="flex-1 sm:max-w-[200px] py-6 bg-gray-900/60 border-gray-700 hover:bg-gray-800 text-white gap-2"
+                    className="flex-1 sm:max-w-[200px] py-6 bg-gray-900/60 border-gray-700 hover:bg-gray-800 text-white hover:text-white hover:border-red-500/50 transition-all duration-300 group"
                   >
-                    <XCircle className="h-5 w-5 text-red-400" />
+                    <XCircle className="h-5 w-5 text-red-400 group-hover:scale-110 transition-transform" />
                     <span>Nei, ich bin under 18</span>
                   </Button>
                   
                   <Button 
                     onClick={() => handleVerify(true)}
-                    className="flex-1 sm:max-w-[200px] py-6 bg-gradient-to-r from-brings-primary to-brings-accent hover:opacity-90 text-white gap-2"
+                    className="flex-1 sm:max-w-[200px] py-6 bg-gradient-to-r from-brings-primary to-brings-accent hover:opacity-90 hover:scale-105 text-white gap-2 transition-all duration-300 group shadow-lg hover:shadow-brings-primary/25"
                   >
-                    <CheckCircle className="h-5 w-5" />
+                    <CheckCircle className="h-5 w-5 group-hover:scale-110 transition-transform" />
                     <span>Ja, ich bin über 18</span>
                   </Button>
                 </div>
