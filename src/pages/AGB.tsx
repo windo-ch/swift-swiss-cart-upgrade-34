@@ -2,12 +2,10 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import PromoBanner from '../components/PromoBanner';
 
 const AGB = () => {
   return (
     <div className="min-h-screen flex flex-col">
-      <PromoBanner />
       <Navbar />
       <main className="flex-grow py-12">
         <div className="container mx-auto px-4">

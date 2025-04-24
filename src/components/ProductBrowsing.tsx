@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import CategorySection from './CategorySection';
 import FeaturedProducts from './FeaturedProducts';
 import { useCart } from '../contexts/CartContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface ProductBrowsingProps {
   city: string;
@@ -52,12 +52,17 @@ const deliveryData = {
 const ProductBrowsing: React.FC<ProductBrowsingProps> = ({ city, district, onBack }) => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const { totalItems } = useCart();
+  const navigate = useNavigate();
   const formattedDistrict = formatDistrict(district);
   const formattedCity = city.charAt(0).toUpperCase() + city.slice(1);
   
   // Get delivery info for the selected district
   const deliveryTime = deliveryData[district]?.time || '30-60';
   const deliveryFee = deliveryData[district]?.fee || 3.50;
+  
+  const handleCheckout = () => {
+    navigate('/checkout');
+  };
   
   return (
     <div>
@@ -71,11 +76,12 @@ const ProductBrowsing: React.FC<ProductBrowsingProps> = ({ city, district, onBac
           </h2>
         </div>
         {totalItems > 0 && (
-          <Link to="/checkout">
-            <Button className="bg-brings-primary hover:bg-brings-primary/90">
-              Zur Kasse ({totalItems})
-            </Button>
-          </Link>
+          <Button 
+            onClick={handleCheckout}
+            className="bg-brings-primary hover:bg-brings-primary/90"
+          >
+            Zur Kasse ({totalItems})
+          </Button>
         )}
       </div>
       
@@ -115,11 +121,12 @@ const ProductBrowsing: React.FC<ProductBrowsingProps> = ({ city, district, onBac
       </div>
       
       <div className="mt-8 flex justify-center">
-        <Link to="/checkout">
-          <Button className="bg-brings-primary hover:bg-brings-primary/90 px-8 py-6 text-lg">
-            Zur Kasse gah
-          </Button>
-        </Link>
+        <Button 
+          onClick={handleCheckout}
+          className="bg-brings-primary hover:bg-brings-primary/90 px-8 py-6 text-lg"
+        >
+          Zur Kasse gah
+        </Button>
       </div>
     </div>
   );
