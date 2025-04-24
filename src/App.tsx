@@ -20,6 +20,10 @@ import AdminOrderTracking from "./pages/AdminOrderTracking";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
 import OrderTracking from "./pages/OrderTracking";
+import Shipping from "./pages/Shipping";
+import FAQ from "./pages/FAQ";
+import AdminTroubleshooting from "./pages/AdminTroubleshooting";
+import DirectAdminAccess from "./pages/DirectAdminAccess";
 import { AuthProvider } from "./contexts/AuthContext";
 import { AgeVerificationProvider } from "./contexts/AgeVerificationContext";
 import { CartProvider } from "./contexts/CartContext";
@@ -31,6 +35,7 @@ import FirstTimeUserBanner from "./components/FirstTimeUserBanner";
 import InitialFlowHandler from "./components/InitialFlowHandler";
 import AdminRoute from "./components/admin/AdminRoute";
 import AdminDashboard from "./pages/AdminDashboard";
+import DatabaseDiagnostic from "@/pages/DatabaseDiagnostic";
 
 const queryClient = new QueryClient();
 
@@ -40,53 +45,58 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <AgeVerificationProvider>
-            <ScrollToTop />
             <CartProvider>
               <DistrictProvider>
+                <ScrollToTop />
                 <InitialLoadingScreen />
                 <CartDrawer />
                 <FirstTimeUserBanner />
                 <InitialFlowHandler />
                 <Toaster />
                 <Sonner />
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/order" element={<Order />} />
-                <Route path="/products" element={<Products />} />
-                <Route path="/product/:id" element={<ProductDetail />} />
-                <Route path="/categories" element={<Categories />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/order-confirmation" element={<OrderConfirmation />} />
-                <Route path="/profile" element={<Profile />} />
-                {/* Order tracking is now only for admin users */}
-                <Route path="/order-tracking/:id" element={
-                  <AdminRoute>
-                    <OrderTracking />
-                  </AdminRoute>
-                } />
-                <Route path="/admin" element={
-                  <AdminRoute>
-                    <Admin />
-                  </AdminRoute>
-                } />
-                <Route path="/admin/orders" element={
-                  <AdminRoute>
-                    <AdminOrderTracking />
-                  </AdminRoute>
-                } />
-                <Route path="/admin/dashboard" element={
-                  <AdminRoute>
-                    <AdminDashboard />
-                  </AdminRoute>
-                } />
-                <Route path="/dateschutz" element={<Dateschutz />} />
-                <Route path="/agb" element={<AGB />} />
-                <Route path="/impressum" element={<Impressum />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </DistrictProvider>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/order" element={<Order />} />
+                  <Route path="/products" element={<Products />} />
+                  <Route path="/product/:id" element={<ProductDetail />} />
+                  <Route path="/categories" element={<Categories />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/order-confirmation" element={<OrderConfirmation />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/shipping" element={<Shipping />} />
+                  <Route path="/faq" element={<FAQ />} />
+                  {/* Order tracking is now only for admin users */}
+                  <Route path="/order-tracking/:id" element={
+                    <AdminRoute>
+                      <OrderTracking />
+                    </AdminRoute>
+                  } />
+                  <Route path="/admin" element={
+                    <AdminRoute>
+                      <Admin />
+                    </AdminRoute>
+                  } />
+                  <Route path="/admin/orders" element={
+                    <AdminRoute>
+                      <AdminOrderTracking />
+                    </AdminRoute>
+                  } />
+                  <Route path="/admin/dashboard" element={
+                    <AdminRoute>
+                      <AdminDashboard />
+                    </AdminRoute>
+                  } />
+                  <Route path="/admin-troubleshooting" element={<AdminTroubleshooting />} />
+                  <Route path="/direct-admin" element={<DirectAdminAccess />} />
+                  <Route path="/dateschutz" element={<Dateschutz />} />
+                  <Route path="/agb" element={<AGB />} />
+                  <Route path="/impressum" element={<Impressum />} />
+                  <Route path="/db-diagnostic" element={<DatabaseDiagnostic />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </DistrictProvider>
             </CartProvider>
           </AgeVerificationProvider>
         </AuthProvider>

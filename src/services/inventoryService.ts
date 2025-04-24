@@ -1,6 +1,7 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { Product } from "@/types/supabase";
+import { Product as AdminProduct } from "@/types/product";
+import { getStoredProducts } from "@/utils/product-utils";
 
 const PRODUCTS_TABLE = "products";
 
@@ -91,6 +92,7 @@ export const addInventory = async (productId: string, quantity: number): Promise
  */
 export const getLowInventoryProducts = async (threshold: number = 10): Promise<Product[]> => {
   try {
+    // Try to get data from Supabase first
     const { data, error } = await supabase
       .from(PRODUCTS_TABLE)
       .select('*')
@@ -105,7 +107,41 @@ export const getLowInventoryProducts = async (threshold: number = 10): Promise<P
     return data || [];
   } catch (error) {
     console.error("Error in getLowInventoryProducts:", error);
-    throw error;
+    
+    // Fallback to localStorage if Supabase query fails
+    console.log("Falling back to localStorage for inventory data");
+    try {
+      const localProducts = getStoredProducts();
+      const lowStockProducts = localProducts
+        .filter(product => (product.stock || 0) < threshold)
+        .sort((a, b) => (a.stock || 0) - (b.stock || 0));
+      
+      console.log(`Found ${lowStockProducts.length} low stock products in localStorage`);
+      
+      // Convert admin product format to supabase Product format
+      return lowStockProducts.map(p => {
+        // Create a Product object that matches the expected type
+        const product: Product = {
+          id: String(p.id),
+          product_id: String(p.id),
+          name: p.name,
+          description: p.description || null,
+          price: p.price,
+          image: p.image || null,
+          category: p.category,
+          subcategory: null,
+          is_age_restricted: Boolean(p.ageRestricted),
+          is_featured: Boolean(p.isFeatured),
+          inventory_count: p.stock || 0,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
+        return product;
+      });
+    } catch (localError) {
+      console.error("Error getting low inventory from localStorage:", localError);
+      return [];
+    }
   }
 };
 
@@ -118,6 +154,18 @@ export const isProductAvailable = async (productId: string, requestedQuantity: n
     return inventory >= requestedQuantity;
   } catch (error) {
     console.error("Error in isProductAvailable:", error);
+    
+    // Fallback to localStorage
+    try {
+      const localProducts = getStoredProducts();
+      const product = localProducts.find(p => String(p.id) === String(productId));
+      if (product) {
+        return (product.stock || 0) >= requestedQuantity;
+      }
+    } catch (localError) {
+      console.error("Error checking availability in localStorage:", localError);
+    }
+    
     return false;
   }
 };

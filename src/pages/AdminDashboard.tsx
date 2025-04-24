@@ -19,6 +19,7 @@ import {
 import { getLowInventoryProducts } from '@/services/inventoryService';
 import { Product } from '@/types/supabase';
 import { Json } from '@/integrations/supabase/types';
+import { useAdmin } from '@/contexts/AdminContext';
 
 // Define the Order type based on what we actually have in the database
 interface OrderAddress {
@@ -119,7 +120,35 @@ const AdminDashboard = () => {
   } = useQuery({
     queryKey: ['low-inventory'],
     queryFn: async () => {
-      return await getLowInventoryProducts(10);
+      try {
+        return await getLowInventoryProducts(10);
+      } catch (error) {
+        console.error("Error fetching low inventory products:", error);
+        // Fallback to admin products if the service fails
+        const { products: adminProducts } = useAdmin();
+        if (adminProducts && adminProducts.length > 0) {
+          console.log("Using admin products as fallback for low inventory");
+          // Get products with stock less than 10
+          return adminProducts
+            .filter(product => (product.stock || 0) < 10)
+            .slice(0, 10)
+            .map(p => ({
+              id: String(p.id),
+              product_id: String(p.id),
+              name: p.name,
+              inventory_count: p.stock || 0,
+              category: p.category,
+              description: p.description || null,
+              image: p.image || null,
+              subcategory: null,
+              is_age_restricted: Boolean(p.ageRestricted),
+              is_featured: Boolean(p.isFeatured),
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            })) as Product[];
+        }
+        return [];
+      }
     }
   });
   
@@ -261,10 +290,10 @@ const AdminDashboard = () => {
                           <div>
                             <p className="font-medium">{product.name}</p>
                             <p className="text-sm text-gray-500">
-                              Kategorie: {product.category} • Bestand: {product.stock}
+                              Kategorie: {product.category} • Bestand: {product.inventory_count}
                             </p>
                           </div>
-                          <InventoryBadge count={product.stock || 0} />
+                          <InventoryBadge count={product.inventory_count || 0} />
                         </div>
                       ))}
                     </div>
@@ -378,8 +407,8 @@ const InventoryTab = ({ products, isLoading }: { products: Product[], isLoading:
                         <td className="p-2">{product.category}</td>
                         <td className="p-2">
                           <div className="flex items-center">
-                            {product.stock}
-                            <InventoryBadge count={product.stock || 0} />
+                            {product.inventory_count}
+                            <InventoryBadge count={product.inventory_count || 0} />
                           </div>
                         </td>
                         <td className="p-2 text-right">

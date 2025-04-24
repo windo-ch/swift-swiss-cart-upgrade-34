@@ -37,9 +37,13 @@ const AgeVerificationModal = ({ isOpen, onVerify }: AgeVerificationModalProps) =
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-                className="bg-gradient-to-br from-brings-primary to-brings-primary/80 p-5 rounded-full shadow-lg"
+                className="p-2 rounded-full shadow-lg flex items-center justify-center"
               >
-                <ShieldAlert className="h-12 w-12 text-white" />
+                <img 
+                  src="/Brings-Logo-noBG.png" 
+                  alt="Brings Logo" 
+                  className="h-24 w-24 object-contain"
+                />
               </motion.div>
               
               <motion.div 
@@ -52,34 +56,26 @@ const AgeVerificationModal = ({ isOpen, onVerify }: AgeVerificationModalProps) =
                   Willkomme bi Brings!
                 </h1>
                 <p className="text-lg text-brings-light/90 max-w-xl">
-                  Bevor du witerfahrsch, muesch du bestätige dass du mindestens 18 Johr alt bisch.
+                  Bevor du witerfahrsch, muesch du bestätige dass du mindestens 18ni bisch.
                 </p>
               </motion.div>
             </div>
 
             {/* Age verification content */}
             <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/10">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <motion.div 
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.7 }}
                   className="flex flex-col items-center bg-white/5 p-5 rounded-lg"
                 >
-                  <Wine size={28} className="text-brings-primary mb-3" />
-                  <h3 className="font-semibold text-white mb-1">Alkoholischi Getränk</h3>
-                  <p className="text-sm text-center text-gray-300">Nur für Persone ab 18 Johr</p>
-                </motion.div>
-
-                <motion.div 
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.8 }}
-                  className="flex flex-col items-center bg-white/5 p-5 rounded-lg"
-                >
-                  <Cigarette size={28} className="text-brings-primary mb-3" />
-                  <h3 className="font-semibold text-white mb-1">Tabakware</h3>
-                  <p className="text-sm text-center text-gray-300">Nur für Persone ab 18 Johr</p>
+                  <div className="flex items-center gap-2 mb-3">
+                    <Wine size={24} className="text-brings-primary" />
+                    <Cigarette size={24} className="text-brings-primary" />
+                  </div>
+                  <h3 className="font-semibold text-white mb-1">Alkohol & Tabakware</h3>
+                  <p className="text-sm text-center text-gray-300">Nur für Persone ab 18ni</p>
                 </motion.div>
 
                 <motion.div 
@@ -96,7 +92,7 @@ const AgeVerificationModal = ({ isOpen, onVerify }: AgeVerificationModalProps) =
 
               <div className="my-8 border-t border-white/10 pt-8">
                 <p className="text-white text-center mb-6 font-medium">
-                  Bisch du scho 18 Johr alt oder älter?
+                  Bisch du scho 18ni oder älter?
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">

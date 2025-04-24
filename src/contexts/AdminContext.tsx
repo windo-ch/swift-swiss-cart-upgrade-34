@@ -1,5 +1,4 @@
-
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { Product as ProductType } from '@/types/product';
 import { getStoredProducts } from '@/utils/product-utils';
 import { products as storeProducts } from '@/data/products';
@@ -34,6 +33,14 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
+  const isMounted = useRef(true);
+  
+  // Set isMounted to false when component unmounts
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
   
   // Function to load products from localStorage
   const refreshProducts = useCallback(() => {
@@ -41,8 +48,29 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     setIsLoading(true);
     
     try {
-      logAdminProducts(); // Debug: log current admin products
+      // Debug: log current admin products
+      logAdminProducts();
       
+      // Check if localStorage has valid products
+      const storedProductsString = localStorage.getItem('adminProducts');
+      if (!storedProductsString) {
+        console.log("AdminContext - No products in localStorage");
+        throw new Error("No products in localStorage");
+      }
+      
+      // Try to parse the products
+      let storedProducts;
+      try {
+        storedProducts = JSON.parse(storedProductsString);
+        if (!Array.isArray(storedProducts) || storedProducts.length === 0) {
+          throw new Error("Invalid products format in localStorage");
+        }
+      } catch (parseError) {
+        console.error("AdminContext - Error parsing products:", parseError);
+        throw parseError;
+      }
+      
+      // Use getStoredProducts to get normalized products
       const allProducts = getStoredProducts();
       
       if (allProducts.length > 0) {
@@ -63,7 +91,9 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
           stock: product.stock !== undefined ? product.stock : 50
         }));
         
-        setProducts(productsWithRequiredFields);
+        if (isMounted.current) {
+          setProducts(productsWithRequiredFields);
+        }
       } else {
         console.log("AdminContext - No products in storage, initializing from store");
         
@@ -82,22 +112,50 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
           stock: 50 // Default stock of 50
         }));
         
-        setProducts(initialProducts);
-        localStorage.setItem('adminProducts', JSON.stringify(initialProducts));
+        if (isMounted.current) {
+          setProducts(initialProducts);
+          localStorage.setItem('adminProducts', JSON.stringify(initialProducts));
+        }
         
         // Dispatch storage event
         window.dispatchEvent(new Event('storage'));
       }
     } catch (error) {
       console.error("AdminContext - Error refreshing products:", error);
-      toast({
-        title: "Fehler",
-        description: "Fehler beim Laden der Produkte.",
-        duration: 3000,
-        variant: "destructive"
-      });
+      
+      // Fallback to store products if there's an error
+      const fallbackProducts = storeProducts.map(product => ({
+        ...product,
+        id: String(product.id),
+        name: product.name,
+        price: typeof product.price === 'number' ? product.price : parseFloat(String(product.price)),
+        category: product.category,
+        image: product.image,
+        description: product.description || '',
+        weight: product.weight || '',
+        ingredients: product.ingredients || '',
+        ageRestricted: product.ageRestricted || false,
+        stock: 50 // Default stock of 50
+      }));
+      
+      if (isMounted.current) {
+        setProducts(fallbackProducts);
+        localStorage.setItem('adminProducts', JSON.stringify(fallbackProducts));
+        
+        toast({
+          title: "Produkte zurückgesetzt",
+          description: "Produkte konnten nicht geladen werden und wurden zurückgesetzt.",
+          duration: 3000,
+          variant: "destructive"
+        });
+      }
+      
+      // Dispatch storage event
+      window.dispatchEvent(new Event('storage'));
     } finally {
-      setIsLoading(false);
+      if (isMounted.current) {
+        setIsLoading(false);
+      }
     }
   }, [toast]);
   

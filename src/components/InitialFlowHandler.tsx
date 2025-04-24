@@ -1,6 +1,5 @@
-
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAgeVerification } from '@/contexts/AgeVerificationContext';
 import { useDistrict } from '@/contexts/DistrictContext';
 import AgeVerificationModal from './AgeVerificationModal';
@@ -8,6 +7,7 @@ import DistrictSelectionModal from './DistrictSelectionModal';
 
 const InitialFlowHandler = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { isVerified, isAdult, verifyAge } = useAgeVerification();
   const { 
     selectedDistrict, 
@@ -18,6 +18,7 @@ const InitialFlowHandler = () => {
   } = useDistrict();
   
   const [showAgeModal, setShowAgeModal] = useState(false);
+  const [initialSetupComplete, setInitialSetupComplete] = useState(false);
   
   // Step 1: Show age verification ONLY if not verified yet
   useEffect(() => {
@@ -37,12 +38,17 @@ const InitialFlowHandler = () => {
     }
   }, [isVerified, selectedDistrict, isDistrictModalOpen, openDistrictModal]);
   
-  // Step 3: After district selection, redirect to products
+  // Step 3: After district selection, redirect to products ONLY if at root path or initial setup
   useEffect(() => {
-    if (isVerified === true && selectedDistrict) {
-      navigate('/products');
+    if (isVerified === true && selectedDistrict && !initialSetupComplete) {
+      setInitialSetupComplete(true);
+      
+      // Only redirect if we're at the root path
+      if (location.pathname === '/') {
+        navigate('/products');
+      }
     }
-  }, [isVerified, selectedDistrict, navigate]);
+  }, [isVerified, selectedDistrict, navigate, location.pathname, initialSetupComplete]);
   
   const handleAgeVerify = (isAdult: boolean) => {
     verifyAge(isAdult);

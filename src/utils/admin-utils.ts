@@ -1,4 +1,3 @@
-
 import { Product } from '../types/product';
 import { products as storeProducts } from '../data/products';
 import { getProductImageUrl } from './product-utils';
@@ -50,12 +49,6 @@ export const forceReinitializeAdminProducts = (): void => {
     throw error;
   }
 };
-
-// Call forceReinitializeAdminProducts to update categories
-setTimeout(() => {
-  forceReinitializeAdminProducts();
-  console.log("🔄 Products reinitialized with updated categories");
-}, 1000);
 
 // Utility function to debug the admin products
 export const logAdminProducts = (): void => {

@@ -1,4 +1,3 @@
-
 import { Product } from '../types/product';
 import { products as storeProducts } from '../data/products/index';
 import { seedProductsData } from './seed-products';
@@ -36,49 +35,86 @@ export const getStoredProducts = (): Product[] => {
     // First try to get products from localStorage that might have been modified in admin panel
     const storedProducts = localStorage.getItem('adminProducts');
     
-    if (storedProducts) {
-      const adminProducts = JSON.parse(storedProducts);
-      console.log(`🛒 Found ${adminProducts.length} admin products in localStorage`);
-      
-      // If we have admin products, use those
-      if (adminProducts && adminProducts.length > 0) {
-        console.log("✅ Using admin products as the source of truth");
-        
-        // Ensure all products have required fields and proper formatting but DO NOT modify image URLs
-        return adminProducts.map((product: Product) => ({
-          ...product,
-          id: String(product.id), // Ensure id is always a string
-          name: product.name,
-          price: typeof product.price === 'number' ? product.price : parseFloat(String(product.price)),
-          category: product.category,
-          image: product.image, // Keep the image URL as is
-          description: product.description || '',
-          weight: product.weight || '',
-          ingredients: product.ingredients || '',
-          ageRestricted: product.ageRestricted || false,
-          stock: product.stock !== undefined ? product.stock : 50
-        }));
-      }
+    if (!storedProducts) {
+      console.log("⚠️ No admin products found in localStorage");
+      throw new Error("No admin products found");
     }
     
-    // If no admin products found, seed the products
-    console.log("⚠️ No admin products found, seeding new products");
+    let adminProducts: Product[];
+    try {
+      adminProducts = JSON.parse(storedProducts);
+      
+      // Validate that we have an array with products
+      if (!Array.isArray(adminProducts) || adminProducts.length === 0) {
+        console.log("⚠️ Invalid admin products format in localStorage");
+        throw new Error("Invalid admin products format");
+      }
+      
+      // Validate that at least the first product has required fields
+      const firstProduct = adminProducts[0];
+      if (!firstProduct.id || !firstProduct.name || firstProduct.price === undefined) {
+        console.log("⚠️ Admin products missing required fields");
+        throw new Error("Admin products missing required fields");
+      }
+      
+      console.log(`🛒 Found ${adminProducts.length} valid admin products in localStorage`);
+      
+      // Ensure all products have required fields and proper formatting
+      return adminProducts.map((product: Product) => ({
+        ...product,
+        id: String(product.id), // Ensure id is always a string
+        name: product.name || 'Unnamed Product',
+        price: typeof product.price === 'number' ? product.price : parseFloat(String(product.price) || '0'),
+        category: product.category || 'other',
+        image: product.image || PLACEHOLDER_IMAGE,
+        description: product.description || '',
+        weight: product.weight || '',
+        ingredients: product.ingredients || '',
+        ageRestricted: product.ageRestricted || false,
+        stock: product.stock !== undefined ? product.stock : 50
+      }));
+    } catch (parseError) {
+      console.error("❌ Error parsing admin products:", parseError);
+      throw parseError;
+    }
+  } catch (error) {
+    console.error('❌ Error loading products from localStorage:', error);
+    
+    // If there's an error, seed new products
+    console.log("🔄 Seeding new products due to error");
     seedProductsData();
     
     // Try to get the newly seeded products
-    const newStoredProducts = localStorage.getItem('adminProducts');
-    if (newStoredProducts) {
-      const newProducts = JSON.parse(newStoredProducts);
-      return newProducts;
+    try {
+      const newStoredProducts = localStorage.getItem('adminProducts');
+      if (newStoredProducts) {
+        const newProducts = JSON.parse(newStoredProducts);
+        if (Array.isArray(newProducts) && newProducts.length > 0) {
+          console.log(`✅ Successfully loaded ${newProducts.length} seeded products`);
+          return newProducts;
+        }
+      }
+    } catch (secondaryError) {
+      console.error("❌ Error loading seeded products:", secondaryError);
     }
     
-    // Fallback to an empty array if still no products
-    console.error("❌ Failed to load or seed products");
-    return [];
-  } catch (error) {
-    console.error('❌ Error loading products from localStorage:', error);
-    // If there's an error, clear localStorage and return empty array
-    localStorage.removeItem('adminProducts');
-    return [];
+    // Ultimate fallback to default store products if all else fails
+    console.log("⚠️ Using default store products as final fallback");
+    const defaultProducts = storeProducts.map(product => ({
+      ...product,
+      id: String(product.id),
+      name: product.name,
+      price: Number(product.price),
+      category: product.category,
+      image: product.image || PLACEHOLDER_IMAGE,
+      description: product.description || '',
+      ageRestricted: product.ageRestricted || false,
+      stock: 50
+    }));
+    
+    // Save these default products to localStorage
+    localStorage.setItem('adminProducts', JSON.stringify(defaultProducts));
+    
+    return defaultProducts;
   }
 };
