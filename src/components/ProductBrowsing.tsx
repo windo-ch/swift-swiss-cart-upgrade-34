@@ -61,6 +61,7 @@ const ProductBrowsing: React.FC<ProductBrowsingProps> = ({ city, district, onBac
   const deliveryFee = deliveryData[district]?.fee || 3.50;
   
   const handleCheckout = () => {
+    console.log("Navigating to checkout from ProductBrowsing");
     navigate('/checkout');
   };
   

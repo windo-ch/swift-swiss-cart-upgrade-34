@@ -22,13 +22,13 @@ const Footer = () => {
               Snacks & Getränk - sofort zu dir glieferet. I 30 Minute bi dir in Züri.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-300 hover:text-brings-secondary" aria-label="Facebook">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-brings-secondary" aria-label="Facebook">
                 <Facebook size={20} />
               </a>
-              <a href="#" className="text-gray-300 hover:text-brings-secondary" aria-label="Instagram">
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-brings-secondary" aria-label="Instagram">
                 <Instagram size={20} />
               </a>
-              <a href="#" className="text-gray-300 hover:text-brings-secondary" aria-label="Twitter">
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-brings-secondary" aria-label="Twitter">
                 <Twitter size={20} />
               </a>
             </div>
@@ -88,6 +88,11 @@ const Footer = () => {
               <li>
                 <Link to="/agb" className="text-gray-300 hover:text-brings-secondary transition-colors">
                   AGB
+                </Link>
+              </li>
+              <li>
+                <Link to="/impressum" className="text-gray-300 hover:text-brings-secondary transition-colors">
+                  Impressum
                 </Link>
               </li>
             </ul>

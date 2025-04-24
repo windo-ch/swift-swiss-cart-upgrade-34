@@ -22,6 +22,7 @@ const Navbar = () => {
 
   const handleCartClick = () => {
     if (totalItems > 0) {
+      console.log("Navigating to checkout from Navbar");
       navigate('/checkout');
     } else {
       setIsCartOpen(true);
@@ -52,6 +53,7 @@ const Navbar = () => {
             <button 
               className="relative" 
               onClick={handleCartClick}
+              aria-label="Shopping cart"
             >
               <ShoppingBag size={20} className="text-[#1D557A]" />
               {totalItems > 0 && (
@@ -63,6 +65,7 @@ const Navbar = () => {
             <button 
               onClick={toggleMenu}
               className="text-[#1D557A] md:hidden focus:outline-none"
+              aria-label="Toggle menu"
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -75,6 +78,18 @@ const Navbar = () => {
             <div className="flex flex-col space-y-4">
               <Link to="/products" className="px-4 py-2 text-[#1D557A] hover:bg-gray-100 rounded-md" onClick={() => setIsMenuOpen(false)}>
                 Produkte
+              </Link>
+              <Link to="/about" className="px-4 py-2 text-[#1D557A] hover:bg-gray-100 rounded-md" onClick={() => setIsMenuOpen(false)}>
+                Über Eus
+              </Link>
+              <Link to="/dateschutz" className="px-4 py-2 text-[#1D557A] hover:bg-gray-100 rounded-md" onClick={() => setIsMenuOpen(false)}>
+                Dateschutz
+              </Link>
+              <Link to="/agb" className="px-4 py-2 text-[#1D557A] hover:bg-gray-100 rounded-md" onClick={() => setIsMenuOpen(false)}>
+                AGB
+              </Link>
+              <Link to="/impressum" className="px-4 py-2 text-[#1D557A] hover:bg-gray-100 rounded-md" onClick={() => setIsMenuOpen(false)}>
+                Impressum
               </Link>
             </div>
           </div>
