@@ -25,14 +25,7 @@ const CartDrawer: React.FC = () => {
   
   const handleCheckout = () => {
     setIsCartOpen(false);
-    
-    if (selectedDistrict) {
-      // If a district is selected, proceed directly to checkout
-      navigate('/checkout');
-    } else {
-      // If no district selected, redirect to order selection first
-      navigate('/order');
-    }
+    navigate('/checkout');
   };
 
   return (

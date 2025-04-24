@@ -21,10 +21,10 @@ const Navbar = () => {
   };
 
   const handleCartClick = () => {
-    if (selectedDistrict) {
-      setIsCartOpen(true);
+    if (totalItems > 0) {
+      navigate('/checkout');
     } else {
-      navigate('/order');
+      setIsCartOpen(true);
     }
   };
 
