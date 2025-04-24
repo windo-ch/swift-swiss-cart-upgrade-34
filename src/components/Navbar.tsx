@@ -56,7 +56,7 @@ const Navbar = () => {
             </Link>
             <button 
               className="relative" 
-              onClick={handleCartClick}
+              onClick={() => setIsCartOpen(true)}
               aria-label="Shopping cart"
             >
               <ShoppingBag size={20} className="text-[#1D557A]" />
