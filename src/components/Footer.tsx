@@ -75,26 +75,6 @@ const Footer = () => {
                   Lieferige
                 </Link>
               </li>
-              <li>
-                <Link to="/returns" className="text-gray-300 hover:text-brings-secondary transition-colors">
-                  Rückgabe & Umtuusch
-                </Link>
-              </li>
-              <li>
-                <Link to="/dateschutz" className="text-gray-300 hover:text-brings-secondary transition-colors">
-                  Dateschutz
-                </Link>
-              </li>
-              <li>
-                <Link to="/agb" className="text-gray-300 hover:text-brings-secondary transition-colors">
-                  AGB
-                </Link>
-              </li>
-              <li>
-                <Link to="/impressum" className="text-gray-300 hover:text-brings-secondary transition-colors">
-                  Impressum
-                </Link>
-              </li>
             </ul>
           </div>
           
@@ -104,15 +84,15 @@ const Footer = () => {
             <ul className="space-y-3 text-gray-300">
               <li className="flex">
                 <MapPin size={20} className="mr-2 text-brings-secondary flex-shrink-0" />
-                <span>Brings AG, Bahnhofstrasse 1, 8001 Züri</span>
+                <span>Brings</span>
               </li>
               <li className="flex">
                 <Phone size={20} className="mr-2 text-brings-secondary flex-shrink-0" />
-                <span>+41 44 123 45 67</span>
+                <span>+41 79 900 02 02</span>
               </li>
               <li className="flex">
                 <Mail size={20} className="mr-2 text-brings-secondary flex-shrink-0" />
-                <span>hallo@brings.ch</span>
+                <span>hallo@gobrings.ch</span>
               </li>
             </ul>
           </div>
@@ -139,3 +119,4 @@ const Footer = () => {
 };
 
 export default Footer;
+
