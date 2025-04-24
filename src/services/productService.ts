@@ -1,6 +1,7 @@
+
 import { supabase } from "@/integrations/supabase/client";
 import { ProductInsert, ProductUpdate, Product } from "@/types/supabase";
-import { initializeSupabaseProducts, getSeedProducts, convertToSupabaseProduct } from "@/utils/supabase-seed";
+import { initializeSupabaseProducts } from "@/utils/supabase-seed";
 
 // Constants
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
@@ -38,7 +39,7 @@ export const fetchProductById = async (productId: string): Promise<Product | nul
     const { data, error } = await supabase
       .from(PRODUCTS_TABLE)
       .select('*')
-      .eq('product_id', productId)
+      .eq('id', productId)
       .single();
     
     if (error) {
@@ -84,7 +85,7 @@ export const updateProduct = async (productId: string, updates: ProductUpdate): 
     const { data, error } = await supabase
       .from(PRODUCTS_TABLE)
       .update(updates)
-      .eq('product_id', productId)
+      .eq('id', productId)
       .select()
       .single();
     
@@ -108,7 +109,7 @@ export const deleteProduct = async (productId: string): Promise<void> => {
     const { error } = await supabase
       .from(PRODUCTS_TABLE)
       .delete()
-      .eq('product_id', productId);
+      .eq('id', productId);
     
     if (error) {
       console.error("Error deleting product:", error);

@@ -1,26 +1,32 @@
+
 export type ProductInsert = {
-  product_id: string;
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-  category: string;
-  subcategory?: string;
-  is_age_restricted: boolean;
-  is_featured?: boolean;
-  inventory_count?: number;
-}
-
-export type ProductUpdate = Partial<ProductInsert> & {
   id?: string;
+  name: string;
+  description?: string;
+  price: number;
+  image?: string;
+  category: string;
+  agerestricted?: boolean;
+  stock?: number;
+  ingredients?: string;
+  weight?: string;
 }
 
-export type Product = ProductInsert & {
+export type ProductUpdate = Partial<ProductInsert>;
+
+export type Product = {
   id: string;
-  created_at: string;
-  updated_at: string;
+  name: string;
+  description: string | null;
+  price: number;
+  image: string | null;
+  category: string;
+  agerestricted: boolean;
+  stock: number | null;
+  ingredients: string | null;
+  weight: string | null;
+  created_at: string | null;
+  updated_at: string | null;
 }
 
-export type ProductWithInventory = Product & {
-  inventory_count: number;
-} 
+export type ProductWithInventory = Product;

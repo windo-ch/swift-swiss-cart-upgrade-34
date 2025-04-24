@@ -1,3 +1,4 @@
+
 import { Product as SupabaseProduct } from '@/types/supabase';
 import { Product as AppProduct } from '@/types/product';
 import { getImageUrl } from '@/services/productService';
@@ -7,15 +8,15 @@ import { getImageUrl } from '@/services/productService';
  */
 export const supabaseProductToAppProduct = (product: SupabaseProduct): AppProduct => {
   return {
-    id: product.product_id,
+    id: product.id,
     name: product.name,
     description: product.description || '',
     price: product.price,
-    image: getImageUrl(product.image),
+    image: getImageUrl(product.image || ''),
     category: product.category,
-    ageRestricted: product.is_age_restricted,
-    isFeatured: product.is_featured,
-    stock: product.inventory_count
+    ageRestricted: product.agerestricted || false,
+    isFeatured: false,
+    stock: product.stock || 0
   };
 };
 
@@ -31,14 +32,13 @@ export const supabaseProductsToAppProducts = (products: SupabaseProduct[]): AppP
  */
 export const appProductToSupabaseProduct = (product: AppProduct): Partial<SupabaseProduct> => {
   return {
-    product_id: product.id.toString(),
+    id: product.id.toString(),
     name: product.name,
     description: product.description || '',
     price: product.price,
     image: product.image,
     category: product.category,
-    is_age_restricted: product.ageRestricted,
-    is_featured: product.isFeatured || false,
-    inventory_count: product.stock || 0
+    agerestricted: product.ageRestricted,
+    stock: product.stock || 0
   };
 }; 

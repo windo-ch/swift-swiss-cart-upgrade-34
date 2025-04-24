@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -18,6 +19,32 @@ import {
 } from 'lucide-react';
 import { getLowInventoryProducts } from '@/services/inventoryService';
 import { Product } from '@/types/supabase';
+import { Json } from '@/integrations/supabase/types';
+
+// Define the Order type based on what we actually have in the database
+interface OrderAddress {
+  firstName: string;
+  lastName: string;
+  address: string;
+  city: string;
+  postalCode: string;
+  email?: string;
+  phone?: string;
+}
+
+interface Order {
+  id: string;
+  delivery_address: OrderAddress;
+  total_amount: number;
+  status: string;
+  created_at: string;
+  payment_method: string;
+  estimated_delivery_time?: string | null;
+  order_items: any[];
+  user_id: string;
+  delivery_fee?: number;
+  discount_amount?: number;
+}
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -42,7 +69,7 @@ const AdminDashboard = () => {
         .limit(50);
       
       if (error) throw error;
-      return data || [];
+      return (data || []) as Order[];
     }
   });
   
@@ -163,7 +190,9 @@ const AdminDashboard = () => {
                       {orders.slice(0, 5).map((order) => (
                         <div key={order.id} className="flex justify-between items-center p-3 rounded-md bg-gray-50">
                           <div>
-                            <p className="font-medium">{order.delivery_address.firstName} {order.delivery_address.lastName}</p>
+                            <p className="font-medium">
+                              {order.delivery_address.firstName} {order.delivery_address.lastName}
+                            </p>
                             <p className="text-sm text-gray-500">
                               {new Date(order.created_at).toLocaleString('de-CH')} • CHF {order.total_amount.toFixed(2)}
                             </p>
@@ -194,10 +223,10 @@ const AdminDashboard = () => {
                           <div>
                             <p className="font-medium">{product.name}</p>
                             <p className="text-sm text-gray-500">
-                              Kategorie: {product.category} • Bestand: {product.inventory_count}
+                              Kategorie: {product.category} • Bestand: {product.stock}
                             </p>
                           </div>
-                          <InventoryBadge count={product.inventory_count} />
+                          <InventoryBadge count={product.stock || 0} />
                         </div>
                       ))}
                     </div>
@@ -311,8 +340,8 @@ const InventoryTab = ({ products, isLoading }: { products: Product[], isLoading:
                         <td className="p-2">{product.category}</td>
                         <td className="p-2">
                           <div className="flex items-center">
-                            {product.inventory_count}
-                            <InventoryBadge count={product.inventory_count} />
+                            {product.stock}
+                            <InventoryBadge count={product.stock || 0} />
                           </div>
                         </td>
                         <td className="p-2 text-right">
@@ -336,8 +365,8 @@ const DeliveryTab = ({
   activeDeliveries, 
   isLoading 
 }: { 
-  pendingOrders: any[], 
-  activeDeliveries: any[], 
+  pendingOrders: Order[], 
+  activeDeliveries: Order[], 
   isLoading: boolean 
 }) => {
   return (
@@ -417,10 +446,10 @@ const DeliveryTab = ({
                         <p className="font-medium">CHF {order.total_amount.toFixed(2)}</p>
                         <p className="text-sm text-gray-500">
                           <Timer className="h-4 w-4 inline-block mr-1" />
-                          {new Date(order.estimated_delivery_time).toLocaleTimeString('de-CH', { 
+                          {order.estimated_delivery_time ? new Date(order.estimated_delivery_time).toLocaleTimeString('de-CH', { 
                             hour: '2-digit', 
                             minute: '2-digit' 
-                          })}
+                          }) : 'Unbekannt'}
                         </p>
                       </div>
                     </div>
@@ -444,13 +473,16 @@ const DeliveryTab = ({
   );
 };
 
-const AnalyticsTab = ({ orders, isLoading }: { orders: any[], isLoading: boolean }) => {
+const AnalyticsTab = ({ orders, isLoading }: { orders: Order[], isLoading: boolean }) => {
   // Simple analytics calculations
   const totalRevenue = orders.reduce((sum, order) => sum + order.total_amount, 0);
-  const ordersByPaymentMethod = orders.reduce((acc, order) => {
-    acc[order.payment_method] = (acc[order.payment_method] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  
+  // Group orders by payment method
+  const ordersByPaymentMethod: Record<string, number> = {};
+  orders.forEach(order => {
+    const method = order.payment_method || 'unknown';
+    ordersByPaymentMethod[method] = (ordersByPaymentMethod[method] || 0) + 1;
+  });
   
   return (
     <div>
@@ -485,8 +517,8 @@ const AnalyticsTab = ({ orders, isLoading }: { orders: any[], isLoading: boolean
                     <p className="capitalize">{method}</p>
                     <div className="flex items-center">
                       <div className="h-2 bg-brings-primary rounded-full mr-2" 
-                        style={{ width: `${(count / orders.length) * 100}px` }} />
-                      <p>{count} ({((count / orders.length) * 100).toFixed(0)}%)</p>
+                        style={{ width: `${Math.min((count / orders.length) * 100, 100)}px` }} />
+                      <p>{count} ({Math.round((count / orders.length) * 100)}%)</p>
                     </div>
                   </div>
                 ))}

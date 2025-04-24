@@ -1,3 +1,4 @@
+
 import { supabase } from "@/integrations/supabase/client";
 import { Product } from "@/types/supabase";
 
@@ -10,8 +11,8 @@ export const getProductInventory = async (productId: string): Promise<number> =>
   try {
     const { data, error } = await supabase
       .from(PRODUCTS_TABLE)
-      .select('inventory_count')
-      .eq('product_id', productId)
+      .select('stock')
+      .eq('id', productId)
       .single();
     
     if (error) {
@@ -19,7 +20,7 @@ export const getProductInventory = async (productId: string): Promise<number> =>
       throw error;
     }
     
-    return data?.inventory_count || 0;
+    return data?.stock || 0;
   } catch (error) {
     console.error("Error in getProductInventory:", error);
     throw error;
@@ -33,8 +34,8 @@ export const updateProductInventory = async (productId: string, newCount: number
   try {
     const { error } = await supabase
       .from(PRODUCTS_TABLE)
-      .update({ inventory_count: newCount })
-      .eq('product_id', productId);
+      .update({ stock: newCount })
+      .eq('id', productId);
     
     if (error) {
       console.error("Error updating inventory:", error);
@@ -93,8 +94,8 @@ export const getLowInventoryProducts = async (threshold: number = 10): Promise<P
     const { data, error } = await supabase
       .from(PRODUCTS_TABLE)
       .select('*')
-      .lt('inventory_count', threshold)
-      .order('inventory_count', { ascending: true });
+      .lt('stock', threshold)
+      .order('stock', { ascending: true });
     
     if (error) {
       console.error("Error fetching low inventory products:", error);
