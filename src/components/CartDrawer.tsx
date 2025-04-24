@@ -24,8 +24,11 @@ const CartDrawer: React.FC = () => {
   if (!isCartOpen) return null;
   
   const handleCheckout = () => {
-    setIsCartOpen(false);
-    navigate('/checkout');
+    console.log("Navigating to checkout from CartDrawer");
+    setIsCartOpen(false); // Close the cart drawer before navigation
+    setTimeout(() => {
+      navigate('/checkout');
+    }, 100); // Small delay to ensure drawer closes first
   };
 
   return (

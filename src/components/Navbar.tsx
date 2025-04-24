@@ -23,8 +23,12 @@ const Navbar = () => {
   const handleCartClick = () => {
     if (totalItems > 0) {
       console.log("Navigating to checkout from Navbar");
+      // Close menu if open
+      if (isMenuOpen) setIsMenuOpen(false);
+      // Navigate to checkout
       navigate('/checkout');
     } else {
+      console.log("Opening cart drawer");
       setIsCartOpen(true);
     }
   };
