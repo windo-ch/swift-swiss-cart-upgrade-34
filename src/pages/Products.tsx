@@ -1,17 +1,17 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import CategoryFilter from '../components/products/CategoryFilter';
 import ProductGrid from '../components/products/ProductGrid';
-import { getStoredProducts } from '../utils/product-utils';
 import { Loader2, Search } from 'lucide-react';
 import { Product } from '../types/product';
 import { Badge } from '@/components/ui/badge';
 import { X } from 'lucide-react';
 import { categories } from '../data/categories-data';
 import { Input } from '@/components/ui/input';
+import { useProducts } from '@/hooks/useProducts';
+import { supabaseProductsToAppProducts } from '@/utils/product-adapter';
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -19,34 +19,11 @@ const Products = () => {
   
   const [activeCategory, setActiveCategory] = useState<string>(categoryParam);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   
-  useEffect(() => {
-    const loadProducts = () => {
-      setIsLoading(true);
-      try {
-        const products = getStoredProducts();
-        console.log(`Loaded ${products.length} products`);
-        setAllProducts(products);
-      } catch (error) {
-        console.error("Error loading products:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    loadProducts();
-    
-    const handleStorageChange = () => {
-      console.log("Storage event detected, refreshing products");
-      loadProducts();
-    };
-    
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
+  // Use the products hook to fetch products from Supabase
+  const { products: supabaseProducts, isLoading, isError, refetch } = useProducts();
+  const allProducts = supabaseProductsToAppProducts(supabaseProducts);
   
   useEffect(() => {
     if (categoryParam) {
@@ -88,6 +65,28 @@ const Products = () => {
     const category = categories.find(c => c.id === activeCategory);
     return category ? category.name : 'Alle Produkte';
   };
+
+  // Show error state if there was a problem loading products
+  if (isError) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-grow container mx-auto px-4 py-8 flex items-center justify-center">
+          <div className="text-center">
+            <h2 className="text-xl font-semibold text-red-600 mb-2">Fehler beim Laden der Produkte</h2>
+            <p className="text-gray-600 mb-4">Es ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.</p>
+            <button 
+              onClick={() => refetch()}
+              className="px-4 py-2 bg-brings-primary text-white rounded-md hover:bg-brings-primary/90"
+            >
+              Erneut versuchen
+            </button>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col">

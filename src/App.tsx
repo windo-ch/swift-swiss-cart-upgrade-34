@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -31,6 +30,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import FirstTimeUserBanner from "./components/FirstTimeUserBanner";
 import InitialFlowHandler from "./components/InitialFlowHandler";
 import AdminRoute from "./components/admin/AdminRoute";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const queryClient = new QueryClient();
 
@@ -74,6 +74,11 @@ const App = () => (
                 <Route path="/admin/orders" element={
                   <AdminRoute>
                     <AdminOrderTracking />
+                  </AdminRoute>
+                } />
+                <Route path="/admin/dashboard" element={
+                  <AdminRoute>
+                    <AdminDashboard />
                   </AdminRoute>
                 } />
                 <Route path="/dateschutz" element={<Dateschutz />} />
