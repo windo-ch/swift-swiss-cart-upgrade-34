@@ -16,7 +16,7 @@ const hotspots = [
 const HotspotButtons: React.FC<HotspotButtonsProps> = ({ onSelectHotspot }) => {
   return (
     <div className="mt-8">
-      <div className="bg-brings-dark/80 backdrop-blur-sm rounded-lg p-6 border border-brings-primary/20">
+      <div className="bg-brings-dark rounded-lg p-6 border border-brings-primary/20">
         <h3 className="text-lg font-semibold mb-3 text-white">Hotspots (Gratis Lieferig)</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {hotspots.map((hotspot) => (
@@ -24,13 +24,13 @@ const HotspotButtons: React.FC<HotspotButtonsProps> = ({ onSelectHotspot }) => {
               key={hotspot.id}
               onClick={() => onSelectHotspot(hotspot.id)}
               variant="outline"
-              className="h-auto py-4 px-4 flex flex-col items-center gap-2 hover:bg-brings-primary hover:text-white group bg-white/20 border-white/20 text-white"
+              className="h-auto py-4 px-4 flex flex-col items-center gap-2 hover:bg-brings-primary hover:text-white group bg-white/80 border-white/20 text-brings-dark"
             >
               <span className="text-2xl group-hover:transform group-hover:scale-110 transition-transform">
                 {hotspot.emoji}
               </span>
               <span className="text-sm font-medium">{hotspot.name}</span>
-              <span className="text-xs text-white/90 group-hover:text-white/90">
+              <span className="text-xs text-brings-dark/90 group-hover:text-white/90">
                 20-25 Min. • Gratis
               </span>
             </Button>

@@ -1,8 +1,8 @@
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import PromoBanner from '../components/PromoBanner';
 import CategoryFilter from '../components/products/CategoryFilter';
 import ProductGrid from '../components/products/ProductGrid';
 import { getStoredProducts } from '../utils/product-utils';
@@ -86,7 +86,6 @@ const Products = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <PromoBanner />
       <Navbar />
       
       <main className="flex-grow container mx-auto px-4 py-8">

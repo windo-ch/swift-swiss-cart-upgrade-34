@@ -1,21 +1,42 @@
 
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Menu, X, ShoppingBag, User } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Menu, X, ShoppingBag, User, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAgeVerification } from '../contexts/AgeVerificationContext';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useDistrict } from '../contexts/DistrictContext';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const { isAdult } = useAgeVerification();
   const { totalItems, setIsCartOpen } = useCart();
   const { user } = useAuth();
+  const { selectedDistrict } = useDistrict();
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/products?search=${encodeURIComponent(searchTerm.trim())}`);
+    }
+  };
+
+  const handleCartClick = () => {
+    if (selectedDistrict) {
+      // If district is selected, just open the cart
+      setIsCartOpen(true);
+    } else {
+      // If no district selected, redirect to Order page where they can select one
+      navigate('/order');
+    }
   };
 
   return (
@@ -42,7 +63,7 @@ const Navbar = () => {
               </Link>
               <button 
                 className="relative" 
-                onClick={() => setIsCartOpen(true)}
+                onClick={handleCartClick}
               >
                 <ShoppingBag size={20} className="text-[#1D557A]" />
                 {totalItems > 0 && (
@@ -62,13 +83,16 @@ const Navbar = () => {
 
           {/* Search Bar - Always visible */}
           <div className="w-full">
-            <div className="relative">
+            <form onSubmit={handleSearch} className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" size={18} />
               <Input
                 type="text"
                 placeholder="Produkt sueche..."
-                className="w-full pl-4 pr-4 py-2 bg-gray-50 border-brings-primary/20 focus:border-brings-primary"
+                className="w-full pl-10 pr-4 py-2 bg-gray-50 border-brings-primary/20 focus:border-brings-primary"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
-            </div>
+            </form>
           </div>
         </div>
 
