@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -34,7 +33,15 @@ interface OrderAddress {
 
 interface Order {
   id: string;
-  delivery_address: OrderAddress;
+  delivery_address: {
+    firstName: string;
+    lastName: string;
+    address: string;
+    city: string;
+    postalCode: string;
+    email?: string;
+    phone?: string;
+  };
   total_amount: number;
   status: string;
   created_at: string;
@@ -46,6 +53,31 @@ interface Order {
   discount_amount?: number;
 }
 
+// Helper function to safely type cast JSON to OrderAddress
+const parseDeliveryAddress = (jsonAddress: Json): OrderAddress => {
+  if (typeof jsonAddress === 'object' && jsonAddress !== null && !Array.isArray(jsonAddress)) {
+    const address = jsonAddress as Record<string, any>;
+    return {
+      firstName: String(address.firstName || ''),
+      lastName: String(address.lastName || ''),
+      address: String(address.address || ''),
+      city: String(address.city || ''),
+      postalCode: String(address.postalCode || ''),
+      email: address.email ? String(address.email) : undefined,
+      phone: address.phone ? String(address.phone) : undefined
+    };
+  }
+  
+  // Return default address if JSON parsing fails
+  return {
+    firstName: '',
+    lastName: '',
+    address: '',
+    city: '',
+    postalCode: '',
+  };
+};
+
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -53,7 +85,7 @@ const AdminDashboard = () => {
   
   // Fetch orders data
   const { 
-    data: orders, 
+    data: ordersData, 
     isLoading: isOrdersLoading, 
     refetch: refetchOrders 
   } = useQuery({
@@ -69,9 +101,15 @@ const AdminDashboard = () => {
         .limit(50);
       
       if (error) throw error;
-      return (data || []) as Order[];
+      return data || [];
     }
   });
+  
+  // Transform the orders data to match the Order interface
+  const orders: Order[] = (ordersData || []).map(order => ({
+    ...order,
+    delivery_address: parseDeliveryAddress(order.delivery_address),
+  }));
   
   // Fetch low inventory products
   const {
@@ -90,7 +128,7 @@ const AdminDashboard = () => {
   const activeDeliveries = orders?.filter(order => order.status === 'in_delivery') || [];
   const completedOrders = orders?.filter(order => order.status === 'delivered') || [];
   
-  const totalRevenue = orders?.reduce((sum, order) => sum + order.total_amount, 0) || 0;
+  const totalRevenue = orders?.reduce((sum, order) => sum + Number(order.total_amount), 0) || 0;
   const avgOrderValue = orders?.length ? totalRevenue / orders.length : 0;
   
   // Refresh data
@@ -194,7 +232,7 @@ const AdminDashboard = () => {
                               {order.delivery_address.firstName} {order.delivery_address.lastName}
                             </p>
                             <p className="text-sm text-gray-500">
-                              {new Date(order.created_at).toLocaleString('de-CH')} • CHF {order.total_amount.toFixed(2)}
+                              {new Date(order.created_at).toLocaleString('de-CH')} • CHF {Number(order.total_amount).toFixed(2)}
                             </p>
                           </div>
                           <StatusBadge status={order.status} />
@@ -400,7 +438,7 @@ const DeliveryTab = ({
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="font-medium">CHF {order.total_amount.toFixed(2)}</p>
+                        <p className="font-medium">CHF {Number(order.total_amount).toFixed(2)}</p>
                         <p className="text-sm text-gray-500">{order.payment_method}</p>
                       </div>
                     </div>
@@ -443,7 +481,7 @@ const DeliveryTab = ({
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="font-medium">CHF {order.total_amount.toFixed(2)}</p>
+                        <p className="font-medium">CHF {Number(order.total_amount).toFixed(2)}</p>
                         <p className="text-sm text-gray-500">
                           <Timer className="h-4 w-4 inline-block mr-1" />
                           {order.estimated_delivery_time ? new Date(order.estimated_delivery_time).toLocaleTimeString('de-CH', { 
@@ -475,7 +513,7 @@ const DeliveryTab = ({
 
 const AnalyticsTab = ({ orders, isLoading }: { orders: Order[], isLoading: boolean }) => {
   // Simple analytics calculations
-  const totalRevenue = orders.reduce((sum, order) => sum + order.total_amount, 0);
+  const totalRevenue = orders.reduce((sum, order) => sum + Number(order.total_amount), 0);
   
   // Group orders by payment method
   const ordersByPaymentMethod: Record<string, number> = {};
@@ -531,4 +569,4 @@ const AnalyticsTab = ({ orders, isLoading }: { orders: Order[], isLoading: boole
   );
 };
 
-export default AdminDashboard; 
+export default AdminDashboard;

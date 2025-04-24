@@ -120,4 +120,4 @@ export const isProductAvailable = async (productId: string, requestedQuantity: n
     console.error("Error in isProductAvailable:", error);
     return false;
   }
-}; 
+};

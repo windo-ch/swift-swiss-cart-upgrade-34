@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchProducts, initializeProducts } from '@/services/productService';
@@ -43,7 +44,7 @@ export const useProducts = () => {
   // Get a product by ID
   const getProductById = (productId: string) => {
     if (!products) return null;
-    return products.find(product => product.product_id === productId) || null;
+    return products.find(product => product.id === productId) || null;
   };
   
   // Get categories
@@ -54,18 +55,19 @@ export const useProducts = () => {
     return categories;
   };
   
-  // Get featured products
+  // Get featured products - in Supabase we don't yet have this field, so we'll return some products for now
   const getFeaturedProducts = () => {
     if (!products) return [];
     
-    return products.filter(product => product.is_featured);
+    // Since we don't have a featured field in our Supabase schema yet, we'll return some products
+    return products.slice(0, 5); // Return first 5 products as "featured"
   };
   
   // Get age-restricted products
   const getAgeRestrictedProducts = () => {
     if (!products) return [];
     
-    return products.filter(product => product.is_age_restricted);
+    return products.filter(product => product.agerestricted);
   };
   
   return {
@@ -81,4 +83,4 @@ export const useProducts = () => {
     getAgeRestrictedProducts,
     isInitialized
   };
-}; 
+};

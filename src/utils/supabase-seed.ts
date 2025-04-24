@@ -1,3 +1,4 @@
+
 import { seedProductsData } from './seed-products';
 import { supabase } from '@/integrations/supabase/client';
 import { Product as AppProduct } from '@/types/product';
@@ -42,16 +43,16 @@ export const getSeedProducts = (): AppProduct[] => {
  */
 export const convertToSupabaseProduct = (product: AppProduct): ProductInsert => {
   return {
-    product_id: product.id.toString(),
+    id: product.id.toString(),
     name: product.name,
     description: product.description || '',
     price: typeof product.price === 'number' ? product.price : parseFloat(String(product.price)),
     image: product.image || '',
     category: product.category,
-    subcategory: '',
-    is_age_restricted: product.ageRestricted || false,
-    is_featured: product.isFeatured || false,
-    inventory_count: product.stock || 100
+    agerestricted: product.ageRestricted || false,
+    stock: product.stock || 100,
+    weight: product.weight || '',
+    ingredients: product.ingredients || ''
   };
 };
 
