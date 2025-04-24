@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -31,15 +30,15 @@ const Auth = () => {
       } else {
         await signUp(email, password);
         toast({
-          title: "Account created",
-          description: "Please check your email to verify your account.",
+          title: "Konto erstellt",
+          description: "Bitte überprüf dini E-Mail zum Bestätige vom Konto.",
         });
       }
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: error instanceof Error ? error.message : "An error occurred",
+        title: "Fehler",
+        description: error instanceof Error ? error.message : "Es isch en Fehler passiert",
       });
     } finally {
       setLoading(false);
@@ -52,10 +51,16 @@ const Auth = () => {
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: error instanceof Error ? error.message : "An error occurred",
+        title: "Fehler",
+        description: error instanceof Error ? error.message : "Es isch en Fehler passiert",
       });
     }
+  };
+
+  // Test account for demo
+  const useTestAccount = () => {
+    setEmail('test@brings.ch');
+    setPassword('test1234');
   };
 
   return (
@@ -68,8 +73,11 @@ const Auth = () => {
             className="mx-auto h-12 w-auto"
           />
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            {isLogin ? 'Sign in to your account' : 'Create a new account'}
+            {isLogin ? 'Amelde' : 'Neues Konto erstelle'}
           </h2>
+          <p className="text-center text-sm text-gray-600 mt-2">
+            {isLogin ? 'Meld dich a zum produkt bestelle' : 'Erstell es Konto zum schneller bestelle'}
+          </p>
         </div>
 
         {/* Social Login Buttons */}
@@ -96,16 +104,6 @@ const Auth = () => {
             <Facebook className="mr-2 h-5 w-5" />
             Facebook
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => handleSocialLogin('twitter')}
-            className="w-full"
-          >
-            <Twitter className="mr-2 h-5 w-5" />
-            Twitter
-          </Button>
-          {/* Remove Instagram as it's not a valid Supabase provider */}
         </div>
 
         <div className="relative">
@@ -113,37 +111,39 @@ const Auth = () => {
             <div className="w-full border-t border-gray-300" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-gray-50 text-gray-500">Or continue with</span>
+            <span className="px-2 bg-gray-50 text-gray-500">Oder mit E-Mail</span>
           </div>
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="email">Email address</Label>
+              <Label htmlFor="email">E-Mail Adressä</Label>
               <Input
                 id="email"
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                placeholder="dini@email.ch"
               />
             </div>
             <div>
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Passwort</Label>
               <Input
                 id="password"
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                placeholder="********"
               />
             </div>
           </div>
 
           <div className="flex flex-col gap-4">
             <Button type="submit" disabled={loading} className="w-full">
-              {loading ? 'Loading...' : isLogin ? 'Sign in' : 'Sign up'}
+              {loading ? 'Ladä...' : isLogin ? 'Ameldä' : 'Konto erstellä'}
             </Button>
             <Button
               type="button"
@@ -151,7 +151,17 @@ const Auth = () => {
               onClick={() => setIsLogin(!isLogin)}
               className="w-full"
             >
-              {isLogin ? "Need an account? Sign up" : "Already have an account? Sign in"}
+              {isLogin ? "Keis Konto? Jetzt registrierä" : "Scho es Konto? Ameldä"}
+            </Button>
+            
+            {/* Test Account Button - for demo purposes */}
+            <Button
+              type="button"
+              variant="link"
+              onClick={useTestAccount}
+              className="w-full text-brings-primary"
+            >
+              Demo-Konto verwende (für Test)
             </Button>
           </div>
         </form>

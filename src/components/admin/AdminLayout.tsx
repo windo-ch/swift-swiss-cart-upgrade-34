@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Navbar from '../Navbar';
@@ -14,7 +13,8 @@ import {
   ChevronUp,
   Users, 
   Settings, 
-  Shield
+  Shield,
+  LayoutDashboard
 } from 'lucide-react';
 import { initializeAdminProducts } from '@/utils/admin-utils';
 import { useToast } from '@/components/ui/use-toast';
@@ -30,7 +30,15 @@ const AdminLayout = ({ children, onRefresh, isRefreshing = false }: AdminLayoutP
   const location = useLocation();
   const { toast } = useToast();
   const currentPath = location.pathname;
-  const activeTab = currentPath.includes('/admin/orders') ? 'orders' : 'products';
+  
+  // Determine active tab based on the current path
+  let activeTab = 'products';
+  if (currentPath.includes('/admin/orders')) {
+    activeTab = 'orders';
+  } else if (currentPath.includes('/admin/dashboard')) {
+    activeTab = 'dashboard';
+  }
+  
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const handleForceRefresh = () => {
@@ -84,6 +92,16 @@ const AdminLayout = ({ children, onRefresh, isRefreshing = false }: AdminLayoutP
             
             <nav className="py-4">
               <ul className="space-y-2">
+                {/* Dashboard Link - NEW */}
+                <li>
+                  <Link to="/admin/dashboard">
+                    <div className={`flex items-center px-4 py-2 ${activeTab === 'dashboard' ? 'bg-brings-primary text-white' : 'text-gray-700 hover:bg-gray-200'} rounded-lg mx-2`}>
+                      <LayoutDashboard size={20} />
+                      {!sidebarCollapsed && <span className="ml-3">Dashboard</span>}
+                    </div>
+                  </Link>
+                </li>
+                
                 <li>
                   <Link to="/admin">
                     <div className={`flex items-center px-4 py-2 ${activeTab === 'products' ? 'bg-brings-primary text-white' : 'text-gray-700 hover:bg-gray-200'} rounded-lg mx-2`}>
@@ -92,6 +110,7 @@ const AdminLayout = ({ children, onRefresh, isRefreshing = false }: AdminLayoutP
                     </div>
                   </Link>
                 </li>
+                
                 <li>
                   <Link to="/admin/orders">
                     <div className={`flex items-center px-4 py-2 ${activeTab === 'orders' ? 'bg-brings-primary text-white' : 'text-gray-700 hover:bg-gray-200'} rounded-lg mx-2`}>
@@ -100,12 +119,14 @@ const AdminLayout = ({ children, onRefresh, isRefreshing = false }: AdminLayoutP
                     </div>
                   </Link>
                 </li>
+                
                 <li>
                   <div className={`flex items-center px-4 py-2 text-gray-500 rounded-lg mx-2`}>
                     <Users size={20} />
                     {!sidebarCollapsed && <span className="ml-3">Kunden</span>}
                   </div>
                 </li>
+                
                 <li>
                   <div className={`flex items-center px-4 py-2 text-gray-500 rounded-lg mx-2`}>
                     <Settings size={20} />
@@ -137,6 +158,12 @@ const AdminLayout = ({ children, onRefresh, isRefreshing = false }: AdminLayoutP
               <div className="flex gap-2">
                 <Tabs value={activeTab} className="mb-0">
                   <TabsList>
+                    <Link to="/admin/dashboard">
+                      <TabsTrigger value="dashboard" className="flex items-center gap-2">
+                        <LayoutDashboard size={16} />
+                        Dashboard
+                      </TabsTrigger>
+                    </Link>
                     <Link to="/admin">
                       <TabsTrigger value="products" className="flex items-center gap-2">
                         <Package size={16} />
@@ -168,7 +195,11 @@ const AdminLayout = ({ children, onRefresh, isRefreshing = false }: AdminLayoutP
             <div className="hidden md:flex md:items-center md:justify-between mb-6">
               <div className="flex items-center">
                 <Shield className="text-brings-primary mr-2" size={24} />
-                <h1 className="text-2xl font-bold">{activeTab === 'products' ? 'Produkte verwalten' : 'Bestellungen verfolgen'}</h1>
+                <h1 className="text-2xl font-bold">
+                  {activeTab === 'dashboard' ? 'Admin Dashboard' : 
+                   activeTab === 'products' ? 'Produkte verwalten' : 
+                   'Bestellungen verfolgen'}
+                </h1>
               </div>
               
               {activeTab === 'products' && !isRefreshing && (
