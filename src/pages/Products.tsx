@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -19,17 +19,40 @@ const Products = () => {
   
   const [activeCategory, setActiveCategory] = useState<string>(categoryParam);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   
   // Use the products hook to fetch products from Supabase
   const { products: supabaseProducts, isLoading, isError, refetch } = useProducts();
-  const allProducts = supabaseProductsToAppProducts(supabaseProducts);
   
+  // Convert Supabase products to app products format once when supabaseProducts changes
+  const allProducts = useMemo(() => {
+    return supabaseProductsToAppProducts(supabaseProducts);
+  }, [supabaseProducts]);
+  
+  // Update activeCategory when URL param changes
   useEffect(() => {
-    if (categoryParam) {
+    if (categoryParam !== activeCategory) {
       setActiveCategory(categoryParam);
     }
-  }, [categoryParam]);
+  }, [categoryParam, activeCategory]);
+  
+  // Filter products based on category and search term - with proper dependencies
+  const filteredProducts = useMemo(() => {
+    const filtered = allProducts.filter((product) => {
+      const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          (product.description || '').toLowerCase().includes(searchTerm.toLowerCase());
+      
+      const matchesCategory = activeCategory === 'all' || product.category === activeCategory;
+      
+      return matchesSearch && matchesCategory;
+    });
+    
+    return filtered;
+  }, [allProducts, activeCategory, searchTerm]);
+  
+  // Log filtered products count when it changes
+  useEffect(() => {
+    console.log(`Filtering for category: ${activeCategory}, found ${filteredProducts.length} products`);
+  }, [filteredProducts.length, activeCategory]);
   
   const handleCategoryChange = (category: string) => {
     setActiveCategory(category);
@@ -45,20 +68,6 @@ const Products = () => {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
-  
-  useEffect(() => {
-    const filtered = allProducts.filter((product) => {
-      const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                            (product.description || '').toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesCategory = activeCategory === 'all' || product.category === activeCategory;
-      
-      return matchesSearch && matchesCategory;
-    });
-    
-    console.log(`Filtering for category: ${activeCategory}, found ${filtered.length} products`);
-    setFilteredProducts(filtered);
-  }, [searchTerm, activeCategory, allProducts]);
 
   const getActiveCategoryName = () => {
     if (activeCategory === 'all') return 'Alle Produkte';

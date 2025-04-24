@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchProducts, initializeProducts } from '@/services/productService';
@@ -44,6 +43,7 @@ export const useProducts = () => {
   // Get a product by ID
   const getProductById = (productId: string) => {
     if (!products) return null;
+    // Use the product's id field for matching
     return products.find(product => product.id === productId) || null;
   };
   
@@ -59,14 +59,15 @@ export const useProducts = () => {
   const getFeaturedProducts = () => {
     if (!products) return [];
     
-    // Since we don't have a featured field in our Supabase schema yet, we'll return some products
-    return products.slice(0, 5); // Return first 5 products as "featured"
+    // We don't have a featured field in our schema yet - return first 5 products
+    return products.slice(0, 5);
   };
   
   // Get age-restricted products
   const getAgeRestrictedProducts = () => {
     if (!products) return [];
     
+    // Use agerestricted field which matches our schema
     return products.filter(product => product.agerestricted);
   };
   
