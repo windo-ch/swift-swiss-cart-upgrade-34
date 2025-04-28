@@ -1,17 +1,18 @@
-
 import React from 'react';
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { UseFormReturn } from 'react-hook-form';
 import { CheckoutFormValues } from './types';
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface AddressFormProps {
   form: UseFormReturn<CheckoutFormValues>;
   onNext: () => void;
+  showSaveAddress?: boolean;
 }
 
-const AddressForm = ({ form, onNext }: AddressFormProps) => {
+const AddressForm = ({ form, onNext, showSaveAddress = false }: AddressFormProps) => {
   return (
     <>
       <h2 className="text-xl font-semibold mb-4">Lieferadresse</h2>
@@ -116,6 +117,29 @@ const AddressForm = ({ form, onNext }: AddressFormProps) => {
             )}
           />
         </div>
+        
+        {showSaveAddress && (
+          <FormField
+            control={form.control}
+            name="saveAddress"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>Adresse speichern</FormLabel>
+                  <FormDescription>
+                    Für schnellere Bestellungen in der Zukunft
+                  </FormDescription>
+                </div>
+              </FormItem>
+            )}
+          />
+        )}
         
         <Button type="submit" className="w-full bg-brings-primary hover:bg-brings-primary/90">
           Wiiter zur Zahlig

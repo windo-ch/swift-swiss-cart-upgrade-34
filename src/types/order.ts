@@ -1,4 +1,3 @@
-
 export interface OrderAddress {
   firstName: string;
   lastName: string;
@@ -26,6 +25,7 @@ export interface Order {
   delivery_fee: number;
   discount_amount: number;
   delivery_address: OrderAddress;
+  district?: string | null;
   status: "pending" | "in_delivery" | "delivered";
   created_at: string;
   updated_at: string;

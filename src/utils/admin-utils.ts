@@ -2,9 +2,11 @@ import { Product } from '../types/product';
 import { products as storeProducts } from '../data/products';
 import { getProductImageUrl } from './product-utils';
 import { seedProductsData } from './seed-products';
+import { fetchProducts } from '@/services/productService';
+import { supabaseProductsToAppProducts } from './product-adapter';
 
 // Create a more reliable method to initialize admin products
-export const initializeAdminProducts = (): void => {
+export const initializeAdminProducts = async (): Promise<void> => {
   console.log("🔧 Initializing admin products");
   
   try {
@@ -23,9 +25,27 @@ export const initializeAdminProducts = (): void => {
       }
     }
     
-    // If we get here, we need to seed products
-    console.log("📦 No valid admin products found, seeding with default products");
-    seedProductsData();
+    // If we get here, we need to seed products by fetching from Supabase
+    console.log("📦 No valid admin products found, fetching from Supabase");
+    
+    try {
+      // Fetch products from Supabase
+      const supabaseProducts = await fetchProducts();
+      
+      if (Array.isArray(supabaseProducts) && supabaseProducts.length > 0) {
+        const adminProducts = supabaseProductsToAppProducts(supabaseProducts);
+        localStorage.setItem('adminProducts', JSON.stringify(adminProducts));
+        console.log(`✅ Successfully initialized ${adminProducts.length} admin products from Supabase`);
+        window.dispatchEvent(new Event('storage')); // Notify other components
+      } else {
+        console.log("📦 No products found in Supabase, using seed data");
+        seedProductsData();
+      }
+    } catch (fetchError) {
+      console.error("❌ Error fetching products from Supabase:", fetchError);
+      console.log("📦 Falling back to seed data");
+      seedProductsData();
+    }
   } catch (error) {
     console.error("❌ Error initializing admin products:", error);
     throw error;
@@ -33,17 +53,31 @@ export const initializeAdminProducts = (): void => {
 };
 
 // Function to force reinitialize all products
-export const forceReinitializeAdminProducts = (): void => {
+export const forceReinitializeAdminProducts = async (): Promise<void> => {
   console.log("🔄 Force reinitializing admin products");
   
   try {
     // Clear existing products
     localStorage.removeItem('adminProducts');
     
-    // Seed with default products
-    seedProductsData();
-    
-    console.log("✅ Successfully reinitialized admin products");
+    // Fetch products from Supabase
+    try {
+      const supabaseProducts = await fetchProducts();
+      
+      if (Array.isArray(supabaseProducts) && supabaseProducts.length > 0) {
+        const adminProducts = supabaseProductsToAppProducts(supabaseProducts);
+        localStorage.setItem('adminProducts', JSON.stringify(adminProducts));
+        console.log(`✅ Successfully reinitialized ${adminProducts.length} admin products from Supabase`);
+        window.dispatchEvent(new Event('storage')); // Notify other components
+      } else {
+        console.log("📦 No products found in Supabase, using seed data");
+        seedProductsData();
+      }
+    } catch (fetchError) {
+      console.error("❌ Error fetching products from Supabase:", fetchError);
+      console.log("📦 Falling back to seed data");
+      seedProductsData();
+    }
   } catch (error) {
     console.error("❌ Error reinitializing admin products:", error);
     throw error;

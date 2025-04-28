@@ -14,6 +14,7 @@ interface AuthContextType {
   isFirstTimeUser: boolean;
   hasAppliedDiscount: boolean;
   applyFirstTimeDiscount: () => Promise<void>;
+  isAuthenticated: boolean;
 }
 
 // Define the expected return types for our queries to fix type issues
@@ -160,7 +161,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       loading,
       isFirstTimeUser,
       hasAppliedDiscount,
-      applyFirstTimeDiscount
+      applyFirstTimeDiscount,
+      isAuthenticated: !!user
     }}>
       {children}
     </AuthContext.Provider>

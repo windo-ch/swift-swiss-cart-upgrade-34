@@ -37,6 +37,29 @@ const DirectAdminAccess = () => {
           </div>
         ) : (
           <>
+            <div className="p-4 bg-yellow-50 border-l-4 border-yellow-500 mb-6">
+              <h2 className="text-lg font-semibold text-yellow-800">Debug Notice</h2>
+              <p className="text-yellow-700">
+                If experiencing persistent redirects, try the test pages below to isolate the issue:
+              </p>
+              <div className="mt-3 flex flex-col sm:flex-row gap-3">
+                <a href="/admin-test" className="inline-block">
+                  <Button variant="outline" className="bg-yellow-100 border-yellow-300">
+                    React Test Page
+                  </Button>
+                </a>
+                
+                <a href="/admin-test.html" className="inline-block">
+                  <Button variant="outline" className="bg-yellow-100 border-yellow-300">
+                    Static HTML Test Page
+                  </Button>
+                </a>
+              </div>
+              <p className="text-xs text-yellow-600 mt-2">
+                The static HTML page completely bypasses React Router and all providers
+              </p>
+            </div>
+            
             <div className="p-4 bg-gray-50 border border-gray-200 rounded-md mb-4">
               <h2 className="text-lg font-semibold mb-3">User Information</h2>
               <p><span className="font-medium">Email:</span> {user.email}</p>
@@ -79,6 +102,40 @@ const DirectAdminAccess = () => {
                 If you can access the admin dashboard through these links but not through the regular navigation, 
                 there's likely an issue with the AdminRoute component or React Router configuration.
               </p>
+            </div>
+
+            <div className="p-4 bg-green-50 border border-green-200 rounded-md mt-4">
+              <h2 className="text-lg font-semibold mb-2 text-green-700">Testing Simplified Dashboard</h2>
+              <p className="text-green-600 mb-4">
+                A simplified admin dashboard has been created to troubleshoot loading issues.
+                Use the link below to access it directly.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <a href="/admin/dashboard?simple=true" className="inline-block">
+                  <Button variant="outline" className="bg-green-100">
+                    Simplified Dashboard (Direct Link)
+                  </Button>
+                </a>
+                
+                <a href="/admin-dashboard-direct" className="inline-block">
+                  <Button variant="outline" className="bg-blue-100">
+                    New Direct Dashboard (No AdminRoute)
+                  </Button>
+                </a>
+              </div>
+            </div>
+
+            <div className="p-4 bg-red-50 border border-red-200 rounded-md mt-4">
+              <h2 className="text-lg font-semibold mb-2 text-red-700">Emergency Access (Minimal Providers)</h2>
+              <p className="text-red-600 mb-4">
+                If all other methods fail, this route bypasses most providers that might cause redirects.
+                May have limited functionality but should definitely load.
+              </p>
+              <a href="/admin-super-direct" className="inline-block">
+                <Button variant="outline" className="bg-red-100">
+                  Super Direct Dashboard (Emergency)
+                </Button>
+              </a>
             </div>
           </>
         )}

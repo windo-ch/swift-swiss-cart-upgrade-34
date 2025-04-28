@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {
   Dialog,
@@ -88,6 +87,12 @@ const OrderDetails = ({ order, isOpen, onClose }: OrderDetailsProps) => {
               <div className="bg-gray-50 p-3 rounded-md">
                 <p className="font-medium">{order.delivery_address.firstName} {order.delivery_address.lastName}</p>
                 <p className="flex items-center"><MapPin size={14} className="mr-1" /> {order.delivery_address.address}, {order.delivery_address.postalCode} {order.delivery_address.city}</p>
+                {order.district && (
+                  <p className="flex items-center mt-1">
+                    <MapPin size={14} className="mr-1 text-brings-primary" /> 
+                    <span className="font-medium text-brings-primary">Bezirk: {order.district}</span>
+                  </p>
+                )}
                 <p className="flex items-center"><Phone size={14} className="mr-1" /> {order.delivery_address.phone}</p>
                 <p className="flex items-center"><Mail size={14} className="mr-1" /> {order.delivery_address.email}</p>
               </div>

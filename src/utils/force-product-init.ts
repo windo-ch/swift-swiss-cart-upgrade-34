@@ -6,6 +6,7 @@ import { Tables } from '@/integrations/supabase/types';
 
 const PRODUCTS_TABLE = 'products';
 
+// Define the insert type directly from the correct Supabase schema
 type ProductInsert = Required<Pick<Tables<"products">, "name" | "category" | "price">> & 
   Partial<Omit<Tables<"products">, "name" | "category" | "price">>;
 
@@ -19,6 +20,8 @@ export const forceInitializeProducts = async (): Promise<{
   productCount: number;
 }> => {
   try {
+    console.log('Starting force initialization of products...');
+    
     // 1. Check if the products table exists
     const { data: tableInfo, error: tableError } = await supabase
       .from(PRODUCTS_TABLE)
@@ -27,6 +30,7 @@ export const forceInitializeProducts = async (): Promise<{
       .single();
     
     if (tableError && !tableError.message.includes('does not exist')) {
+      console.error('Error accessing products table:', tableError);
       return {
         success: false,
         message: `Error accessing products table: ${tableError.message}`,
@@ -36,12 +40,14 @@ export const forceInitializeProducts = async (): Promise<{
     
     // 2. Clear existing products if the table exists
     if (!tableError) {
+      console.log('Products table exists, clearing existing products...');
       const { error: deleteError } = await supabase
         .from(PRODUCTS_TABLE)
         .delete()
         .neq('id', 'none'); // Delete all rows
       
       if (deleteError) {
+        console.error('Error clearing existing products:', deleteError);
         return {
           success: false,
           message: `Error clearing existing products: ${deleteError.message}`,
@@ -56,6 +62,7 @@ export const forceInitializeProducts = async (): Promise<{
     const seedProducts = getSeedProducts();
     
     if (seedProducts.length === 0) {
+      console.error('No seed products found');
       return {
         success: false,
         message: 'No seed products found to initialize',
@@ -67,13 +74,28 @@ export const forceInitializeProducts = async (): Promise<{
     
     // 4. Convert to Supabase format and insert in batches
     const supabaseProducts: ProductInsert[] = seedProducts.map(product => {
+      // Convert app product to match the Supabase schema 
       const converted = appProductToSupabaseProduct(product);
+      
+      // Log the first product to help with debugging
+      if (product.id === seedProducts[0].id) {
+        console.log('Sample product conversion:', { 
+          original: product,
+          converted
+        });
+      }
+      
       // Ensure required fields are present
       return {
         name: product.name,
         category: product.category,
         price: product.price,
-        ...converted
+        ...converted,
+        
+        // Explicit mapping for critical fields to ensure consistency
+        agerestricted: product.ageRestricted || false,
+        stock: product.stock || 0,
+        image: product.image || null
       };
     });
     
@@ -83,11 +105,15 @@ export const forceInitializeProducts = async (): Promise<{
     
     for (let i = 0; i < supabaseProducts.length; i += batchSize) {
       const batch = supabaseProducts.slice(i, i + batchSize);
+      
+      console.log(`Inserting batch ${i / batchSize + 1} of ${Math.ceil(supabaseProducts.length / batchSize)}...`);
+      
       const { error: insertError } = await supabase
         .from(PRODUCTS_TABLE)
         .insert(batch);
       
       if (insertError) {
+        console.error(`Error inserting batch ${i / batchSize + 1}:`, insertError);
         return {
           success: false,
           message: `Error inserting batch ${i / batchSize + 1}: ${insertError.message}`,
@@ -105,6 +131,7 @@ export const forceInitializeProducts = async (): Promise<{
       productCount: insertedCount
     };
   } catch (error) {
+    console.error('Unexpected error during force initialization:', error);
     return {
       success: false,
       message: `Unexpected error: ${error instanceof Error ? error.message : String(error)}`,

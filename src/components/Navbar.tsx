@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X, ShoppingBag, User } from 'lucide-react';
@@ -7,12 +6,13 @@ import { useAgeVerification } from '../contexts/AgeVerificationContext';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useDistrict } from '../contexts/DistrictContext';
+import { DropdownMenuItem, DropdownMenuGroup, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isAdult } = useAgeVerification();
   const { totalItems, setIsCartOpen } = useCart();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const { selectedDistrict } = useDistrict();
   const navigate = useNavigate();
 

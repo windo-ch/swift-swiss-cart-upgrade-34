@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import Navbar from '../Navbar';
 import Footer from '../Footer';
 import { Button } from '@/components/ui/button';
-import { AdminProvider } from '@/contexts/AdminContext';
+import { AdminProvider, useAdmin } from '@/contexts/AdminContext';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Package, 
@@ -14,19 +14,22 @@ import {
   Users, 
   Settings, 
   Shield,
-  LayoutDashboard
+  LayoutDashboard,
+  AlertTriangle
 } from 'lucide-react';
 import { initializeAdminProducts } from '@/utils/admin-utils';
 import { useToast } from '@/components/ui/use-toast';
 import { Separator } from '@/components/ui/separator';
+import ProductSyncHandler from './ProductSyncHandler';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
   onRefresh?: () => void;
   isRefreshing?: boolean;
+  noProvider?: boolean; // Add prop to optionally skip provider wrapping
 }
 
-const AdminLayout = ({ children, onRefresh, isRefreshing = false }: AdminLayoutProps) => {
+const AdminLayout = ({ children, onRefresh, isRefreshing = false, noProvider = false }: AdminLayoutProps) => {
   const location = useLocation();
   const { toast } = useToast();
   const currentPath = location.pathname;
@@ -46,12 +49,27 @@ const AdminLayout = ({ children, onRefresh, isRefreshing = false }: AdminLayoutP
       onRefresh();
     } else {
       try {
-        initializeAdminProducts();
-        toast({
-          title: "Produkte neu geladen",
-          description: "Alle Produkte wurden erfolgreich neu geladen.",
-          duration: 3000,
-        });
+        // Use async/await pattern for initializeAdminProducts
+        const doRefresh = async () => {
+          try {
+            await initializeAdminProducts();
+            toast({
+              title: "Produkte neu geladen",
+              description: "Alle Produkte wurden erfolgreich neu geladen.",
+              duration: 3000,
+            });
+          } catch (error) {
+            console.error("Error refreshing products:", error);
+            toast({
+              title: "Fehler",
+              description: "Fehler beim Neuladen der Produkte.",
+              duration: 3000,
+              variant: "destructive"
+            });
+          }
+        };
+        
+        doRefresh();
       } catch (error) {
         console.error("Error refreshing products:", error);
         toast({
@@ -68,8 +86,12 @@ const AdminLayout = ({ children, onRefresh, isRefreshing = false }: AdminLayoutP
     setSidebarCollapsed(!sidebarCollapsed);
   };
 
-  return (
-    <AdminProvider>
+  // Create content without AdminProvider wrapper
+  const content = (
+    <>
+      {/* Include the ProductSyncHandler for backward compatibility */}
+      <ProductSyncHandler />
+      
       <div className="min-h-screen flex flex-col">
         <Navbar />
         
@@ -133,6 +155,16 @@ const AdminLayout = ({ children, onRefresh, isRefreshing = false }: AdminLayoutP
                     {!sidebarCollapsed && <span className="ml-3">Einstellungen</span>}
                   </div>
                 </li>
+                
+                {/* Add link to database diagnostic page */}
+                <li>
+                  <Link to="/db-diagnostic">
+                    <div className={`flex items-center px-4 py-2 ${location.pathname === '/db-diagnostic' ? 'bg-brings-primary text-white' : 'text-gray-700 hover:bg-gray-200'} rounded-lg mx-2`}>
+                      <AlertTriangle size={20} />
+                      {!sidebarCollapsed && <span className="ml-3">Datenbank Diagnose</span>}
+                    </div>
+                  </Link>
+                </li>
               </ul>
             </nav>
             
@@ -174,6 +206,12 @@ const AdminLayout = ({ children, onRefresh, isRefreshing = false }: AdminLayoutP
                       <TabsTrigger value="orders" className="flex items-center gap-2">
                         <Truck size={16} />
                         Bestellungen
+                      </TabsTrigger>
+                    </Link>
+                    <Link to="/db-diagnostic">
+                      <TabsTrigger value="diagnostic" className="flex items-center gap-2">
+                        <AlertTriangle size={16} />
+                        Diagnose
                       </TabsTrigger>
                     </Link>
                   </TabsList>
@@ -221,6 +259,13 @@ const AdminLayout = ({ children, onRefresh, isRefreshing = false }: AdminLayoutP
         
         <Footer />
       </div>
+    </>
+  );
+
+  // Conditionally wrap with AdminProvider based on the noProvider prop
+  return noProvider ? content : (
+    <AdminProvider>
+      {content}
     </AdminProvider>
   );
 };

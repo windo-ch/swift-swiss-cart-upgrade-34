@@ -1,16 +1,19 @@
-
 import React from 'react';
 import { CartItem } from '@/contexts/CartContext';
 import { Truck } from 'lucide-react';
+import { formatDeliveryTimeRange, getFormattedDeliveryTime } from '@/utils/delivery-utils';
 
 interface OrderSummaryProps {
   cartItems: CartItem[];
   totalPrice: number;
   deliveryFee: number;
+  postalCode?: string;
 }
 
-const OrderSummary = ({ cartItems, totalPrice, deliveryFee }: OrderSummaryProps) => {
+const OrderSummary = ({ cartItems, totalPrice, deliveryFee, postalCode }: OrderSummaryProps) => {
   const orderTotal = totalPrice + deliveryFee;
+  const deliveryTimeRange = postalCode ? formatDeliveryTimeRange(postalCode) : '30-60 Minute';
+  const estimatedTime = postalCode ? getFormattedDeliveryTime(postalCode) : '';
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
@@ -53,7 +56,14 @@ const OrderSummary = ({ cartItems, totalPrice, deliveryFee }: OrderSummaryProps)
           <Truck className="text-brings-primary mr-3 flex-shrink-0 mt-1" size={20} />
           <div>
             <p className="font-medium">Lieferig</p>
-            <p className="text-sm text-gray-600">Üsi Lieferzit isch meistens innerhalb vo 30-60 Minute.</p>
+            <p className="text-sm text-gray-600">
+              Üsi Lieferzit für dini Region isch {deliveryTimeRange}.
+              {estimatedTime && postalCode && (
+                <span className="block font-medium mt-1">
+                  Gschätzt bis {estimatedTime} Uhr
+                </span>
+              )}
+            </p>
           </div>
         </div>
       </div>

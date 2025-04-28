@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
@@ -18,6 +17,15 @@ import AddressForm from '@/components/checkout/AddressForm';
 import PaymentForm from '@/components/checkout/PaymentForm';
 import OrderSummary from '@/components/checkout/OrderSummary';
 import { CheckoutFormValues } from '@/components/checkout/types';
+import { isProductAvailable, reduceInventory } from '@/services/inventoryService';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { 
+  calculateEstimatedDeliveryTime, 
+  formatDeliveryTimeRange, 
+  getFormattedDeliveryTime 
+} from '@/utils/delivery-utils';
+import { useDistrict } from '@/contexts/DistrictContext';
 
 const formSchema = z.object({
   firstName: z.string().min(2, { message: 'Vorname muess mindestens 2 Zeiche ha' }),
@@ -30,32 +38,122 @@ const formSchema = z.object({
   paymentMethod: z.enum(['card', 'twint', 'cash'], { 
     required_error: 'Bitte wähl e Zahligs-Methode us' 
   }),
+  saveAddress: z.boolean(),
 });
 
 const Checkout = () => {
   const [step, setStep] = useState<'details' | 'payment'>('details');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCreatingAccount, setIsCreatingAccount] = useState(false);
+  const [savedAddresses, setSavedAddresses] = useState<any[]>([]);
+  const [selectedAddressId, setSelectedAddressId] = useState<string>("");
+  const [loadingAddresses, setLoadingAddresses] = useState(false);
   const { cartItems, totalPrice, clearCart } = useCart();
   const { toast } = useToast();
   const navigate = useNavigate();
   const { user, hasAppliedDiscount, signUp } = useAuth();
+  const { selectedDistrict, openDistrictModal } = useDistrict();
   
   const form = useForm<CheckoutFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       firstName: '',
       lastName: '',
-      email: '',
+      email: user?.email || '',
       phone: '',
       address: '',
       city: '',
       postalCode: '',
       paymentMethod: 'card',
+      saveAddress: false,
     },
   });
 
+  // Load user's saved addresses
+  useEffect(() => {
+    if (user) {
+      fetchUserAddresses();
+    }
+  }, [user]);
+
+  // Fetch user's saved addresses from Supabase
+  const fetchUserAddresses = async () => {
+    if (!user) return;
+    
+    setLoadingAddresses(true);
+    try {
+      const { data, error } = await supabase
+        .from('user_addresses')
+        .select('*')
+        .eq('user_id', user.id);
+        
+      if (error) throw error;
+      
+      setSavedAddresses(data || []);
+    } catch (error) {
+      console.error('Error fetching addresses:', error);
+      toast({
+        title: 'Fehler',
+        description: 'Fehler beim Laden der gespeicherten Adressen.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoadingAddresses(false);
+    }
+  };
+
+  // Handle selecting a saved address
+  const handleSelectAddress = (addressId: string) => {
+    setSelectedAddressId(addressId);
+    
+    const selectedAddress = savedAddresses.find(addr => addr.id === addressId);
+    if (selectedAddress) {
+      // Get the user's profile to fill in name and email
+      (async () => {
+        try {
+          const { data: profile, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', user?.id)
+            .single();
+            
+          if (error) throw error;
+          
+          const fullName = profile?.full_name || '';
+          const nameParts = fullName.split(' ');
+          const firstName = nameParts[0] || '';
+          const lastName = nameParts.slice(1).join(' ') || '';
+          
+          form.reset({
+            firstName,
+            lastName,
+            email: user?.email || '',
+            phone: selectedAddress.phone || '',
+            address: selectedAddress.street,
+            city: selectedAddress.city,
+            postalCode: selectedAddress.postal_code,
+            paymentMethod: form.getValues('paymentMethod'),
+            saveAddress: false,
+          });
+        } catch (error) {
+          console.error('Error fetching profile:', error);
+        }
+      })();
+    }
+  };
+
   const handleDetailsSubmit = () => {
+    // Check if district is selected before proceeding
+    if (!selectedDistrict) {
+      toast({
+        title: "Bezirkswahl erforderlich",
+        description: "Bitte wähle einen Bezirk aus, bevor du fortfährst.",
+        variant: "destructive",
+      });
+      openDistrictModal();
+      return;
+    }
+    
     setStep('payment');
   };
   
@@ -117,11 +215,65 @@ const Checkout = () => {
   };
   
   const handleSubmit = async (data: CheckoutFormValues) => {
+    // Check if district is selected
+    if (!selectedDistrict) {
+      toast({
+        title: "Bezirkswahl erforderlich",
+        description: "Bitte wähle einen Bezirk aus, bevor du die Bestellung aufgibst.",
+        variant: "destructive",
+      });
+      openDistrictModal();
+      return;
+    }
+    
     setIsSubmitting(true);
-
     try {
+      // Check inventory first
+      for (const item of cartItems) {
+        const isAvailable = await isProductAvailable(item.id, item.quantity);
+        
+        if (!isAvailable) {
+          toast({
+            title: "Lagerbestand nicht ausreichend",
+            description: `Leider ist ${item.name} im gewünschten Umfang nicht verfügbar.`,
+            variant: "destructive",
+          });
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
       // Create user account if not logged in
       const userId = await createUserAccount(data) || "guest";
+      
+      // Save address if requested and user is logged in
+      if (user && data.saveAddress) {
+        try {
+          await supabase
+            .from('user_addresses')
+            .insert({
+              user_id: user.id,
+              name: `${data.firstName} ${data.lastName}`,
+              street: data.address,
+              postal_code: data.postalCode,
+              city: data.city,
+              phone: data.phone,
+              is_default: false,
+            });
+          
+          toast({
+            title: "Adresse gespeichert",
+            description: "Dini Adresse isch erfolgriich gspeichert worde.",
+            duration: 3000,
+          });
+          
+          // Refresh the addresses list
+          fetchUserAddresses();
+        } catch (error) {
+          console.error('Error saving address:', error);
+          // Continue with checkout even if saving address fails
+        }
+      }
       
       const deliveryFee = totalPrice >= 50 ? 0 : 5.90;
       const discountAmount = hasAppliedDiscount ? totalPrice * 0.10 : 0;
@@ -144,27 +296,33 @@ const Checkout = () => {
             email: data.email,
             phone: data.phone,
           },
+          district: selectedDistrict,
           status: 'pending',
-          estimated_delivery_time: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+          estimated_delivery_time: calculateEstimatedDeliveryTime(data.postalCode),
         })
         .select()
         .single();
 
       if (orderError) throw orderError;
 
-      const orderItems = cartItems.map(item => ({
-        order_id: order.id,
-        product_id: item.id,
-        product_name: item.name,
-        quantity: item.quantity,
-        price: item.price,
-      }));
+      // Process each item and reduce inventory
+      for (const item of cartItems) {
+        // Add to order_items
+        const { error: itemError } = await supabase
+          .from('order_items')
+          .insert({
+            order_id: order.id,
+            product_id: item.id,
+            product_name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+          });
 
-      const { error: itemsError } = await supabase
-        .from('order_items')
-        .insert(orderItems);
-
-      if (itemsError) throw itemsError;
+        if (itemError) throw itemError;
+        
+        // Reduce inventory
+        await reduceInventory(item.id, item.quantity);
+      }
 
       clearCart();
       navigate('/order-confirmation', { 
@@ -246,9 +404,35 @@ const Checkout = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <div className="bg-white p-6 rounded-lg shadow-md">
+              {user && savedAddresses.length > 0 && step === 'details' && (
+                <div className="mb-6">
+                  <Label htmlFor="saved-address">Gespeicherte Adressen</Label>
+                  <Select
+                    value={selectedAddressId}
+                    onValueChange={handleSelectAddress}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Wähle eine gespeicherte Adresse" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">Neue Adresse eingeben</SelectItem>
+                      {savedAddresses.map(address => (
+                        <SelectItem key={address.id} value={address.id}>
+                          {address.name} - {address.street}, {address.postal_code} {address.city}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+              
               <Form {...form}>
                 {step === 'details' ? (
-                  <AddressForm form={form} onNext={handleDetailsSubmit} />
+                  <AddressForm 
+                    form={form} 
+                    onNext={handleDetailsSubmit} 
+                    showSaveAddress={!!user} 
+                  />
                 ) : (
                   <PaymentForm 
                     form={form} 
@@ -266,6 +450,7 @@ const Checkout = () => {
               cartItems={cartItems}
               totalPrice={totalPrice}
               deliveryFee={deliveryFee}
+              postalCode={form.watch('postalCode')}
             />
           </div>
         </div>

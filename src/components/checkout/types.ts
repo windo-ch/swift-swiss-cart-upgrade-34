@@ -1,4 +1,3 @@
-
 export interface CheckoutFormValues {
   firstName: string;
   lastName: string;
@@ -8,4 +7,5 @@ export interface CheckoutFormValues {
   postalCode: string;
   city: string;
   paymentMethod: 'card' | 'twint' | 'cash';
+  saveAddress?: boolean;
 }

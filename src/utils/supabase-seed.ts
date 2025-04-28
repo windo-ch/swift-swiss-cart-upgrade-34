@@ -77,9 +77,8 @@ export const convertToSupabaseProduct = (product: AppProduct): ProductInsert => 
     image: product.image || '',
     category: product.category,
     subcategory: '',
-    is_age_restricted: product.ageRestricted || false,
-    is_featured: false,
-    inventory_count: product.stock || 100
+    agerestricted: product.ageRestricted || false,
+    stock: product.stock || 100,
   };
 };
 

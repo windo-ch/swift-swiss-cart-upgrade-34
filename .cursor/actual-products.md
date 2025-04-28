@@ -1,0 +1,81 @@
+# Brings Store Products
+
+## Soft Drinks
+- **Valser Prickelnd**: CHF 2.50 (Description: Valser sparkling water)
+- **Valser Still**: CHF 2.50 (Description: Valser still water)
+- **Lauretana mit Kohlensäure**: CHF 3.50 (Description: Lauretana sparkling water)
+- **Lauretana ohne Kohlensäure**: CHF 3.50 (Description: Lauretana still water)
+- **AriZona Honey Ice Tea**: CHF 3.50 (Description: AriZona Honey Ice Tea)
+- **AriZona Honey Ice Tea 1.5L**: CHF 6.50 (Description: AriZona Honey Ice Tea in a 1.5L bottle)
+- **AriZona Pfirsich Ice Tea 1.5L**: CHF 6.50 (Description: AriZona Peach Ice Tea in a 1.5L bottle)
+- **Capri-Sun Multivitamin**: CHF 2.00 (Description: Capri-Sun Multivitamin juice drink)
+- **Coca Cola 1.5l**: CHF 5.90 (Description: Coca Cola in a 1.5L bottle)
+- **Coca Cola Zero**: CHF 2.50 (Description: Coca Cola Zero)
+- **Coca-Cola Classic**: CHF 2.50 (Description: Coca-Cola Classic)
+- **Fanta 1.5l**: CHF 5.90 (Description: Fanta in a 1.5L bottle)
+- **Red Bull Original**: CHF 3.50 (Description: Red Bull Original energy drink)
+- **Red Bull Sugarfree**: CHF 3.50 (Description: Red Bull Sugarfree energy drink)
+- **San Bedetto Ice Tea Lemon**: CHF 2.50 (Description: San Benedetto Lemon Ice Tea)
+- **San Benedetto Ice Tea Pfirsich**: CHF 2.50 (Description: San Benedetto Peach Ice Tea)
+- **Sinalco Original**: CHF 2.50 (Description: Sinalco Original soft drink)
+- **Uludag Original**: CHF 2.50 (Description: Uludag Original soft drink)
+
+## Snacks
+- **Zweifel Nature Chips**: CHF 4.90 (Description: Zweifel Nature flavored chips)
+- **Zweifel Paprika Chips**: CHF 4.90 (Description: Zweifel Paprika flavored chips)
+- **Fonzies Original Käse Chips**: CHF 4.90 (Description: Fonzies Original Cheese flavored chips)
+- **Granforno Grissini Traditionell**: CHF 5.90 (Description: Granforno Traditional Grissini breadsticks)
+- **Kinder Schokolade Stk.Preis**: CHF 0.70 (Description: Kinder Chocolate, price per piece)
+- **Kinder-Bueno (Einzeler Riegel)**: CHF 1.60 (Description: Kinder Bueno chocolate bar)
+- **Kinder-Milchschnitte**: CHF 1.20 (Description: Kinder Milk Slice)
+- **Nippon Hosta**: CHF 4.90 (Description: Nippon Hosta snack)
+- **Oreo Original**: CHF 4.90 (Description: Oreo Original cookies)
+- **Smoki Erdnuss Flips**: CHF 3.90 (Description: Smoki Peanut Flips)
+- **TUC Original LU gesalzen**: CHF 2.90 (Description: TUC Original LU salted crackers)
+
+## Non-Food
+- **Babywindel Gr.4 (8 Stk.)**: CHF 5.50 (Description: Baby diapers, size 4, pack of 8)
+- **Kosmetiktücher-Box**: CHF 4.90 (Description: Box of facial tissues)
+- **o.b. Procompfort mini**: CHF 3.90 (Description: o.b. ProComfort mini tampons)
+- **Plastik Shotsbecher**: CHF 0.30 (Description: Plastic shot glasses)
+- **Plastikbecher**: CHF 0.30 (Description: Plastic cups)
+- **Taschentuch-Packung (2 Stk.)**: CHF 2.20 (Description: Pack of tissues, 2 pieces)
+- **WC Papier (1 Rolle)**: CHF 2.40 (Description: Toilet paper, 1 roll)
+
+## Smoking (Age Restricted)
+- **American Spirit Blue Tabak**: CHF 11.90 (Description: American Spirit Blue tobacco)
+- **Vogue Slim Blue**: CHF 12.90 (Description: Vogue Slim Blue cigarettes)
+- **Sullana Drehtabak**: CHF 11.90 (Description: Sullana rolling tobacco)
+- **Parisienne Jaune**: CHF 12.90 (Description: Parisienne Jaune cigarettes)
+- **Philip Morris Quantum Blue**: CHF 13.90 (Description: Philip Morris Quantum Blue cigarettes)
+- **Marlboro Gold**: CHF 12.90 (Description: Marlboro Gold cigarettes)
+- **Marlboro Rot**: CHF 12.90 (Description: Marlboro Red cigarettes)
+- **Smoking Blue King Size**: CHF 2.50 (Description: Smoking Blue King Size rolling papers)
+
+## Alcoholic Beverages (Age Restricted)
+
+### Beers
+- **Feldschlösschen Original 0.33l**: CHF 2.50 (Description: Original Feldschlösschen beer in a 0.33l bottle)
+- **Feldschlösschen Original**: CHF 3.50 (Description: Original Feldschlösschen beer)
+- **Quöllfrisch 0.33l**: CHF 2.50 (Description: Quöllfrisch beer in a 0.33l bottle)
+- **Quöllfrisch**: CHF 3.50 (Description: Quöllfrisch beer)
+- **Birra Ichnusa non Filtre**: CHF 3.90 (Description: Unfiltered Birra Ichnusa beer)
+- **Birra Morreti**: CHF 2.80 (Description: Birra Morreti beer)
+- **Desperados Original**: CHF 3.60 (Description: Original Desperados beer)
+- **Früh Kölsch 0.33l**: CHF 3.50 (Description: Früh Kölsch beer in a 0.33l bottle)
+- **Heineken Premium 0.33l**: CHF 2.50 (Description: Heineken Premium beer in a 0.33l bottle)
+- **Heineken Premium 0.5l**: CHF 3.60 (Description: Heineken Premium beer in a 0.5l bottle)
+- **Mönchshof Kellerbier 0.5l**: CHF 3.90 (Description: Mönchshof Kellerbier in a 0.5l bottle)
+- **Rothaus Tannenzäpfle 0.33l**: CHF 3.20 (Description: Rothaus Tannenzäpfle beer in a 0.33l bottle)
+
+### Wine/Sparkling Wine
+- **Bluesecco Blu Rosé Rubicone IGT**: CHF 4.20 (Description: Bluesecco Blu Rosé sparkling wine from the Rubicone region, Italy)
+- **Bluesecco Blu Trevenezie IGT**: CHF 4.20 (Description: Bluesecco Blu sparkling wine from the Trevenezie region, Italy)
+
+### Spirits
+- **Ballantine's Finest Scotch**: CHF 34.00 (Description: Ballantine's Finest Scotch Whisky)
+- **Jack Daniel's Tennessee Whiskey**: CHF 49.00 (Description: Jack Daniel's Tennessee Whiskey)
+- **Jägermeister 70cl**: CHF 39.00 (Description: Jägermeister herbal liqueur, 70cl bottle)
+- **Johnnie Walker Red Label 70cl**: CHF 39.00 (Description: Johnnie Walker Red Label Scotch Whisky, 70cl bottle)
+- **Vodka Absolut 70cl**: CHF 46.00 (Description: Absolut Vodka, 70cl bottle)
+- **Wodka Gorbatschow 70cl**: CHF 26.00 (Description: Wodka Gorbatschow, 70cl bottle) 

@@ -1,44 +1,47 @@
-
 import { useState, useEffect } from 'react';
 import { Product } from '../types/product';
-import { getStoredProducts } from '../utils/product-utils';
+import { useProducts } from './useProducts';
+import { supabaseProductsToAppProducts } from '@/utils/product-adapter';
+import { Tables } from '@/integrations/supabase/types';
 
 export const useProduct = (productId: string | undefined) => {
-  const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { products: supabaseProducts, isLoading: productsLoading, isError } = useProducts();
   
   useEffect(() => {
-    console.log("useProduct hook: Loading products for product ID:", productId);
-    try {
-      const allProducts = getStoredProducts();
-      console.log(`useProduct hook: Loaded ${allProducts.length} products`);
-      setProducts(allProducts);
-    } catch (error) {
-      console.error("Error in useProduct hook:", error);
-    } finally {
+    console.log(`useProduct hook: Product ID: "${productId}", Loading: ${productsLoading}, Error: ${isError}`);
+    console.log(`useProduct hook: Loaded ${supabaseProducts?.length || 0} Supabase products`);
+    
+    if (productId) {
+      const matchingProduct = supabaseProducts.find(p => p.id === productId);
+      console.log(`useProduct hook: Found matching product for ID ${productId}:`, matchingProduct);
+    }
+    
+    if (!productsLoading) {
       setIsLoading(false);
     }
-  }, []);
+  }, [productId, productsLoading, supabaseProducts, isError]);
   
+  // Convert Supabase products to app product format
+  // Use empty array as fallback if supabaseProducts is undefined
+  const products = supabaseProductsToAppProducts(
+    Array.isArray(supabaseProducts) ? supabaseProducts as Tables<"products">[] : []
+  );
+  
+  // Find the product with exact string comparison
   const product = products.find(p => p.id.toString() === productId);
   
-  console.log("useProduct hook: Found product:", product);
-  
-  // Don't modify the image URLs here, as we're now doing it in the ProductImage component
-  const formattedProduct = product ? {
-    ...product
-  } : undefined;
-  
-  const relatedProducts = products
-    .filter(p => p.category === product?.category && p.id.toString() !== productId)
-    .slice(0, 4)
-    .map(p => ({
-      ...p
-    }));
+  // Get related products (same category, different product)
+  const relatedProducts = product 
+    ? products
+        .filter(p => p.category === product.category && p.id.toString() !== productId)
+        .slice(0, 4)
+    : [];
     
   return {
-    product: formattedProduct,
+    product,
     relatedProducts,
-    isLoading: isLoading || products.length === 0
+    isLoading: isLoading || productsLoading,
+    isError
   };
 };

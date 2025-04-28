@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -19,12 +18,13 @@ const Categories = () => {
   
   // Load products for displaying counts and popular items
   useEffect(() => {
-    const loadProducts = () => {
+    const loadProducts = async () => {
+      setIsLoading(true);
       try {
-        const allProducts = getStoredProducts();
+        const allProducts = await getStoredProducts();
         setProducts(allProducts);
       } catch (error) {
-        console.error("Error loading products:", error);
+        console.error("Error loading categories:", error);
       } finally {
         setIsLoading(false);
       }
